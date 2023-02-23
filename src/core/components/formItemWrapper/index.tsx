@@ -50,9 +50,6 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
     const extraContext = useContext(ExtraContext)
     const Widget = getWidgets(widget) ?? internalWidgets(widget);
 
-    /**
-     * TODO 可以优化为 useMemo
-     */
     const executor = (formData, value) => {
         if(typeof value !== "function") {
             return value

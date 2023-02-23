@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Form, Select, Input } from 'antd';
 import FormRenderer from '../core/components/formRenderer';
 import formServicePool from './support/formServicePool';
@@ -20,9 +20,20 @@ const sourceList = [
     {label: 'hive_2', value: 2, type: "hive"}, 
     {label: 'oracle_1', value: 3, type: "oracle"},  
 ]
+const formLayout: any = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 6 },
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 18 },
+    },
+};
 
 const FormDemo: React.FC<IProps> = (props) => {
     const { parsedJson, changeParseJson } = props
+    const formRef = useRef<FormInstance>(null)
 
     const renderFixedItem = (form: FormInstance, extraDataRef: IExtraDataRef) => {
         return (
@@ -61,13 +72,15 @@ const FormDemo: React.FC<IProps> = (props) => {
 
     return (
         <FormRenderer
+            ref={formRef}
+            {...formLayout}
             docsMap={docsMap}
             getWidgets={getWidgets}
             ruleMap={ruleMap}
             formServicePool={formServicePool}
             parsedJson={parsedJson}
             defaultExtraData={{
-                isNotHiveTable: true
+                isNotHiveTable: false
             }}
             preserveFields={['sourceId', 'sourceType']}
             preserveFormItems={renderFixedItem}
