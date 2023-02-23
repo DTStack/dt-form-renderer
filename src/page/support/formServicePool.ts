@@ -1,33 +1,43 @@
-import { FormServicePool, IFormService } from "../core/services/serviceType"
+import type { FormServicePool, IFormService } from "../../core"
 
 const getSchemaList: IFormService = function (formData, extraData) {
     console.log('invoke getSchemaList', formData, extraData);
+    if(!formData.sourceId || !formData.sourceType) return Promise.resolve([])
     return Promise.resolve([
-        {label: 'schema_batch', value: 'schema_batch'}, 
-        {label: 'schema_assets', value: 'schema_assets'}, 
-    ])
+        `${formData.sourceType}_schema_batch`,
+        `${formData.sourceType}_schema_assets`,
+    ].map(s => ({ label: s, value: s })))
+ 
 }
 
 const getTableList: IFormService = function (formData, extraData) {
     console.log('invoke getTableList', formData, extraData);
     if(!formData.schema) return Promise.resolve([])
-    const result = formData.schema === "schema_assets"
+    const result = formData.schema.endsWith === "assets"
         ? [
-            {label: 'table_assets_meta', value: 'table_assets_meta'}, 
-            {label: 'table_assets_model', value: 'table_assets_model'},  
-        ]
+            `${formData.sourceType}_table_assets_meta`,
+            `${formData.sourceType}_table_assets_model`,
+        ].map(s => ({ label: s, value: s }))
         : [
-            {label: 'table_batch_meta', value: 'table_batch_meta'}, 
-            {label: 'table_batch_model', value: 'table_batch_model'}, 
-        ]
-    return Promise.resolve(result)
+            `${formData.sourceType}_table_batch_meta`,
+            `${formData.sourceType}_table_batch_model`,
+        ].map(s => ({ label: s, value: s }))
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(result)
+        }, 1000)
+    })
 }
 
 const getTableLocationType: IFormService = function (formData, extraData) {
     console.log('invoke getTableLocationType', formData, extraData);
     if(!formData.tableName) return Promise.resolve(true)
     const result = (formData.tableName as string)?.endsWith('meta')
-    return Promise.resolve(result)
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(result)
+        }, 1000)
+    })
 }
 
 const getHivePartitions: IFormService = function (formData, extraData) {
@@ -42,7 +52,11 @@ const getHivePartitions: IFormService = function (formData, extraData) {
             {label: 'pt_model_1', value: 'pt_model_1'}, 
             {label: 'pt_model_2', value: 'pt_model_2'}, 
         ]
-    return Promise.resolve(result)
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(result)
+        }, 1000)
+    })
 }
 
 const getPartitionDetail: IFormService = function (formData, extraData) {
@@ -57,7 +71,11 @@ const getPartitionDetail: IFormService = function (formData, extraData) {
             {label: 'pt_model_1', value: 'pt_model_1'}, 
             {label: 'pt_model_2', value: 'pt_model_2'}, 
         ]
-    return Promise.resolve(result)
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(result)
+        }, 1000)
+    })
 }
 
 const formServicePool: FormServicePool = {

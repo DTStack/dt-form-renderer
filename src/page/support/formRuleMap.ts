@@ -1,4 +1,4 @@
-import { FormItemRuleMap, FormItemValidator , IFormItemCustomRule } from "../core/services/serviceType"
+import type { FormItemRuleMap, FormItemValidator , IFormItemCustomRule } from "../../core"
 
 const noWhiteSpace: IFormItemCustomRule = function (formData, extraData) {
     return (rule: any, value: any) => {

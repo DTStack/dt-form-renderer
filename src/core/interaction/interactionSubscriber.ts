@@ -1,7 +1,7 @@
 import { FormInstance } from "antd";
 import PubSubCenter from "./pubSubCenter"
 import { fieldValueInteractionFactory, triggerServiceFactory } from '../factory'
-import { FormServicePool } from "../services/serviceType";
+import { FormServicePool } from "../components/support-type";
 import { IExtraContext } from '../extraDataContext'
 
 export default class InteractionSubscriber {
@@ -28,6 +28,7 @@ export default class InteractionSubscriber {
 
     /**
      * 获取一个字段的变化会影响哪些字段 包括直接和间接影响
+     * 生成对应的依赖图
      */
     private getFieldsDependGraph () {
         const dependGraph = this._parsedJson.map(fieldConf => {
@@ -69,6 +70,9 @@ export default class InteractionSubscriber {
         return effectMap
     }
 
+    /**
+     * 订阅字段间依赖关系的处理
+     */
     subscribeFieldChangeEvent = () => {
         const effectMap = this.getFieldsDependGraph();
         effectMap.forEach((effectList, field) => {
@@ -78,6 +82,9 @@ export default class InteractionSubscriber {
         })
     }
 
+    /**
+     * 订阅 triggerAction
+     */
     subscribeTriggerActions = () => {
         this._parsedJson.forEach((fieldConf) => {
             fieldConf.triggerActions?.forEach?.(action => {
@@ -94,6 +101,9 @@ export default class InteractionSubscriber {
         })
     }
     
+    /**
+     * 订阅
+     */
     subscribe = (parsedJson: any[]) => {
         this._parsedJson = parsedJson
         this.subscribeFieldChangeEvent();

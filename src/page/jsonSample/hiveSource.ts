@@ -1,4 +1,4 @@
-const config = [
+const hiveSource = [
     {
         fieldName: "schema",
         label: "schema",
@@ -87,6 +87,7 @@ const config = [
     },
     {
         fieldName: "extraConfig",
+        tooltip: "{{ docs.extraConfigDoc }}",
         label: "高级配置",
         rules: [
             {
@@ -102,4 +103,4 @@ const config = [
     },
 ]
 
-export default config
+export default hiveSource

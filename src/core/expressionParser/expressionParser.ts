@@ -1,23 +1,51 @@
-export default class GetExpressionParser<IFormData, IExtraData> {
-    static reg = /\{\{\s*(formData|extraData)(\.[\w\d_]+)+\s*(\}\})/g;
-    static validatorReg = /\{\{\s*(ruleMap\.validators|ruleMap\.customRules)(\.[\w\d_]+)+\s*(\}\})/g;
+export default class ExpressionParser<IFormData, IExtraData> {
+    /** 匹配 formData 和 extraData -- 取值表达式 */
+    static valueReg = /^\s*\{\{\s*(formData|extraData)(\.[\w\d_]+)+\s*\}\}\s*$/;
+
+    /** 匹配 ruleMap -- rules */
+    static validatorReg = /^\s*\{\{\s*(ruleMap\.validators|ruleMap\.customRules)(\.[\w\d_]+)+\s*\}\}\s*$/;
+
+    /** 匹配 docs -- tooltip */
+    static docReg = /^\s*\{\{\s*(docs)(\.[\w\d_]+)+\s*\}\}\s*$/;
+
+    /** 匹配函数表达式 -- new function */
+    static functionReg = /^\s*@\{\{.+?\}\}\s*$/;
+
 
     /**
-     * @description 判断一个字符串内是否包含取值表达式
+     * @description 判断一个字符串内是否是取值表达式
      * @param expr 输入字符
      */
-    static containGetExpression(expr: string) {
+    static isGetExpression(expr: string) {
         if(!(typeof expr === 'string')) return false
-        return !!expr.match(GetExpressionParser.reg)?.length
+        return ExpressionParser.valueReg.test(expr);
     }
 
     /**
-     * @description 判断一个字符串内是否包含自定义校验器 validator
+     * @description 判断一个字符串内是否是自定义校验器 validator
      * @param expr 输入字符
      */
-    static containValidatorExpression(expr: string) {
+    static isValidatorExpression(expr: string) {
         if(!(typeof expr === 'string')) return false
-        return !!expr.match(GetExpressionParser.validatorReg)?.length
+        return ExpressionParser.validatorReg.test(expr)
+    }
+
+    /**
+     * @description 判断一个字符串内是否是 docs tooltip
+     * @param expr 输入字符
+     */
+    static isDocsExpression(expr: string) {
+        if(!(typeof expr === 'string')) return false
+        return ExpressionParser.docReg.test(expr)
+    }
+
+    /**
+     * @description 判断一个字符串内是否是函数表达式
+     * @param expr 输入字符
+     */
+    static isFunctionExpression(expr: string) {
+        if(!(typeof expr === 'string')) return false
+        return ExpressionParser.functionReg.test(expr)
     }
 
     /**
@@ -25,7 +53,7 @@ export default class GetExpressionParser<IFormData, IExtraData> {
      * @param expr 输入字符
      */
     genValueDescFromExpression (expr: string) {
-        const result = expr.match(GetExpressionParser.reg);
+        const result = expr.match(ExpressionParser.valueReg);
         if(result === null) return null
         const expression = result[0]
             .replace(/[\s|\{\}]/g, '')
@@ -73,7 +101,7 @@ export default class GetExpressionParser<IFormData, IExtraData> {
      * @param expr 输入字符
      */
     genValidatorDescFromExpression (expr: string) {
-        const result = expr.match(GetExpressionParser.validatorReg);
+        const result = expr.match(ExpressionParser.validatorReg);
         if(result === null) return null
         const expression = result[0]
             .replace(/[\s|\{\}]/g, '')
@@ -113,5 +141,54 @@ export default class GetExpressionParser<IFormData, IExtraData> {
         } else {
             return () => null
         }
+    }
+
+
+    /**
+     * @description 从取值表达式中获取 tooltip 描述信息
+     * @param expr 输入字符
+     */
+    genDocDescFromExpression (expr: string) {
+        const result = expr.match(ExpressionParser.docReg);
+        if(result === null) return null
+        const expression = result[0]
+            .replace(/[\s|\{\}]/g, '')
+            .split('.');
+
+        return {
+            source: expression[0],
+            property: expression.slice(1)
+        }
+    }
+
+
+    /**
+     * @description 生成 tooltip
+     * @param expr docs 表达式
+     * @returns 返回tooltip
+     */
+    getDoc (docMap: any, expr: string) {
+        const docDesc = this.genDocDescFromExpression(expr)
+        if(docDesc === null) {
+            return () => null
+        }
+        return docDesc.property
+            .reduce(
+                (obj: any, k) => (obj || {})[k],
+                (docMap ?? {})
+            ) ?? null
+    }
+
+    /**
+     * @description 生成 Function
+     * @param expr docs 表达式
+     */
+    genFunction (expr: string) {
+        const functionBody = expr
+            .replace(/^\s*@\{\{/, '')
+            .replace(/\}\}\s*$/, '')
+        const fn = new Function('formData', 'extraData', functionBody)
+
+        return (formData, extraData) => fn.call(null, formData, extraData)
     }
 }

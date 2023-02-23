@@ -1,4 +1,4 @@
-import { } from "antd/lib/form";
+import React from "react";
 
 export interface IFormService<FormData = any, ExtraData = any> {
     (formData: FormData, extraData: ExtraData): Promise<any>;
@@ -23,4 +23,8 @@ export interface FormItemRuleMap {
     validators: {
         [key: string]: FormItemValidator
     }
+}
+
+export interface IDocsMap {
+    [key: string]: React.ReactNode;
 }
