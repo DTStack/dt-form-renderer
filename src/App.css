@@ -28,6 +28,7 @@
 .page-header {
   height: 32px;
   display: flex;
+  justify-content: space-between;
 }
 
 .page-header .ant-btn span {

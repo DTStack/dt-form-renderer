@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, message } from 'antd';
+import { Button, message, Alert } from 'antd';
 import { editor } from 'monaco-editor'
 import hiveSource from './jsonSample/hiveSource';
 import oracleSource from './jsonSample/oracleSource';
@@ -42,6 +42,11 @@ const Page: React.FC<any> = () => {
     return(
         <div className='page'>
             <p className='page-header'>
+                <Alert 
+                    message="demo 已经内置了 hive 和 oracle 两种数据源作为来源时的配置，选择数据源，左侧编辑器就会自动出现对应的配置，编辑配置，并点击 refresh 按钮，表单会根据编辑器内容重新渲染！"
+                    type="info"
+                    showIcon
+                />
                 <Button type='primary' onClick={refresh}>refresh</Button>
             </p>
             <div className='page-container'>
