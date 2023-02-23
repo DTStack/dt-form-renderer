@@ -1,11 +1,10 @@
 # dataSync-form-renderer
-## Power By Ant design
 
 ## Quick Start
 ```shell
 # clone registry
 git clone git@github.com:HaydenOrz/dataSync-form-renderer.git
-# instasll dependencies
+# install dependencies
 pnpm install
 # start example
 pnpm start
