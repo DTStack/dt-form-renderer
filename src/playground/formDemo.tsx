@@ -84,7 +84,6 @@ const FormDemo: React.FC<IProps> = (props) => {
             }}
             preserveFields={['sourceId', 'sourceType']}
             preserveFormItems={renderFixedItem}
-            style={{ width: 600}}
         />
     )
 }

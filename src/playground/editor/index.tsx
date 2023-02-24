@@ -1,12 +1,15 @@
 import React from "react";
 import { editor } from 'monaco-editor';
 
+import './autoComplete'
+
 interface IProps {
     value?: string;
     onChange?: (value: string) => void;
+    language?: string;
 }
 
-class JsonEditor extends React.Component<IProps> {
+class Editor extends React.Component<IProps> {
     _container = null
     _monacoInstance: editor.IStandaloneCodeEditor = null
 
@@ -16,7 +19,9 @@ class JsonEditor extends React.Component<IProps> {
 
     componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<{}>, snapshot?: any): void {
         if(prevProps.value !== this.props.value) {
+            const pos = this._monacoInstance.getPosition()
             this._monacoInstance.setValue(this.props.value);
+            this._monacoInstance.setPosition(pos)
         }
     }
 
@@ -35,10 +40,10 @@ class JsonEditor extends React.Component<IProps> {
                 fontSize: 13,
                 fixedOverflowWidgets: true,
                 renderControlCharacters: true,
-                language: 'json',
+                language: this.props.language ?? 'sql',
                 value,
-            })
-            this.initEditorEvent()
+            });
+            this.initEditorEvent();
         }
 
     }
@@ -56,8 +61,9 @@ class JsonEditor extends React.Component<IProps> {
         return <div 
             ref={(r) => this._container = r } 
             style={{width: '100%', height: '100%'}}
+            className="dataSync-monaco-editor"
         />
     }
 }
 
-export default JsonEditor
+export default Editor

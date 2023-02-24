@@ -8,12 +8,6 @@ const hiveSource = [
             options: "{{ extraData.schemaList }}",
             allowClear: true,
         },
-        rules: [
-            {
-                required: true,
-                message: '请选择schema！'
-            }
-        ],
         trigger: "onChange",
         triggerActions: [
             {
@@ -51,10 +45,6 @@ const hiveSource = [
                 immediate: true,
             },
             {
-                serviceName: 'getTableLocationType',
-                fieldInExtraData: "isNotHiveTable",
-            },
-            {
                 serviceName: 'getHivePartitions',
                 fieldInExtraData: "hivePartitions",
                 immediate: false,
@@ -66,7 +56,7 @@ const hiveSource = [
         label: "分区",
         widget: "AutoComplete",
         dependencies: ["tableName"],
-        destroy: "{{ extraData.isNotHiveTable }}",
+        tooltip: "分区支持识别逻辑运算符“>” “=” “<” “and”逻辑运算符，比如比如“pt>= ${xxx} and pt <= ${yyy}”，即代表读取范围在${xxx} ~ ${yyy}的所有分区",
         rules: [
             {
                 validator: "{{ ruleMap.customRules.noWhiteSpace }}"
@@ -77,13 +67,6 @@ const hiveSource = [
             options: "{{ extraData.hivePartitions }}"
         },
         trigger: "onChange",
-        triggerActions: [
-            {
-                serviceName: 'getPartitionDetail',
-                fieldInExtraData: "partitionDetail",
-                immediate: true,
-            },
-        ]
     },
     {
         fieldName: "extraConfig",

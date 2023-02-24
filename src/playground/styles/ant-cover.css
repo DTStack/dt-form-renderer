@@ -1,0 +1,15 @@
+.ant-form-item-label>label {
+  font-size: 12px;
+}
+
+.ant-input {
+  font-size: 12px;
+}
+
+.ant-input::placeholder {
+  font-size: 12px;
+}
+
+.ant-form-item {
+  margin-bottom: 16px;
+}

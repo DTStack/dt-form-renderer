@@ -1,10 +1,11 @@
-import './App.css';
 import 'antd/dist/antd.css';
-import Page from './page';
+import './playground/styles/ant-cover.css';
+import './playground/styles/app.css';
+import Page from './playground';
 
 function App() {
     return (
-        <div className="App">
+        <div className="App"> 
             <Page/>
         </div>
     );

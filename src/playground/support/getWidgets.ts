@@ -1,6 +1,7 @@
 import {
     Select,
 } from 'antd'
+import Editor from '../editor'
 
 import type { GetWidgets } from "../../core"
 
@@ -9,6 +10,8 @@ const getWidgets: GetWidgets = (widget: string) => {
     switch (name) {
         case 'select': 
             return Select
+        case 'sqleditor':
+            return Editor
         default:
             return null
     }

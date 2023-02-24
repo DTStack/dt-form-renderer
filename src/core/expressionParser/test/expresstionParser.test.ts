@@ -173,6 +173,4 @@ describe('Expression Parser Tests', () => {
         const res2 = fn2(formData, extraData)
         expect(res2).toBe(10)
     })
-
-
 });

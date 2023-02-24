@@ -1,4 +1,4 @@
-import { IExtraDataRef as IExtraDataRef } from "../extraDataContext";
+import { IExtraDataRef } from "../extraDataContext";
 
 export default class PubSubCenter {
     private _dependenciesEventPool: Map<string, Function[]> = new Map();

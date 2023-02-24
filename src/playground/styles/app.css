@@ -46,10 +46,18 @@
 
 
 .editor-wrapper {
-  width: 50%;
+  width: 55%;
   height: 100%;
 }
 
 .form-wrapper {
   flex: 1;
+}
+
+.ant-form-item .dataSync-monaco-editor {
+  resize: vertical;
+  overflow: auto;
+  border-radius: 4px;
+  border: 1px solid #DDD;
+  min-height: 60px;
 }

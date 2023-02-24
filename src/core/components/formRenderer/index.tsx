@@ -107,13 +107,13 @@ const FormRenderer: React.ForwardRefRenderFunction<FormInstance, FormRendererPro
     }
 
     return (
+        <ExtraContext.Provider value={{ extraDataRef, update: updateExtraData }}>
             <Form 
                 {...restProps}
                 form={form}
                 onValuesChange={onValuesChange}
                 preserve={false}
             >
-                <ExtraContext.Provider value={{ extraDataRef, update: updateExtraData }}>
                     <ExtraContext.Consumer>
                         {
                             (extraDataContext) => {
@@ -130,8 +130,8 @@ const FormRenderer: React.ForwardRefRenderFunction<FormInstance, FormRendererPro
                             />
                         })  
                     }
-                </ExtraContext.Provider>
             </Form>
+        </ExtraContext.Provider>
     )
 }
 
