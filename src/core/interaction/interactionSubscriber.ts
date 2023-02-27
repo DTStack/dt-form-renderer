@@ -1,6 +1,6 @@
 import { FormInstance } from "antd";
 import PubSubCenter from "./pubSubCenter"
-import { fieldValueInteractionFactory, triggerServiceFactory } from '../factory'
+import { fieldValueInteractionFactory, triggerServiceFactory } from './factory'
 import { FormServicePool } from "../components/support-type";
 import { IExtraContext } from '../extraDataContext'
 
@@ -31,6 +31,9 @@ export default class InteractionSubscriber {
      * 生成对应的依赖图
      */
     private getFieldsDependGraph () {
+        /** 
+         * TODO 需要检测依赖是否成环 
+         */
         const dependGraph = this._parsedJson.map(fieldConf => {
             return fieldConf.dependencies?.map(( dependence => ({ fieldName: fieldConf.fieldName, dependOn: dependence  }) ))
         }).filter(Boolean).flat()

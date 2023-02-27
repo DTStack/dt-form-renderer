@@ -1,8 +1,8 @@
 import ExpressionParser from './expressionParser';
+import safeInnerHtml from './safeInnerHtml';
 
 class JsonConfigTransformer {
     private _jsonArr: any[] = null;
-    private _genValueGetter;
     private _genValidatorGetter;
     private _getDoc;
     private _genFunction;
@@ -11,10 +11,9 @@ class JsonConfigTransformer {
     constructor(jsonArr, ruleMap, docsMap) {
         this._jsonArr = jsonArr
         const expressionParser = new ExpressionParser();
-        this._genValueGetter = expressionParser.genValueGetter.bind(expressionParser)
         this._genValidatorGetter = expressionParser.genValidatorGetter.bind(expressionParser, ruleMap)
         this._getDoc = expressionParser.getDoc.bind(expressionParser, docsMap)
-        this._genFunction = expressionParser.genFunction.bind(expressionParser)
+        this._genFunction = expressionParser.generateFunction.bind(expressionParser)
     }
 
     transformRules (rules) {
@@ -32,19 +31,26 @@ class JsonConfigTransformer {
     }
 
     transformField(value) {
-        const isGetExpression = ExpressionParser.isGetExpression
         const isFunctionExpression = ExpressionParser.isFunctionExpression
         const res = isFunctionExpression(value)
             ? this._genFunction(value)
-            : isGetExpression(value)
-                ? this._genValueGetter(value)
-                : value
+            : value
         return res
+    }
+
+    transformTooltip (tooltip: string) {
+        const isDocsExpression = ExpressionParser.isDocsExpression;
+        if(isDocsExpression(tooltip)) {
+            return this._getDoc(tooltip);
+        }
+        if(typeof tooltip === 'string') {
+            return safeInnerHtml(tooltip)
+        }
+        return null
     }
 
     transform () {
         const jsonArr = this._jsonArr;
-        const isDocsExpression = ExpressionParser.isDocsExpression;
         return jsonArr.map(field => {
             const {
                 label,
@@ -62,9 +68,7 @@ class JsonConfigTransformer {
                 rules: rules 
                     ? this.transformRules(rules)
                     : () => [],
-                tooltip: isDocsExpression(tooltip)
-                    ? this._getDoc(tooltip)
-                    : tooltip,
+                tooltip: this.transformTooltip(tooltip),
                 widgetProps: {
                     ...widgetProps,
                     options: this.transformField(widgetProps.options),

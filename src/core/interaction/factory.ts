@@ -1,5 +1,5 @@
 import { FormInstance } from "antd";
-import { FormServicePool } from './components/support-type'
+import { FormServicePool } from '../components/support-type'
 
 /**
  * @description 生成字段联动处理函数

@@ -7,46 +7,6 @@ describe('Expression Parser Tests', () => {
             y: 'ok'
         }
     }
-    const expr1 = "{{ extraData.x.y }}"
-    const expr2 = " {{extraData.x.y }}"
-    const expr3 = "{{formData.x.y }}"
-    const expr4 = "{{extrDta.x.y}}"
-    const expr5 = "{{extrDta.x.y}}"
-    const expr6 = "{{extraDta.x.y }} xxx"
-
-
-    test('Is a Get Expression test', () => {
-        const flag1 = ExpressionParser.isGetExpression(expr1)
-        expect(flag1).toBe(true)
-
-        const flag2 = ExpressionParser.isGetExpression(expr2)
-        expect(flag2).toBe(true)
-
-        const flag3 = ExpressionParser.isGetExpression(expr3)
-        expect(flag3).toBe(true)
-
-        const flag4 = ExpressionParser.isGetExpression(expr4)
-        expect(flag4).toBe(false)
-
-        const flag5 = ExpressionParser.isGetExpression(expr5)
-        expect(flag5).toBe(false)
-
-        const flag6 = ExpressionParser.isGetExpression(expr6)
-        expect(flag6).toBe(false)
-    });
-
-    test('Generate Value Description From Expression', () => {
-        const valueDesc = expressionParser.genValueDescFromExpression(expr1)
-        expect(valueDesc.source).toBe('extraData')
-        expect(valueDesc.property).toEqual(['x', 'y'])
-    });
-
-    test("Generate Value Getter", () => {
-        const getter = expressionParser.genValueGetter(expr1)
-        const res = getter.call(null, {}, extraData)
-        expect(res).toBe('ok')
-    })
-
 
     const ruleMap = {
         validators: {
@@ -139,15 +99,15 @@ describe('Expression Parser Tests', () => {
     })
 
     test("Is a Docs Expression", () => {
-        const fnExpr1 = " @{{ return formData.x.y}}"
-        const fnExpr2 = "@ {{ return formData.x.y }} "
-        const fnExpr3 = " @{{ return extraData.m }}"
+        const fnExpr1 = " {{ formData.x.y}}"
+        const fnExpr2 = "{{ formData.x.y }} "
+        const fnExpr3 = "{{  extraData.m }}"
 
         const flag1 = ExpressionParser.isFunctionExpression(fnExpr1)
         expect(flag1).toBe(true)
 
         const flag2 = ExpressionParser.isFunctionExpression(fnExpr2)
-        expect(flag2).toBe(false)
+        expect(flag2).toBe(true)
 
         const flag3 = ExpressionParser.isFunctionExpression(fnExpr3)
         expect(flag3).toBe(true)
@@ -159,18 +119,20 @@ describe('Expression Parser Tests', () => {
                 y: 1
             },
         }
-        const extraData = {
-            m: [1, 2, 3],
+        const extraDataRef = {
+            current: {
+                m: [1, 2, 3],
+            }
         }
 
-        const fnExpr1 = "@{{ return formData.x.y }}"
-        const fn1 = expressionParser.genFunction(fnExpr1)
-        const res1 = fn1(formData, extraData)
+        const fnExpr1 = "{{ formData.x.y }}"
+        const fn1 = expressionParser.generateFunction(fnExpr1)
+        const res1 = fn1({  formData, extraDataRef })
         expect(res1).toBe(1)
 
-        const fnExpr2 = "@{{ let res = 4; res = extraData.m.reduce((pre, c) => pre+c,  res); return res; }}"
-        const fn2 = expressionParser.genFunction(fnExpr2)
-        const res2 = fn2(formData, extraData)
+        const fnExpr2 = "{{ extraData.m.reduce((pre, c) => pre+c,  4) }}"
+        const fn2 = expressionParser.generateFunction(fnExpr2)
+        const res2 = fn2({ formData, extraDataRef })
         expect(res2).toBe(10)
     })
 });

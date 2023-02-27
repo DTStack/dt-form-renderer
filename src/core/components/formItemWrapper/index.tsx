@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Form } from 'antd'
 import ExtraContext from '../../extraDataContext';
 import internalWidgets from '../internalWidgets';
+import { IScope } from '../../expressionParser/fnExpressionTransformer';
 
-const FormItem = Form.Item;
+const { Item: FormItem, useFormInstance } = Form;
 
 export interface FormItemMeta {
     fieldName: string;
@@ -48,30 +49,39 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         valuePropName ,
     } = formItemMeta
     const extraContext = useContext(ExtraContext)
-    const Widget = getWidgets(widget) ?? internalWidgets(widget);
+    const form = useFormInstance()
 
-    const executor = (formData, value) => {
+    const Widget = useMemo(() => {
+        return getWidgets(widget) ?? internalWidgets(widget)
+    }, [widget]) 
+
+    const scope = useMemo<IScope>(() => {
+       return {
+            formData: form.getFieldsValue(),
+            extraDataRef: extraContext.extraDataRef
+        }
+    }, [extraContext.extraDataRef, form.getFieldsValue()])
+
+    const valueGetter = (value) => {
         if(typeof value !== "function") {
             return value
         } else {
-            return value.call(null, formData, extraContext.extraDataRef.current)
+            return value.call(null, scope)
         }
     }
 
     return (
         <FormItem noStyle shouldUpdate>
             {(form) => {
-                const formData = form.getFieldsValue();
-                const exec = executor.bind(null, formData)
-                return !exec(destroy)
+                return !valueGetter(destroy)
                     ? (
                         <FormItem
                             name={fieldName}
                             initialValue={initialValue}
                             tooltip={tooltip}
-                            label={exec(label)}
-                            rules={exec(rules)}
-                            hidden={exec(hidden)}
+                            label={valueGetter(label)}
+                            rules={valueGetter(rules)}
+                            hidden={valueGetter(hidden)}
                             colon={colon}
                             extra={extra}
                             labelAlign={labelAlign}
@@ -80,8 +90,8 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                         >
                             <Widget
                                 {...widgetProps}
-                                placeholder={exec(widgetProps?.placeholder)  ?? ''}
-                                options={exec(widgetProps?.options) ?? []}
+                                placeholder={valueGetter(widgetProps?.placeholder) ?? ''}
+                                options={valueGetter(widgetProps?.options)}
                             />
                         </FormItem>
                     )

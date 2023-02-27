@@ -4,7 +4,7 @@ import type { FormServicePool, FormItemRuleMap, IDocsMap } from '../support-type
 import type { FormInstance, FormProps } from 'antd/es/form/Form';
 import FormItemWrapper, { FormItemMeta, GetWidgets } from '../formItemWrapper';
 import ExtraContext, { useExtraData, IExtraDataRef } from '../../extraDataContext';
-import JsonConfigTransformer from '../../expressionParser';
+import JsonConfigTransformer from '../../expressionParser/jsonConfigTransformer';
 import PubSubCenter from '../../interaction/pubSubCenter';
 import InteractionSubscriber from '../../interaction/interactionSubscriber';
 
