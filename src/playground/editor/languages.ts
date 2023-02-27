@@ -83,11 +83,11 @@ export const fieldCompletionsCreator: (range: IRange) => IMonacoLanguageCompleti
 export const expressionCompletionsCreator: (range: IRange) => IMonacoLanguageCompletionItem[] = (range) => [
     {
         label: "{{ formData.$1 }}",
-        detail: "取值表达式 -form",
+        detail: "函数表达式 -form",
     },
     {
         label: "{{ extraData. }}",
-        detail: "取值表达式 -extraData",
+        detail: "函数表达式 -extraData",
     },
     {
         label: "{{ ruleMap.customRules.$1 }}",
@@ -96,10 +96,6 @@ export const expressionCompletionsCreator: (range: IRange) => IMonacoLanguageCom
     {
         label: "{{ ruleMap.validators.$1 }}",
         detail: "自定义校验器 -validators",
-    },
-    {
-        label: "@{{ return $1 }}",
-        detail: "函数表达式",
     },
 ].map(i => ({
     ...i,

@@ -58,7 +58,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
     const scope = useMemo<IScope>(() => {
        return {
             formData: form.getFieldsValue(),
-            extraDataRef: extraContext.extraDataRef
+            extraDataRef: extraContext.extraDataRef,
         }
     }, [extraContext.extraDataRef, form.getFieldsValue()])
 

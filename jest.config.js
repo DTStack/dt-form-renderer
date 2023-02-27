@@ -6,7 +6,7 @@ module.exports = {
     globals: {
         window: {},
     },
-    testEnvironment: 'node',
+    testEnvironment: 'jsdom',
     testPathIgnorePatterns: ['/node_modules/'],
     transform: {
         '^.+\\.(t|j)sx?$': 'ts-jest',
