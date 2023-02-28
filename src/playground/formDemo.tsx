@@ -6,7 +6,7 @@ import ruleMap from './support/formRuleMap';
 import getWidgets from './support/getWidgets';
 import { FormInstance } from 'antd/es/form/Form';
 import docsMap from './support/doc'
-import { IExtraDataRef } from '../core/extraDataContext';
+import { ExtraDataRefType } from '../core/extraDataContext';
 
 const FormItem = Form.Item
 
@@ -35,7 +35,7 @@ const FormDemo: React.FC<IProps> = (props) => {
     const { parsedJson, changeParseJson } = props
     const formRef = useRef<FormInstance>(null)
 
-    const renderFixedItem = (form: FormInstance, extraDataRef: IExtraDataRef) => {
+    const renderFixedItem = (form: FormInstance, extraDataRef: ExtraDataRefType) => {
         return (
             <>
                 <FormItem

@@ -1,10 +1,10 @@
-import type { FormItemRuleMap, FormItemValidator , IFormItemCustomRule } from "../../core"
+import type { FormItemRuleMapType, FormItemValidatorType , FormItemCustomRuleType } from "../../core"
 
-const noWhiteSpace: IFormItemCustomRule = function (formData, extraData) {
+const noWhiteSpace: FormItemCustomRuleType = function (formData, extraData) {
     return (rule: any, value: any) => {
         let msg: any;
         if (/\s/.test(value)) {
-            msg = '不支持空格！';
+            msg = '不支持空格！' + formData.schema;
         }
         if(msg) {
             return Promise.reject(new Error(msg))
@@ -14,7 +14,7 @@ const noWhiteSpace: IFormItemCustomRule = function (formData, extraData) {
     };
 }
 
-const formJsonValidator: FormItemValidator =  function (rule: any, value: any) {
+const formJsonValidator: FormItemValidatorType =  function (rule: any, value: any) {
     let msg: string;
     try {
         if (value) {
@@ -36,7 +36,7 @@ const formJsonValidator: FormItemValidator =  function (rule: any, value: any) {
 }
 
 
-const ruleMap: FormItemRuleMap = {
+const ruleMap: FormItemRuleMapType = {
     customRules: {
         noWhiteSpace,
     },

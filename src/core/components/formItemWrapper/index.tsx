@@ -2,68 +2,54 @@ import React, { useContext, useMemo } from 'react';
 import { Form } from 'antd'
 import ExtraContext from '../../extraDataContext';
 import internalWidgets from '../internalWidgets';
-import { IScope } from '../../expressionParser/fnExpressionTransformer';
+import type { ScopeType, TransformedFnType } from '../../expressionParser/fnExpressionTransformer';
+import type { FieldItemMetaType } from '../../type';
 
 const { Item: FormItem, useFormInstance } = Form;
 
-export interface FormItemMeta {
-    fieldName: string;
-    widget: string;
-    widgetProps?: Record<string, any>;
-    label?: (formData, extraData) => boolean;
-    destroy?: (formData, extraData) => boolean;
-    hidden?: (formData, extraData) => boolean;
-    rules?: (formData, extraData) => any[];
-    tooltip?: string;
-    colon?: boolean;
-    extra?: string;
-    initialValue?: any;
-    labelAlign?: 'left'|'right';
-    trigger?: string;
-    valuePropName?: string;
-}
-
 export type GetWidgets = (widget: string) => React.ComponentType<any>;
-
 export interface FormItemWrapperProps {
-    formItemMeta: FormItemMeta;
+    formItemMeta: FieldItemMetaType;
     getWidgets?: GetWidgets;
 }
 
 const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
     const { formItemMeta, getWidgets } = props
     const {
-        fieldName ,
-        widget ,
-        widgetProps ,
-        label ,
+        fieldName,
+        widget,
+        widgetProps,
+        label,
         destroy = false,
         hidden = false,
-        rules ,
-        tooltip ,
-        initialValue ,
-        colon ,
+        rules,
+        tooltip,
+        initialValue,
+        colon,
         extra,
-        labelAlign ,
-        trigger ,
-        valuePropName ,
+        labelAlign,
+        trigger,
+        valuePropName,
     } = formItemMeta
     const extraContext = useContext(ExtraContext)
     const form = useFormInstance()
 
     const Widget = useMemo(() => {
         return getWidgets(widget) ?? internalWidgets(widget)
-    }, [widget]) 
+    }, [widget])
 
-    const scope = useMemo<IScope>(() => {
-       return {
+    /**
+     * TODO 这里form.getFieldsValue() 的返回值每次都是一个新对象，导致scope一直在变化
+     */
+    const scope = useMemo<ScopeType>(() => {
+        return {
             formData: form.getFieldsValue(),
             extraDataRef: extraContext.extraDataRef,
         }
     }, [extraContext.extraDataRef, form.getFieldsValue()])
 
-    const valueGetter = (value) => {
-        if(typeof value !== "function") {
+    const valueGetter = (value: TransformedFnType | unknown) => {
+        if (typeof value !== "function") {
             return value
         } else {
             return value.call(null, scope)

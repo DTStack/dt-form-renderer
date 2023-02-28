@@ -1,6 +1,6 @@
-import type { FormServicePool, IFormService } from "../../core"
+import type { FormServicePoolType, FormServiceType } from "../../core"
 
-const getSchemaList: IFormService = function (formData, extraData) {
+const getSchemaList: FormServiceType = function (formData, extraData) {
     console.log('invoke getSchemaList', formData, extraData);
     if(!formData.sourceId || !formData.sourceType) return Promise.resolve([])
     return Promise.resolve([
@@ -10,7 +10,7 @@ const getSchemaList: IFormService = function (formData, extraData) {
  
 }
 
-const getTableList: IFormService = function (formData, extraData) {
+const getTableList: FormServiceType = function (formData, extraData) {
     console.log('invoke getTableList', formData, extraData);
     if(!formData.schema) return Promise.resolve([])
     const result = formData.schema.endsWith === "assets"
@@ -29,7 +29,7 @@ const getTableList: IFormService = function (formData, extraData) {
     })
 }
 
-const getTableLocationType: IFormService = function (formData, extraData) {
+const getTableLocationType: FormServiceType = function (formData, extraData) {
     console.log('invoke getTableLocationType', formData, extraData);
     if(!formData.tableName) return Promise.resolve(true)
     const result = (formData.tableName as string)?.endsWith('meta')
@@ -40,7 +40,7 @@ const getTableLocationType: IFormService = function (formData, extraData) {
     })
 }
 
-const getHivePartitions: IFormService = function (formData, extraData) {
+const getHivePartitions: FormServiceType = function (formData, extraData) {
     console.log('invoke getHivePartitions', formData, extraData);
     if(!formData.tableName) return Promise.resolve([])
     const result = (formData.tableName as string)?.endsWith('meta')
@@ -59,7 +59,7 @@ const getHivePartitions: IFormService = function (formData, extraData) {
     })
 }
 
-const getPartitionDetail: IFormService = function (formData, extraData) {
+const getPartitionDetail: FormServiceType = function (formData, extraData) {
     console.log('invoke getPartitionDetail', formData, extraData);
     if(!formData.tableName) return Promise.resolve([])
     const result = (formData.tableName as string)?.endsWith('meta')
@@ -78,7 +78,7 @@ const getPartitionDetail: IFormService = function (formData, extraData) {
     })
 }
 
-const formServicePool: FormServicePool = {
+const formServicePool: FormServicePoolType = {
     getSchemaList,
     getTableList,
     getHivePartitions,

@@ -1,5 +1,5 @@
-import { FormInstance } from "antd";
-import { FormServicePool } from '../components/support-type'
+import type { FormInstance } from "antd";
+import type { FormServicePoolType } from '../type'
 
 /**
  * @description 生成字段联动处理函数
@@ -28,7 +28,7 @@ interface IActionConf {
  * @param triggerAction 触发的 action 信息
  * @returns 
  */
-export function triggerServiceFactory (servicePool: FormServicePool, updateExtra, triggerAction: IActionConf) {
+export function triggerServiceFactory (servicePool: FormServicePoolType, updateExtra, triggerAction: IActionConf) {
     const {
         serviceName,
         fieldInExtraData,

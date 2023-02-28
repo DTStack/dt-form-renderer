@@ -1,14 +1,16 @@
-import { IExtraDataRef } from "../extraDataContext";
+import { ExtraDataRefType } from "../extraDataContext";
 
-export interface IScope {
+export interface ScopeType {
     formData: any;
-    extraDataRef: IExtraDataRef;
+    extraDataRef: ExtraDataRefType;
 }
 
-class FnExpressionTransformer {
-    private sandboxProxiesMap: WeakMap<IScope, InstanceType<typeof Proxy>> = new WeakMap();
+export type TransformedFnType = (scope: ScopeType) => unknown
 
-    private createProxy(scopeObj: IScope) {
+class FnExpressionTransformer {
+    private sandboxProxiesMap: WeakMap<ScopeType, InstanceType<typeof Proxy>> = new WeakMap();
+
+    private createProxy(scopeObj: ScopeType) {
         /** 存储创建的 proxy 避免重复创建 */
         if(this.sandboxProxiesMap.has(scopeObj)) {
             return this.sandboxProxiesMap.get(scopeObj)
@@ -35,8 +37,8 @@ class FnExpressionTransformer {
         return proxy
     }
 
-    generateFn = (code: string) => {
-        return (scope: IScope) => {
+    transform = (code: string): TransformedFnType => {
+        return (scope: ScopeType) => {
             const proxy = this.createProxy(scope)
             const fnBody = `with(scope) {  return ${ code } }`
             const fn = new Function('scope', fnBody)

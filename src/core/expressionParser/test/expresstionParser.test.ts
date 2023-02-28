@@ -1,4 +1,5 @@
 import ExpressionParser from "../expressionParser";
+import { FormItemRuleMapType } from "../../type";
 
 describe('Expression Parser Tests', () => {
     const expressionParser = new ExpressionParser()
@@ -8,12 +9,12 @@ describe('Expression Parser Tests', () => {
         }
     }
 
-    const ruleMap = {
+    const ruleMap: FormItemRuleMapType = {
         validators: {
-            formJsonValidator: 'formJsonValidator',
+            formJsonValidator: () => Promise.reject("reject formJsonValidator"),
         },
         customRules: {
-            noWhiteSpace: (formData, extraData) => 'noWhiteSpace',
+            noWhiteSpace: (formData, extraData) => () => Promise.reject(extraData.x.y),
         },
     }
     const validatorExpr1 = "{{ruleMap.validators.formJsonValidator }}"
@@ -43,18 +44,18 @@ describe('Expression Parser Tests', () => {
     })
 
 
-    test("Generate Validator Getter", () => {
+    test("Generate Validator Getter", async () => {
         const getter1 = expressionParser.genValidatorGetter(ruleMap, validatorExpr1)
-        const res1 = getter1.call(null, {}, extraData)
-        expect(res1).toBe('formJsonValidator')
+        const v1 = getter1.call(null, {}, extraData)
+        await expect(v1()).rejects.toMatch("reject formJsonValidator")
 
         const getter2 = expressionParser.genValidatorGetter(ruleMap, validatorExpr2)
-        const res2 = getter2.call(null, {}, extraData)
-        expect(res2).toBe('noWhiteSpace')
+        const v2 = getter2.call(null, {}, extraData)
+        await expect(v2()).rejects.toMatch("ok")
 
     })
 
-    const docsMap = {
+    const docsMap: any = {
         x: {
             y: 'doc1'
         },

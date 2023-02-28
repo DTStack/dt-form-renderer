@@ -1,14 +1,16 @@
 import ExpressionParser from './expressionParser';
 import safeInnerHtml from './safeInnerHtml';
+import { ScopeType } from './fnExpressionTransformer';
+import type { RuleType, ValidatorRule, JsonConfigType, DocsMapType, FormItemRuleMapType } from '../type'; 
 
 class JsonConfigTransformer {
-    private _jsonArr: any[] = null;
+    private _jsonArr: JsonConfigType[] = null;
     private _genValidatorGetter;
     private _getDoc;
-    private _genFunction;
+    private _genFunction: ExpressionParser<any, any>['generateFunction'];
 
 
-    constructor(jsonArr, ruleMap, docsMap) {
+    constructor(jsonArr: JsonConfigType[], ruleMap: FormItemRuleMapType, docsMap: DocsMapType) {
         this._jsonArr = jsonArr
         const expressionParser = new ExpressionParser();
         this._genValidatorGetter = expressionParser.genValidatorGetter.bind(expressionParser, ruleMap)
@@ -16,13 +18,13 @@ class JsonConfigTransformer {
         this._genFunction = expressionParser.generateFunction.bind(expressionParser)
     }
 
-    transformRules (rules) {
-        return ( formData, extraData ) => {
+    transformRules (rules: RuleType[]) {
+        return (scope: ScopeType) => {
             return rules.map((rule) => {
-                if(ExpressionParser.isValidatorExpression(rule.validator ?? '')) {
+                if(ExpressionParser.isValidatorExpression((rule as ValidatorRule).validator ?? '')) {
                     return {
                         ...rule,
-                        validator: this._genValidatorGetter(rule.validator).call(formData, extraData)
+                        validator: this._genValidatorGetter((rule as ValidatorRule).validator).call(null, scope.formData, scope.extraDataRef.current)
                     }
                 }
                 return rule
@@ -30,7 +32,7 @@ class JsonConfigTransformer {
         }
     }
 
-    transformField(value) {
+    transformField(value: string) {
         const isFunctionExpression = ExpressionParser.isFunctionExpression
         const res = isFunctionExpression(value)
             ? this._genFunction(value)
@@ -63,15 +65,15 @@ class JsonConfigTransformer {
             return {
                 ...field,
                 label: this.transformField(label),
-                destroy: this.transformField(destroy),
-                hidden: this.transformField(hidden),
+                destroy: this.transformField(destroy as string),
+                hidden: this.transformField(hidden as string),
                 rules: rules 
                     ? this.transformRules(rules)
                     : () => [],
                 tooltip: this.transformTooltip(tooltip),
                 widgetProps: {
                     ...widgetProps,
-                    options: this.transformField(widgetProps.options),
+                    options: this.transformField(widgetProps.options as string),
                     placeholder: this.transformField(widgetProps.placeholder)
                 }
             }

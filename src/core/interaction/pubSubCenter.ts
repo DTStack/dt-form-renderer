@@ -1,4 +1,4 @@
-import { IExtraDataRef } from "../extraDataContext";
+import { ExtraDataRefType } from "../extraDataContext";
 
 export default class PubSubCenter {
     private _dependenciesEventPool: Map<string, Function[]> = new Map();
@@ -36,7 +36,7 @@ export default class PubSubCenter {
         }
     }
     
-    publishTriggerEvent (field: string, formData: any, extraDataRef: IExtraDataRef) {
+    publishTriggerEvent (field: string, formData: any, extraDataRef: ExtraDataRefType) {
         const services = this._triggerEventPool.get(field) ?? []
         services.forEach(service => service.call(null, formData, extraDataRef.current))
     }
@@ -54,7 +54,7 @@ export default class PubSubCenter {
         }
     }
     
-    publishImmediateTriggerEvent (field, formData, extraDataRef: IExtraDataRef) {
+    publishImmediateTriggerEvent (field, formData, extraDataRef: ExtraDataRefType) {
         const services = this._immediateTriggerEventPool.get(field) ?? []
         services.forEach(service => service.call(null, formData, extraDataRef.current))
     }

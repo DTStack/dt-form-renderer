@@ -12,15 +12,15 @@ export function useExtraData (init) {
     return [stateRef, updateState] as const
 }
 
-export type IExtraDataRef = ReturnType<typeof useExtraData>[0]
-type IUpdateExtra = ReturnType<typeof useExtraData>[1]
+export type ExtraDataRefType = ReturnType<typeof useExtraData>[0]
+type UpdateExtraType = ReturnType<typeof useExtraData>[1]
 
-export interface IExtraContext {
-    extraDataRef: IExtraDataRef;
-    update: IUpdateExtra;
+export interface ExtraContextType {
+    extraDataRef: ExtraDataRefType;
+    update: UpdateExtraType;
 }
 
-const ExtraContext = React.createContext<IExtraContext>({extraDataRef: { current: {} }, update: () => void 0});
+const ExtraContext = React.createContext<ExtraContextType>({extraDataRef: { current: {} }, update: () => void 0});
 
 export default ExtraContext
 

@@ -1,4 +1,6 @@
-const hiveSource = [
+import type { JsonConfigType } from '../../core'
+
+const hiveSource: JsonConfigType[] = [
     {
         fieldName: "schema",
         label: "schema",

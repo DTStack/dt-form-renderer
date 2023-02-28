@@ -1,4 +1,4 @@
-import type { IDocsMap } from '../../core'
+import type { DocsMapType } from '../../core'
 
 const extraConfigDoc = (
     <div>
@@ -28,7 +28,7 @@ const dataFilterDoc = (
     </div>
 );
 
-const docs: IDocsMap = {
+const docs: DocsMapType = {
     extraConfigDoc,
     dataFilterDoc
 }

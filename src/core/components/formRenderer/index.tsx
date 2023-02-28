@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
 import { Form } from 'antd';
-import type { FormServicePool, FormItemRuleMap, IDocsMap } from '../support-type';
+import type { FormServicePoolType, FormItemRuleMapType, DocsMapType, FieldItemMetaType, JsonConfigType } from '../../type';
 import type { FormInstance, FormProps } from 'antd/es/form/Form';
-import FormItemWrapper, { FormItemMeta, GetWidgets } from '../formItemWrapper';
-import ExtraContext, { useExtraData, IExtraDataRef } from '../../extraDataContext';
+import FormItemWrapper, { GetWidgets } from '../formItemWrapper';
+import ExtraContext, { useExtraData, ExtraDataRefType } from '../../extraDataContext';
 import JsonConfigTransformer from '../../expressionParser/jsonConfigTransformer';
 import PubSubCenter from '../../interaction/pubSubCenter';
 import InteractionSubscriber from '../../interaction/interactionSubscriber';
@@ -11,12 +11,12 @@ import InteractionSubscriber from '../../interaction/interactionSubscriber';
 const { useForm } = Form;
 
 export interface FormRendererProps extends FormProps {
-    parsedJson: any[];
-    formServicePool: FormServicePool;
-    ruleMap: FormItemRuleMap;
-    docsMap: IDocsMap;
+    parsedJson: JsonConfigType[];
+    formServicePool: FormServicePoolType;
+    ruleMap: FormItemRuleMapType;
+    docsMap: DocsMapType;
     defaultExtraData: Record<string, any>;
-    preserveFormItems?: (form: FormInstance, extraDataRef: IExtraDataRef) => React.ReactNode;
+    preserveFormItems?: (form: FormInstance, extraDataRef: ExtraDataRefType) => React.ReactNode;
     preserveFields?: string[];
     getWidgets?: GetWidgets;
 }
@@ -35,7 +35,7 @@ const FormRenderer: React.ForwardRefRenderFunction<FormInstance, FormRendererPro
     } = props;
     const [ form ] = useForm()
     const [ extraDataRef, updateExtraData ] = useExtraData({})
-    const [ formItems, updateFormItems ] = useState<FormItemMeta[]>([])
+    const [ formItems, updateFormItems ] = useState<FieldItemMetaType[]>([])
     const pubSubCenterRef = useRef<PubSubCenter>(null)
     const mountedFieldsRef = useRef<string[]>([])
 
@@ -47,7 +47,7 @@ const FormRenderer: React.ForwardRefRenderFunction<FormInstance, FormRendererPro
     useEffect(() => {
         updateExtraData(defaultExtraData);
         const jsonConfigTransformer = new JsonConfigTransformer(parsedJson, ruleMap, docsMap);
-        updateFormItems(jsonConfigTransformer.transform());
+        updateFormItems(jsonConfigTransformer.transform() as any);
         /** 初始化发布订阅池 */
         const pubSubCenter = new PubSubCenter();
         /** 初始化订阅器 */

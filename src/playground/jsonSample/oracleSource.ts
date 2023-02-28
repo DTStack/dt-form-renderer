@@ -1,4 +1,5 @@
-const oracleSource = [
+import type { JsonConfigType } from '../../core'
+const oracleSource: JsonConfigType[] = [
     {
         fieldName: "configMode",
         label: "配置方式",
@@ -16,7 +17,7 @@ const oracleSource = [
         fieldName: "customSql",
         label: "SQL",
         widget: "sqlEditor",
-        destroy: "@{{ return formData.configMode !== 1 }}",
+        destroy: "{{ formData.configMode !== 1 }}",
         rules: [{ required: true, message: "请输入自定义SQL" }],
         initialValue: "-- 仅限查询语句，例如select a,b from ...\n"
     },
@@ -29,7 +30,7 @@ const oracleSource = [
             options: "{{ extraData.schemaList }}",
             allowClear: true,
         },
-        destroy: "@{{ return formData.configMode === 1 }}",
+        destroy: "{{ formData.configMode === 1 }}",
         dependencies: ["dependencies"],
         trigger: "onChange",
         triggerActions: [
@@ -49,7 +50,7 @@ const oracleSource = [
         fieldName: "tableName",
         label: "表名",
         dependencies: ["schema", "dependencies"],
-        destroy: "@{{ return formData.configMode === 1 }}",
+        destroy: "{{ formData.configMode === 1 }}",
         widget: "Select",
         widgetProps: {
             options: "{{ extraData.tableList }}",
@@ -75,7 +76,7 @@ const oracleSource = [
         label: "数据过滤",
         widget: "textArea",
         tooltip: "{{ docs.dataFilterDoc }}",
-        destroy: "@{{ return formData.configMode === 1 }}",
+        destroy: "{{ formData.configMode === 1 }}",
         dependencies: ["schema", "dependencies", "table"],
         widgetProps: {
             placeholder:
@@ -88,6 +89,9 @@ const oracleSource = [
         tooltip: "仅支持数值型字段",
         widget: "Input",
         dependencies: ["schema", "dependencies", "table"],
+        rules: [
+            { validator: "{{ ruleMap.customRules.noWhiteSpace }}" }
+        ],
         widgetProps: {
             placeholder:
                 "请填写切分键",

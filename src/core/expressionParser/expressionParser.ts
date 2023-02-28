@@ -1,3 +1,4 @@
+import { DocsMapType, FormItemRuleMapType } from "../type";
 import FnExpressionTransformer from "./fnExpressionTransformer";
 export default class ExpressionParser<IFormData, IExtraData> {
 
@@ -62,7 +63,7 @@ export default class ExpressionParser<IFormData, IExtraData> {
      * @param expr 取值表达式
      * @returns 返回一个函数，函数的返回值就是 validator
      */
-    genValidatorGetter (validatorMap: any, expr: string) {
+    genValidatorGetter (validatorMap: FormItemRuleMapType, expr: string) {
         const validatorDesc = this.genValidatorDescFromExpression(expr);
         if (validatorDesc === null) {
             return () => null
@@ -109,7 +110,7 @@ export default class ExpressionParser<IFormData, IExtraData> {
      * @param expr docs 表达式
      * @returns 返回tooltip
      */
-    getDoc (docMap: any, expr: string) {
+    getDoc (docMap: DocsMapType, expr: string) {
         const docDesc = this.genDocDescFromExpression(expr);
         if(docDesc === null) {
             return () => null
@@ -130,6 +131,6 @@ export default class ExpressionParser<IFormData, IExtraData> {
             .replace(/^\s*\{\{/, '')
             .replace(/\}\}\s*$/, '')
 
-        return this.fnExprTransformer.generateFn(functionBody);
+        return this.fnExprTransformer.transform(functionBody);
     }
 }

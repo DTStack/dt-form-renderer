@@ -1,17 +1,17 @@
 import { FormInstance } from "antd";
 import PubSubCenter from "./pubSubCenter"
 import { fieldValueInteractionFactory, triggerServiceFactory } from './factory'
-import { FormServicePool } from "../components/support-type";
-import { IExtraContext } from '../extraDataContext'
+import { FormServicePoolType } from "../type";
+import { ExtraContextType } from '../extraDataContext'
 
 export default class InteractionSubscriber {
     private _parsedJson: any[] = null
     private _pubSubCenter: PubSubCenter = null;
     private _formInstance: FormInstance = null;
-    private _extraContext: IExtraContext = null;
+    private _extraContext: ExtraContextType = null;
     private _triggerServiceFactory: ( action: any ) => any = null;
 
-    constructor(formInstance: FormInstance, pubSubCenter: PubSubCenter, extraContext: IExtraContext, formServicePool: FormServicePool) {
+    constructor(formInstance: FormInstance, pubSubCenter: PubSubCenter, extraContext: ExtraContextType, formServicePool: FormServicePoolType) {
         this._formInstance = formInstance;
         this._extraContext = extraContext;
         this._pubSubCenter = pubSubCenter
