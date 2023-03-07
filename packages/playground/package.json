@@ -1,5 +1,6 @@
 {
   "name": "datasync-form-renderer-playground",
+  "homepage": "./",
   "scripts": {
     "start": "umi dev",
     "build": "umi build",
