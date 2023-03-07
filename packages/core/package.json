@@ -1,0 +1,24 @@
+{
+  "name": "datasync-form-renderer-core",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./lib/index.js",
+  "dependencies": {
+    "xss": "^1.0.14"
+  },
+  "peerDependencies": {
+    "antd": "^4.28.0",
+    "react": "17.x",
+    "react-dom": "17.x"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "rm -rf lib && tsc"
+  },
+  "author": "",
+  "license": "ISC"
+}

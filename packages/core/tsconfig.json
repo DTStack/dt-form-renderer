@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "outDir": "./lib/",
+        "baseUrl": "./",
+        "sourceMap": true,
+        "allowJs":true,
+        "target": "es6",
+        "module": "ES2022",
+        "noUnusedLocals": false,
+        "noUnusedParameters": true,
+        "declaration": true,
+        "strict": false,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "jsx": "react-jsx",
+        "typeRoots": [
+            "node",
+            "node_modules/@types",
+            "../../node_modules/@types"
+        ],
+        "paths": {
+            "@/*": ["./src/*"],
+        }
+    },
+    "include": [ "./src/**/*"],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "datasync-form-renderer-playground",
+  "scripts": {
+    "start": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi generate tmp",
+    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
+    "test": "umi-test",
+    "test:coverage": "umi-test --coverage",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,less,md,json}": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "dependencies": {
+    "@ant-design/pro-layout": "^6.5.0",
+    "@datasync-form-renderer/core": "workspace:../core",
+    "gh-pages": "^5.0.0",
+    "monaco-editor": "0.30.1",
+    "umi": "^3.5.37"
+  },
+  "devDependencies": {
+    "@umijs/preset-react": "1.x",
+    "@umijs/test": "^3.5.37",
+    "lint-staged": "^10.0.7",
+    "monaco-editor-webpack-plugin": "6.0.0",
+    "prettier": "^2.2.0",
+    "yorkie": "^2.0.0"
+  }
+}
