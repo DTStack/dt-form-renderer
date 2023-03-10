@@ -1,7 +1,13 @@
 import ExpressionParser from './expressionParser';
 import safeInnerHtml from './safeInnerHtml';
 import { ScopeType } from './fnExpressionTransformer';
-import type { RuleType, ValidatorRule, JsonConfigType, DocsMapType, FormItemRuleMapType } from '../type'; 
+import type {
+    RuleType,
+    ValidatorRule,
+    JsonConfigType,
+    DocsMapType,
+    FormItemRuleMapType,
+} from '../type';
 
 class JsonConfigTransformer {
     private _jsonArr: JsonConfigType[] = null;
@@ -9,51 +15,68 @@ class JsonConfigTransformer {
     private _getDoc;
     private _genFunction: ExpressionParser['generateFunction'];
 
-
-    constructor(jsonArr: JsonConfigType[], ruleMap: FormItemRuleMapType, docsMap: DocsMapType) {
-        this._jsonArr = jsonArr
+    constructor(
+        jsonArr: JsonConfigType[],
+        ruleMap: FormItemRuleMapType,
+        docsMap: DocsMapType,
+    ) {
+        this._jsonArr = jsonArr;
         const expressionParser = new ExpressionParser();
-        this._genValidatorGetter = expressionParser.genValidatorGetter.bind(expressionParser, ruleMap)
-        this._getDoc = expressionParser.getDoc.bind(expressionParser, docsMap)
-        this._genFunction = expressionParser.generateFunction.bind(expressionParser)
+        this._genValidatorGetter = expressionParser.genValidatorGetter.bind(
+            expressionParser,
+            ruleMap,
+        );
+        this._getDoc = expressionParser.getDoc.bind(expressionParser, docsMap);
+        this._genFunction =
+            expressionParser.generateFunction.bind(expressionParser);
     }
 
-    transformRules (rules: RuleType[]) {
+    transformRules(rules: RuleType[]) {
         return (scope: ScopeType) => {
             return rules.map((rule) => {
-                if(ExpressionParser.isValidatorExpression((rule as ValidatorRule).validator ?? '')) {
+                if (
+                    ExpressionParser.isValidatorExpression(
+                        (rule as ValidatorRule).validator ?? '',
+                    )
+                ) {
                     return {
                         ...rule,
-                        validator: this._genValidatorGetter((rule as ValidatorRule).validator).call(null, scope.formData, scope.extraDataRef.current)
-                    }
+                        validator: this._genValidatorGetter(
+                            (rule as ValidatorRule).validator,
+                        ).call(
+                            null,
+                            scope.formData,
+                            scope.extraDataRef.current,
+                        ),
+                    };
                 }
-                return rule
-            })
-        }
+                return rule;
+            });
+        };
     }
 
     transformField(value: string) {
-        const isFunctionExpression = ExpressionParser.isFunctionExpression
+        const isFunctionExpression = ExpressionParser.isFunctionExpression;
         const res = isFunctionExpression(value)
             ? this._genFunction(value)
-            : value
-        return res
+            : value;
+        return res;
     }
 
-    transformTooltip (tooltip: string) {
+    transformTooltip(tooltip: string) {
         const isDocsExpression = ExpressionParser.isDocsExpression;
-        if(isDocsExpression(tooltip)) {
+        if (isDocsExpression(tooltip)) {
             return this._getDoc(tooltip);
         }
-        if(typeof tooltip === 'string') {
-            return safeInnerHtml(tooltip)
+        if (typeof tooltip === 'string') {
+            return safeInnerHtml(tooltip);
         }
-        return null
+        return null;
     }
 
-    transform () {
+    transform() {
         const jsonArr = this._jsonArr;
-        return jsonArr.map(field => {
+        return jsonArr.map((field) => {
             const {
                 label,
                 destroy,
@@ -61,25 +84,22 @@ class JsonConfigTransformer {
                 rules,
                 tooltip,
                 widgetProps = {},
-            } = field
+            } = field;
             return {
                 ...field,
                 label: this.transformField(label),
                 destroy: this.transformField(destroy as string),
                 hidden: this.transformField(hidden as string),
-                rules: rules 
-                    ? this.transformRules(rules)
-                    : () => [],
+                rules: rules ? this.transformRules(rules) : () => [],
                 tooltip: this.transformTooltip(tooltip),
                 widgetProps: {
                     ...widgetProps,
                     options: this.transformField(widgetProps.options as string),
-                    placeholder: this.transformField(widgetProps.placeholder)
-                }
-            }
-        })
+                    placeholder: this.transformField(widgetProps.placeholder),
+                },
+            };
+        });
     }
 }
 
-
-export default JsonConfigTransformer
+export default JsonConfigTransformer;

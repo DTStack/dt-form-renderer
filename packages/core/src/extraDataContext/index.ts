@@ -1,26 +1,29 @@
-import React, { useRef, useReducer } from "react";
+import React, { useRef, useReducer } from 'react';
 
-export function useExtraData (init) {
-    const stateRef = useRef(init)
+export function useExtraData(init) {
+    const stateRef = useRef(init);
     const [_, updateState] = useReducer((preState, action) => {
-        stateRef.current = typeof action === 'function'
-            ? {...action(preState)}
-            : {...action}
-        return stateRef.current
-    }, init)
+        stateRef.current =
+            typeof action === 'function'
+                ? { ...action(preState) }
+                : { ...action };
+        return stateRef.current;
+    }, init);
 
-    return [stateRef, updateState] as const
+    return [stateRef, updateState] as const;
 }
 
-export type ExtraDataRefType = ReturnType<typeof useExtraData>[0]
-type UpdateExtraType = ReturnType<typeof useExtraData>[1]
+export type ExtraDataRefType = ReturnType<typeof useExtraData>[0];
+type UpdateExtraType = ReturnType<typeof useExtraData>[1];
 
 export interface ExtraContextType {
     extraDataRef: ExtraDataRefType;
     update: UpdateExtraType;
 }
 
-const ExtraContext = React.createContext<ExtraContextType>({extraDataRef: { current: {} }, update: () => void 0});
+const ExtraContext = React.createContext<ExtraContextType>({
+    extraDataRef: { current: {} },
+    update: () => void 0,
+});
 
-export default ExtraContext
-
+export default ExtraContext;

@@ -1,4 +1,8 @@
-import type { FormItemRuleMapType, FormItemValidatorType , FormItemCustomRuleType } from "@datasync-form-renderer/core"
+import type {
+    FormItemRuleMapType,
+    FormItemValidatorType,
+    FormItemCustomRuleType,
+} from '@datasync-form-renderer/core';
 
 const noWhiteSpace: FormItemCustomRuleType = function (formData, extraData) {
     return (rule: any, value: any) => {
@@ -6,15 +10,18 @@ const noWhiteSpace: FormItemCustomRuleType = function (formData, extraData) {
         if (/\s/.test(value)) {
             msg = '不支持空格！' + formData.schema;
         }
-        if(msg) {
-            return Promise.reject(new Error(msg))
+        if (msg) {
+            return Promise.reject(new Error(msg));
         } else {
-            return Promise.resolve()
+            return Promise.resolve();
         }
     };
-}
+};
 
-const formJsonValidator: FormItemValidatorType =  function (rule: any, value: any) {
+const formJsonValidator: FormItemValidatorType = function (
+    rule: any,
+    value: any,
+) {
     let msg: string;
     try {
         if (value) {
@@ -26,15 +33,13 @@ const formJsonValidator: FormItemValidatorType =  function (rule: any, value: an
     } catch (e) {
         msg = '请检查JSON格式，确认无中英文符号混用！';
     } finally {
-        if(msg) {
-            return Promise.reject(new Error(msg))
+        if (msg) {
+            return Promise.reject(new Error(msg));
         } else {
-            return Promise.resolve()
+            return Promise.resolve();
         }
-        
     }
-}
-
+};
 
 const ruleMap: FormItemRuleMapType = {
     customRules: {
@@ -42,8 +47,7 @@ const ruleMap: FormItemRuleMapType = {
     },
     validators: {
         formJsonValidator,
-    }
-}
+    },
+};
 
-
-export default ruleMap
+export default ruleMap;

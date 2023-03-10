@@ -5,20 +5,20 @@ import formServicePool from './support/formServicePool';
 import ruleMap from './support/formRuleMap';
 import getWidgets from './support/getWidgets';
 import { FormInstance } from 'antd/es/form/Form';
-import docsMap from './support/doc'
+import docsMap from './support/doc';
 
-const FormItem = Form.Item
+const FormItem = Form.Item;
 
 interface IProps {
-    parsedJson: any[],
-    changeParseJson: ( sourceId, sourceType ) => void
+    parsedJson: any[];
+    changeParseJson: (sourceId, sourceType) => void;
 }
 
 const sourceList = [
-    {label: 'hive_1', value: 1, type: "hive"}, 
-    {label: 'hive_2', value: 2, type: "hive"}, 
-    {label: 'oracle_1', value: 3, type: "oracle"},  
-]
+    { label: 'hive_1', value: 1, type: 'hive' },
+    { label: 'hive_2', value: 2, type: 'hive' },
+    { label: 'oracle_1', value: 3, type: 'oracle' },
+];
 const formLayout: any = {
     labelCol: {
         xs: { span: 24 },
@@ -31,8 +31,8 @@ const formLayout: any = {
 };
 
 const FormDemo: React.FC<IProps> = (props) => {
-    const { parsedJson, changeParseJson } = props
-    const formRef = useRef<FormInstance>(null)
+    const { parsedJson, changeParseJson } = props;
+    const formRef = useRef<FormInstance>(null);
 
     const renderFixedItem = (form, extraDataRef) => {
         return (
@@ -43,31 +43,28 @@ const FormDemo: React.FC<IProps> = (props) => {
                     rules={[
                         {
                             required: true,
-                            message: '请选择数据来源！'
-                        }
-                   
+                            message: '请选择数据来源！',
+                        },
                     ]}
                 >
                     <Select
                         onChange={(v) => {
-                            const sourceType = sourceList.find(s => s.value === v)?.type
-                            form.setFieldValue('sourceType', sourceType)
-                            changeParseJson(v, sourceType)
+                            const sourceType = sourceList.find(
+                                (s) => s.value === v,
+                            )?.type;
+                            form.setFieldValue('sourceType', sourceType);
+                            changeParseJson(v, sourceType);
                         }}
                         placeholder="请选择数据来源"
                         options={sourceList}
                     />
                 </FormItem>
-                <FormItem
-                    name="sourceType"
-                    label="数据源类型"
-                    hidden
-                >
-                    <Input/>
+                <FormItem name="sourceType" label="数据源类型" hidden>
+                    <Input />
                 </FormItem>
             </>
-        )
-    }
+        );
+    };
 
     return (
         <FormRenderer
@@ -79,12 +76,12 @@ const FormDemo: React.FC<IProps> = (props) => {
             formServicePool={formServicePool}
             parsedJson={parsedJson}
             defaultExtraData={{
-                isNotHiveTable: false
+                isNotHiveTable: false,
             }}
             preserveFields={['sourceId', 'sourceType']}
             preserveFormItems={renderFixedItem}
         />
-    )
-}
+    );
+};
 
-export default FormDemo
+export default FormDemo;

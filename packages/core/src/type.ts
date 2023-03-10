@@ -11,20 +11,20 @@ export interface FormServicePoolType<FormData = any, ExtraData = any> {
 }
 
 export interface FormItemValidatorType {
-    (rule: any, value: any): Promise<Error | void>
+    (rule: any, value: any): Promise<Error | void>;
 }
 
 export interface FormItemCustomRuleType {
-    (formData, extraData): FormItemValidatorType
+    (formData, extraData): FormItemValidatorType;
 }
 
 export interface FormItemRuleMapType {
     customRules: {
-        [key: string]: FormItemCustomRuleType
-    },
+        [key: string]: FormItemCustomRuleType;
+    };
     validators: {
-        [key: string]: FormItemValidatorType
-    }
+        [key: string]: FormItemValidatorType;
+    };
 }
 
 export type DocType = React.ReactNode;
@@ -33,15 +33,17 @@ export interface DocsMapType {
     [key: string]: DocType;
 }
 
-export type FunctionExprType = `{{ ${string} }}`
+export type FunctionExprType = `{{ ${string} }}`;
 
-export type ValidatorExprType = `{{ ruleMap.validators.${string} }}` | `{{ ruleMap.customRules.${string} }}`
+export type ValidatorExprType =
+    | `{{ ruleMap.validators.${string} }}`
+    | `{{ ruleMap.customRules.${string} }}`;
 
-export type DocsExprType = `{{ docs.${string} }}`
+export type DocsExprType = `{{ docs.${string} }}`;
 
 export interface WidgetPropsConfigType {
     options?: FunctionExprType | any[];
-    [key: string]: any
+    [key: string]: any;
 }
 
 export interface TriggerActionType {
@@ -50,9 +52,9 @@ export interface TriggerActionType {
     immediate?: boolean;
 }
 
-export type ValidatorRule = { validator:  ValidatorExprType}
+export type ValidatorRule = { validator: ValidatorExprType };
 
-export type RuleType =  ValidatorRule | any
+export type RuleType = ValidatorRule | any;
 
 export interface JsonConfigType {
     fieldName: string;

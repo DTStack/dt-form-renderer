@@ -3,7 +3,7 @@
         "outDir": "./lib/",
         "baseUrl": "./",
         "sourceMap": true,
-        "allowJs":true,
+        "allowJs": true,
         "target": "es6",
         "module": "ES2022",
         "noUnusedLocals": false,
@@ -20,13 +20,11 @@
             "../../node_modules/@types"
         ],
         "paths": {
-            "@/*": ["./src/*"],
+            "@/*": ["./src/*"]
         }
     },
-    "include": [ "./src/**/*"],
+    "include": ["./src/**/*"],
     "typeAcquisition": {
-        "include": [
-            "jest"
-        ]
+        "include": ["jest"]
     }
 }

@@ -5,7 +5,7 @@
     "start": "umi dev",
     "build": "umi build",
     "postinstall": "umi generate tmp",
-    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
+    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less}' --config ../../.prettierrc",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
     "deploy": "npm run build && gh-pages -d dist"
@@ -14,7 +14,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,less,md,json}": [
+    "*.{js,jsx,less}": [
       "prettier --write"
     ],
     "*.ts?(x)": [
@@ -33,7 +33,6 @@
     "@umijs/test": "^3.5.37",
     "lint-staged": "^10.0.7",
     "monaco-editor-webpack-plugin": "6.0.0",
-    "prettier": "^2.2.0",
     "yorkie": "^2.0.0"
   }
 }

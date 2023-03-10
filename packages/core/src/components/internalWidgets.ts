@@ -14,8 +14,8 @@ import {
     TimePicker,
     Transfer,
     TreeSelect,
-    Upload
-} from 'antd'
+    Upload,
+} from 'antd';
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -31,17 +31,17 @@ const Password = Input.Password;
 const InputSearch = Input.Search;
 const TextArea = Input.TextArea;
 
-const RadioGroup = Radio.Group
-const RadioButton = Radio.Button
+const RadioGroup = Radio.Group;
+const RadioButton = Radio.Button;
 
-const TimeRangePicker = TimePicker.RangePicker
+const TimeRangePicker = TimePicker.RangePicker;
 
-import { GetWidgets } from "./formItemWrapper"
+import { GetWidgets } from './formItemWrapper';
 
 const internalWidgets: GetWidgets = (widget: string) => {
     const name = widget.toLowerCase();
     switch (name) {
-        case 'autocomplete': 
+        case 'autocomplete':
             return AutoComplete;
         case 'cascader':
             return Cascader;
@@ -63,19 +63,19 @@ const internalWidgets: GetWidgets = (widget: string) => {
             return YearPicker;
         case 'weekpicker':
             return WeekPicker;
-        case 'input': 
+        case 'input':
             return Input;
         case 'inputgroup':
-            return InputGroup
+            return InputGroup;
         case 'password':
             return Password;
         case 'inputsearch':
-            return InputSearch
-        case "textarea":
-            return TextArea
-        case 'inputnumber': 
-           return InputNumber;
-        case 'mentions': 
+            return InputSearch;
+        case 'textarea':
+            return TextArea;
+        case 'inputnumber':
+            return InputNumber;
+        case 'mentions':
             return Mentions;
         case 'radio':
             return Radio;
@@ -85,25 +85,25 @@ const internalWidgets: GetWidgets = (widget: string) => {
             return RadioButton;
         case 'rate':
             return Rate;
-        case 'select': 
+        case 'select':
             return Select;
-        case 'slider': 
+        case 'slider':
             return Slider;
         case 'switch':
             return Switch;
-        case 'timepicker': 
+        case 'timepicker':
             return TimePicker;
-        case 'timerangepicker': 
+        case 'timerangepicker':
             return TimeRangePicker;
         case 'transfer':
-            return Transfer
+            return Transfer;
         case 'treeselect':
-            return TreeSelect
+            return TreeSelect;
         case 'upload':
-            return Upload
+            return Upload;
         default:
-            return null
+            return null;
     }
-}
+};
 
 export default internalWidgets;

@@ -1,9 +1,9 @@
-import { DocsMapType, FormItemRuleMapType } from "../type";
-import FnExpressionTransformer from "./fnExpressionTransformer";
+import { DocsMapType, FormItemRuleMapType } from '../type';
+import FnExpressionTransformer from './fnExpressionTransformer';
 export default class ExpressionParser {
-
     /** 匹配 ruleMap -- rules */
-    static validatorReg = /^\s*\{\{\s*(ruleMap\.validators|ruleMap\.customRules)(\.[\w\d_]+)+\s*\}\}\s*$/;
+    static validatorReg =
+        /^\s*\{\{\s*(ruleMap\.validators|ruleMap\.customRules)(\.[\w\d_]+)+\s*\}\}\s*$/;
 
     /** 匹配 docs -- tooltip */
     static docReg = /^\s*\{\{\s*(docs)(\.[\w\d_]+)+\s*\}\}\s*$/;
@@ -16,7 +16,7 @@ export default class ExpressionParser {
      * @param expr 输入字符
      */
     static isValidatorExpression(expr: string) {
-        if(!(typeof expr === 'string')) return false
+        if (!(typeof expr === 'string')) return false;
         return ExpressionParser.validatorReg.test(expr);
     }
 
@@ -25,7 +25,7 @@ export default class ExpressionParser {
      * @param expr 输入字符
      */
     static isDocsExpression(expr: string) {
-        if(!(typeof expr === 'string')) return false
+        if (!(typeof expr === 'string')) return false;
         return ExpressionParser.docReg.test(expr);
     }
 
@@ -34,28 +34,26 @@ export default class ExpressionParser {
      * @param expr 输入字符
      */
     static isFunctionExpression(expr: string) {
-        if(!(typeof expr === 'string')) return false
+        if (!(typeof expr === 'string')) return false;
         return ExpressionParser.functionReg.test(expr);
     }
 
-    private fnExprTransformer = new FnExpressionTransformer()
+    private fnExprTransformer = new FnExpressionTransformer();
 
     /**
      * @description 从表达式中获取validator描述信息
      * @param expr 输入字符
      */
-    genValidatorDescFromExpression (expr: string) {
+    genValidatorDescFromExpression(expr: string) {
         const result = expr.match(ExpressionParser.validatorReg);
-        if(result === null) return null
-        const expression = result[0]
-            .replace(/[\s|\{\}]/g, '')
-            .split('.');
+        if (result === null) return null;
+        const expression = result[0].replace(/[\s|\{\}]/g, '').split('.');
 
         return {
             source: expression[0],
             type: expression[1],
             property: expression.slice(2),
-        }
+        };
     }
 
     /**
@@ -63,46 +61,45 @@ export default class ExpressionParser {
      * @param expr 取值表达式
      * @returns 返回一个函数，函数的返回值就是 validator
      */
-    genValidatorGetter (validatorMap: FormItemRuleMapType, expr: string) {
+    genValidatorGetter(validatorMap: FormItemRuleMapType, expr: string) {
         const validatorDesc = this.genValidatorDescFromExpression(expr);
         if (validatorDesc === null) {
-            return () => null
+            return () => null;
         }
-        if(validatorDesc.type === 'validators') {
+        if (validatorDesc.type === 'validators') {
             return () => {
-                return validatorDesc.property
-                    .reduce(
+                return (
+                    validatorDesc.property.reduce(
                         (obj: any, k) => (obj || {})[k],
-                        (validatorMap?.validators ?? {})
+                        validatorMap?.validators ?? {},
                     ) ?? null
-            }
+                );
+            };
         } else if (validatorDesc.type === 'customRules') {
-            return validatorDesc.property
-                .reduce (
+            return (
+                validatorDesc.property.reduce(
                     (obj: any, k) => (obj || {})[k],
-                    (validatorMap?.customRules ?? {})
+                    validatorMap?.customRules ?? {},
                 ) ?? null
+            );
         } else {
-            return () => null
+            return () => null;
         }
     }
-
 
     /**
      * @description 从取值表达式中获取 tooltip 描述信息
      * @param expr 输入字符
      */
-    genDocDescFromExpression (expr: string) {
+    genDocDescFromExpression(expr: string) {
         const result = expr.match(ExpressionParser.docReg);
-        if(result === null) return null
-        const expression = result[0]
-            .replace(/[\s|\{\}]/g, '')
-            .split('.');
+        if (result === null) return null;
+        const expression = result[0].replace(/[\s|\{\}]/g, '').split('.');
 
         return {
             source: expression[0],
-            property: expression.slice(1)
-        }
+            property: expression.slice(1),
+        };
     }
 
     /**
@@ -110,26 +107,27 @@ export default class ExpressionParser {
      * @param expr docs 表达式
      * @returns 返回tooltip
      */
-    getDoc (docMap: DocsMapType, expr: string) {
+    getDoc(docMap: DocsMapType, expr: string) {
         const docDesc = this.genDocDescFromExpression(expr);
-        if(docDesc === null) {
-            return () => null
+        if (docDesc === null) {
+            return () => null;
         }
-        return docDesc.property
-            .reduce(
+        return (
+            docDesc.property.reduce(
                 (obj: any, k) => (obj || {})[k],
-                (docMap ?? {})
+                docMap ?? {},
             ) ?? null
+        );
     }
 
     /**
      * @description 生成 Function
      * @param expr docs 表达式
      */
-    generateFunction (expr: string) {
+    generateFunction(expr: string) {
         const functionBody = expr
             .replace(/^\s*\{\{/, '')
-            .replace(/\}\}\s*$/, '')
+            .replace(/\}\}\s*$/, '');
 
         return this.fnExprTransformer.transform(functionBody);
     }

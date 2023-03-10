@@ -1,8 +1,8 @@
-import FormRenderer from "./components/formRenderer";
+import FormRenderer from './components/formRenderer';
 
-export type { ExtraDataRefType } from './extraDataContext'
-export type { FormRendererProps } from  "./components/formRenderer"
-export type { GetWidgets } from './components/formItemWrapper'
-export * from './type'
+export type { ExtraDataRefType } from './extraDataContext';
+export type { FormRendererProps } from './components/formRenderer';
+export type { GetWidgets } from './components/formItemWrapper';
+export * from './type';
 
-export default FormRenderer
+export default FormRenderer;
