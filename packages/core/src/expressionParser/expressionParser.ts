@@ -1,5 +1,9 @@
-import { DocsMapType, FormItemRuleMapType } from '../type';
+import { DocsMapType, FormItemRuleMapType, FormItemCustomRuleType } from '../type';
 import FnExpressionTransformer from './fnExpressionTransformer';
+
+/**
+ * @description 转化 json config 中的所有表达式
+ */
 export default class ExpressionParser {
     /** 匹配 ruleMap -- rules */
     static validatorReg =
@@ -38,6 +42,9 @@ export default class ExpressionParser {
         return ExpressionParser.functionReg.test(expr);
     }
 
+    /**
+     * @description 函数表达式转化器
+     */
     private fnExprTransformer = new FnExpressionTransformer();
 
     /**
@@ -61,7 +68,7 @@ export default class ExpressionParser {
      * @param expr 取值表达式
      * @returns 返回一个函数，函数的返回值就是 validator
      */
-    genValidatorGetter(validatorMap: FormItemRuleMapType, expr: string) {
+    genValidatorGetter(validatorMap: FormItemRuleMapType, expr: string): FormItemCustomRuleType {
         const validatorDesc = this.genValidatorDescFromExpression(expr);
         if (validatorDesc === null) {
             return () => null;
@@ -114,7 +121,7 @@ export default class ExpressionParser {
         }
         return (
             docDesc.property.reduce(
-                (obj: any, k) => (obj || {})[k],
+                (obj, k) => (obj || {})[k],
                 docMap ?? {},
             ) ?? null
         );

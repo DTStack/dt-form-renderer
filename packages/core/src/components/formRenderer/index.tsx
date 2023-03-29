@@ -50,7 +50,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
     } = props;
     const [form] = useForm();
     const [extraDataRef, updateExtraData] = useExtraData({});
-    const [formItems, updateFormItems] = useState<FieldItemMetaType[]>([]);
+    const [formItemsMeta, updateFormItems] = useState<FieldItemMetaType[]>([]);
     const pubSubCenterRef = useRef<PubSubCenter>(null);
     const mountedFieldsRef = useRef<string[]>([]);
 
@@ -109,7 +109,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 ),
             );
         });
-    }, [formItems]);
+    }, [formItemsMeta]);
 
     /**
      * 处理不切换数据源的情况下，某些字段从 销毁状态 到 挂载状态 时要触发的 action
@@ -167,7 +167,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                         );
                     }}
                 </ExtraContext.Consumer>
-                {formItems.map((formItemMeta) => {
+                {formItemsMeta.map((formItemMeta) => {
                     return (
                         <FormItemWrapper
                             getWidgets={getWidgets}

@@ -2,22 +2,33 @@ import React from 'react';
 import type { FormItemProps } from 'antd';
 import type { TransformedFnType } from './expressionParser/fnExpressionTransformer';
 
+/**
+ * @description formRenderer 的 service 类型
+ */
 export interface FormServiceType<FormData = any, ExtraData = any> {
     (formData: FormData, extraData: ExtraData): Promise<any>;
 }
 
+/**
+ * @description formRenderer 的 formServicePool 类型
+ */
 export interface FormServicePoolType<FormData = any, ExtraData = any> {
     [key: string]: FormServiceType<FormData, ExtraData>;
 }
 
-export interface FormItemValidatorType {
-    (rule: any, value: any): Promise<Error | void>;
-}
+/**
+ * @description 表单校验器的类型
+ */
+export type FormItemValidatorType = (rule: any, value: any) => Promise<Error | void>;
 
-export interface FormItemCustomRuleType {
-    (formData, extraData): FormItemValidatorType;
-}
+/**
+ * @description 自定义表单校验器的类型 返回一个 FormItemValidator {@link FormItemValidatorType}
+ */
+export type FormItemCustomRuleType = (formData, extraData)=> FormItemValidatorType;
 
+/**
+ * @description formRenderer 的 ruleMap 类型
+ */
 export interface FormItemRuleMapType {
     customRules: {
         [key: string]: FormItemCustomRuleType;
@@ -27,35 +38,66 @@ export interface FormItemRuleMapType {
     };
 }
 
+/**
+ * @description tooltip 提示文案的类型
+ */
 export type DocType = React.ReactNode;
 
+/**
+ * @description formRenderer 的 docMap 类型
+ */
 export interface DocsMapType {
     [key: string]: DocType;
 }
 
+/**
+ * @description 函数表达式配置的类型
+ */
 export type FunctionExprType = `{{ ${string} }}`;
 
+/**
+ * @description 自定义校验器表达式配置的类型
+ */
 export type ValidatorExprType =
     | `{{ ruleMap.validators.${string} }}`
     | `{{ ruleMap.customRules.${string} }}`;
 
+/**
+ * @description 自定义 tooltip 文案表达式配置的类型
+ */
 export type DocsExprType = `{{ docs.${string} }}`;
 
+/**
+ * @description 表单控件的props配置的类型
+ */
 export interface WidgetPropsConfigType {
     options?: FunctionExprType | any[];
     [key: string]: any;
 }
 
+/**
+ * @description 触发的 action 配置的类型
+ */
 export interface TriggerActionType {
     serviceName: string;
     fieldInExtraData: string;
     immediate?: boolean;
 }
 
-export type ValidatorRule = { validator: ValidatorExprType };
+/**
+ * @description 自定义校验器配置的类型
+ */
+export type ValidatorRuleConfigType = { validator: ValidatorExprType };
 
-export type RuleType = ValidatorRule | any;
 
+/**
+ * @description 自定义校验规则配置的类型
+ */
+export type RuleConfigType = ValidatorRuleConfigType | any;
+
+/**
+ * @description json 配置的类型
+ */
 export interface JsonConfigType {
     fieldName: string;
     widget: string;
@@ -65,7 +107,7 @@ export interface JsonConfigType {
     label?: FunctionExprType | string;
     destroy?: FunctionExprType | boolean;
     hidden?: FunctionExprType | boolean;
-    rules?: RuleType[];
+    rules?: RuleConfigType[];
     tooltip?: DocsExprType | string;
     colon?: FormItemProps['colon'];
     extra?: string;
@@ -75,11 +117,17 @@ export interface JsonConfigType {
     triggerActions?: TriggerActionType[];
 }
 
+/**
+ * @description 表单组件的 props 类型，衍生自 WidgetPropsConfigType {@link WidgetPropsConfigType}
+ */
 export interface WidgetPropsType {
     options: TransformedFnType | any[];
     [key: string]: any;
 }
 
+/**
+ * @description formRender用于渲染的配置，衍生自 JsonConfigType {@link JsonConfigType}
+ */
 export interface FieldItemMetaType {
     fieldName: string;
     widget: string;

@@ -2,17 +2,19 @@ import ExpressionParser from './expressionParser';
 import safeInnerHtml from './safeInnerHtml';
 import { ScopeType } from './fnExpressionTransformer';
 import type {
-    RuleType,
-    ValidatorRule,
+    RuleConfigType,
+    ValidatorRuleConfigType,
     JsonConfigType,
     DocsMapType,
     FormItemRuleMapType,
+    FormItemCustomRuleType,
 } from '../type';
+import React from 'react';
 
 class JsonConfigTransformer {
     private _jsonArr: JsonConfigType[] = null;
-    private _genValidatorGetter;
-    private _getDoc;
+    private _genValidatorGetter: (expr: string) => FormItemCustomRuleType;
+    private _getDoc: (expr: string) => React.ReactNode;
     private _genFunction: ExpressionParser['generateFunction'];
 
     constructor(
@@ -31,26 +33,27 @@ class JsonConfigTransformer {
             expressionParser.generateFunction.bind(expressionParser);
     }
 
-    transformRules(rules: RuleType[]) {
+    transformRules(rules: RuleConfigType[]) {
         return (scope: ScopeType) => {
-            return rules.map((rule) => {
+            return rules.map((rule: ValidatorRuleConfigType) => {
                 if (
-                    ExpressionParser.isValidatorExpression(
-                        (rule as ValidatorRule).validator ?? '',
+                    !ExpressionParser.isValidatorExpression(
+                        rule.validator ?? '',
                     )
                 ) {
-                    return {
-                        ...rule,
-                        validator: this._genValidatorGetter(
-                            (rule as ValidatorRule).validator,
-                        ).call(
-                            null,
-                            scope.formData,
-                            scope.extraDataRef.current,
-                        ),
-                    };
+                    return rule;
                 }
-                return rule;
+                const validator = this._genValidatorGetter(rule.validator).call(
+                    null,
+                    scope.formData,
+                    scope.extraDataRef.current,
+                );
+                return validator
+                    ? {
+                          ...rule,
+                          validator,
+                      }
+                    : rule;
             });
         };
     }

@@ -1,11 +1,11 @@
 import { ExtraDataRefType } from '../extraDataContext';
 
 export default class PubSubCenter {
-    private _dependenciesEventPool: Map<string, Function[]> = new Map();
+    private _fieldDependEventPool: Map<string, Function[]> = new Map();
     private _triggerEventPool: Map<string, Function[]> = new Map();
     private _immediateTriggerEventPool: Map<String, Function[]> = new Map();
 
-    subscribeDepEvent = (
+    subscribeFieldDepEvent = (
         field: string,
         effectHandler: Function | Function[],
     ) => {
@@ -13,18 +13,18 @@ export default class PubSubCenter {
             ? effectHandler
             : [effectHandler];
 
-        if (this._dependenciesEventPool.has(field)) {
-            this._dependenciesEventPool.set(field, [
-                ...this._dependenciesEventPool.get(field),
+        if (this._fieldDependEventPool.has(field)) {
+            this._fieldDependEventPool.set(field, [
+                ...this._fieldDependEventPool.get(field),
                 ...effectHandlers,
             ]);
         } else {
-            this._dependenciesEventPool.set(field, effectHandlers);
+            this._fieldDependEventPool.set(field, effectHandlers);
         }
     };
 
     publishDepEvent = (field: string) => {
-        const effectHandler = this._dependenciesEventPool.get(field) ?? [];
+        const effectHandler = this._fieldDependEventPool.get(field) ?? [];
         effectHandler.forEach((handler) => handler.call(null));
     };
 
@@ -80,7 +80,7 @@ export default class PubSubCenter {
     }
 
     dispose() {
-        this._dependenciesEventPool.clear();
+        this._fieldDependEventPool.clear();
         this._immediateTriggerEventPool.clear();
         this._triggerEventPool.clear();
     }

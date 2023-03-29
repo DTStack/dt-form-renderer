@@ -102,7 +102,7 @@ export default class InteractionSubscriber {
     subscribeFieldChangeEvent = () => {
         const effectMap = this.getFieldsDependGraph();
         effectMap.forEach((effectList, field) => {
-            this._pubSubCenter.subscribeDepEvent(
+            this._pubSubCenter.subscribeFieldDepEvent(
                 field,
                 fieldValueInteractionFactory.bind(
                     null,
