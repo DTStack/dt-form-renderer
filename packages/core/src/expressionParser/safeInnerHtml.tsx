@@ -2,7 +2,7 @@ import xss from 'xss';
 
 /**
  * @description 防止 xss 攻击
- * @returns 
+ * @returns
  */
 const safeInnerHtml = (tooltip) => {
     const safeTooltip = xss(tooltip);

@@ -18,7 +18,9 @@ languages.registerCompletionItemProvider('json', {
         );
 
         let suggestions: languages.CompletionItem[] = [];
-        suggestions = suggestions.concat(fieldCompletionsCreator(wordRange, context));
+        suggestions = suggestions.concat(
+            fieldCompletionsCreator(wordRange, context),
+        );
         suggestions = suggestions.concat(
             expressionCompletionsCreator(wordRange),
         );

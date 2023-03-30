@@ -1,4 +1,8 @@
-import { DocsMapType, FormItemRuleMapType, FormItemCustomRuleType } from '../type';
+import {
+    DocsMapType,
+    FormItemRuleMapType,
+    FormItemCustomRuleType,
+} from '../type';
 import FnExpressionTransformer from './fnExpressionTransformer';
 
 /**
@@ -68,7 +72,10 @@ export default class ExpressionParser {
      * @param expr 取值表达式
      * @returns 返回一个函数，函数的返回值就是 validator
      */
-    genValidatorGetter(validatorMap: FormItemRuleMapType, expr: string): FormItemCustomRuleType {
+    genValidatorGetter(
+        validatorMap: FormItemRuleMapType,
+        expr: string,
+    ): FormItemCustomRuleType {
         const validatorDesc = this.genValidatorDescFromExpression(expr);
         if (validatorDesc === null) {
             return () => null;
@@ -120,10 +127,8 @@ export default class ExpressionParser {
             return () => null;
         }
         return (
-            docDesc.property.reduce(
-                (obj, k) => (obj || {})[k],
-                docMap ?? {},
-            ) ?? null
+            docDesc.property.reduce((obj, k) => (obj || {})[k], docMap ?? {}) ??
+            null
         );
     }
 

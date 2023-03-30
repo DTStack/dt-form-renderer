@@ -1,16 +1,13 @@
-
 const isJSONStr = (str: string) => {
     let flag = false;
-     try {
-         JSON.parse(str);
-         flag = true
-     } catch (error) {
-         
-     }
-     return flag
- };
+    try {
+        JSON.parse(str);
+        flag = true;
+    } catch (error) {}
+    return flag;
+};
 
-export const DefaultWip = 'untitled'
+export const DefaultWip = 'untitled';
 
 export enum LocalDBKey {
     AutoSave = 'autoSave',
@@ -32,20 +29,20 @@ export const localDB = {
     },
 
     autoSaveConfig(wip: string, content: string, isCreate?: boolean) {
-        const workbench: any[] = localDB.get(LocalDBKey.WorkBench)??[];
-        const index = workbench.findIndex(w => w.name === DefaultWip)
-        if(wip === DefaultWip && index === -1) {
+        const workbench: any[] = localDB.get(LocalDBKey.WorkBench) ?? [];
+        const index = workbench.findIndex((w) => w.name === DefaultWip);
+        if (wip === DefaultWip && index === -1) {
             workbench.unshift({
                 name: DefaultWip,
-                content: content
-            })
+                content: content,
+            });
         } else {
             workbench[index] = {
                 name: wip,
                 content,
-            }
+            };
         }
-        localDB.set(LocalDBKey.WorkBench, workbench)
+        localDB.set(LocalDBKey.WorkBench, workbench);
     },
 
     /**

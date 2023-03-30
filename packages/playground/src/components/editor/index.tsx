@@ -1,14 +1,14 @@
 import React from 'react';
 import { editor } from 'monaco-editor';
 import './autoComplete';
-import './index.less'
+import './index.less';
 
 export type MonacoEditorHeight =
-	| { kind: "fill" }
-	| {
-		kind: "dynamic";
-		maxHeight?: number|string;
-	  };
+    | { kind: 'fill' }
+    | {
+          kind: 'dynamic';
+          maxHeight?: number | string;
+      };
 
 interface EditorProps {
     value?: string;
@@ -16,33 +16,31 @@ interface EditorProps {
     language?: string;
     style?: React.CSSProperties;
     className?: string;
-    editorHeight?: MonacoEditorHeight
-};
+    editorHeight?: MonacoEditorHeight;
+}
 
 const initialState = {
     contentHeight: undefined as number,
-}
+};
 
 type EditorState = typeof initialState;
 
 class Editor extends React.Component<EditorProps, EditorState> {
-    state=initialState
+    state = initialState;
     private _container = null;
     monacoInstance: editor.IStandaloneCodeEditor = null;
 
     private readonly resizeObserver = new ResizeObserver(() => {
-		if (this.monacoInstance) {
-			this.monacoInstance.layout();
-		}
-	});
+        if (this.monacoInstance) {
+            this.monacoInstance.layout();
+        }
+    });
 
     componentDidMount() {
         this.initEditor();
     }
 
-    componentDidUpdate(
-        prevProps: Readonly<any>,
-    ): void {
+    componentDidUpdate(prevProps: Readonly<any>): void {
         if (prevProps.value !== this.props.value) {
             const pos = this.monacoInstance.getPosition();
             this.monacoInstance.setValue(this.props.value);
@@ -51,8 +49,8 @@ class Editor extends React.Component<EditorProps, EditorState> {
     }
 
     componentWillUnmount(): void {
-        this.monacoInstance.dispose()
-        this.resizeObserver.disconnect()
+        this.monacoInstance.dispose();
+        this.resizeObserver.disconnect();
     }
 
     initEditor = () => {
@@ -87,23 +85,24 @@ class Editor extends React.Component<EditorProps, EditorState> {
             if (onChange) onChange(newValue);
         });
         this.monacoInstance.onDidContentSizeChange((e) => {
-			this.setState({ contentHeight: e.contentHeight });
-		});
+            this.setState({ contentHeight: e.contentHeight });
+        });
     };
 
     render() {
-        const { style={}, className, editorHeight } = this.props
+        const { style = {}, className, editorHeight } = this.props;
         const { contentHeight } = this.state;
         const editorStyle = {
-            ...style
-        }
-        if(!editorStyle.height) {
-            if(editorHeight?.kind === 'dynamic') {
-                editorStyle.maxHeight = editorStyle.maxHeight ?? editorHeight?.maxHeight ?? 300;
-                editorStyle.minHeight = 100
-                editorStyle.height = contentHeight
+            ...style,
+        };
+        if (!editorStyle.height) {
+            if (editorHeight?.kind === 'dynamic') {
+                editorStyle.maxHeight =
+                    editorStyle.maxHeight ?? editorHeight?.maxHeight ?? 300;
+                editorStyle.minHeight = 100;
+                editorStyle.height = contentHeight;
             } else {
-                editorStyle.height = '100%'
+                editorStyle.height = '100%';
             }
         }
 

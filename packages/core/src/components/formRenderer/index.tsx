@@ -147,7 +147,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 extraDataRef,
             );
         });
-        props.onValuesChange?.(changedValues, restArgs)
+        props.onValuesChange?.(changedValues, restArgs);
     };
 
     return (

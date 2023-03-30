@@ -4,11 +4,11 @@ type IMonacoLanguageCompletionItem = languages.CompletionItem;
 export const fieldCompletionsCreator: (
     range: IRange,
     context: languages.CompletionContext,
-) => IMonacoLanguageCompletionItem[] = (_range, context) =>{
-    const range = {..._range};
-    if(context.triggerCharacter === '"') {
+) => IMonacoLanguageCompletionItem[] = (_range, context) => {
+    const range = { ..._range };
+    if (context.triggerCharacter === '"') {
         range.startColumn -= 1;
-        range.endColumn += 1
+        range.endColumn += 1;
     }
     return [
         {
@@ -87,7 +87,7 @@ export const fieldCompletionsCreator: (
         insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
         insertText: i.insertText ?? `"${i.label}": $1,`,
     }));
-}
+};
 
 export const expressionCompletionsCreator: (
     range: IRange,

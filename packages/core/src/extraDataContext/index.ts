@@ -3,7 +3,7 @@ import React, { useRef, useReducer } from 'react';
 /**
  * @description extraData context hook
  * @param init 缺省值
- * @returns 
+ * @returns
  */
 export function useExtraData(init) {
     const stateRef = useRef(init);
@@ -19,7 +19,6 @@ export function useExtraData(init) {
 }
 
 export type ExtraDataRefType = ReturnType<typeof useExtraData>[0];
-
 
 type UpdateExtraType = ReturnType<typeof useExtraData>[1];
 

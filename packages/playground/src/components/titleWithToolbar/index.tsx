@@ -14,7 +14,6 @@ interface TitleWithToolbarProps {
     onCopy?: () => any;
     onDownload?: () => any;
     size?: 'default' | 'large' | 'small';
-
 }
 
 const TitleWithToolbar: React.FC<TitleWithToolbarProps> = (props) => {
@@ -23,17 +22,16 @@ const TitleWithToolbar: React.FC<TitleWithToolbarProps> = (props) => {
         <p className={'toolbar-title ' + className}>
             <span className="toolbar-title-title">{props.children}</span>
             <span className="toolbar-title-toolbar">
-        
                 {props.onDownload ? (
                     <Tooltip title="下载">
-                        <DownloadOutlined onClick={() => props.onDownload?.()} />
+                        <DownloadOutlined
+                            onClick={() => props.onDownload?.()}
+                        />
                     </Tooltip>
                 ) : null}
                 {props.onCopy ? (
                     <Tooltip title="复制">
-                        <CopyOutlined
-                            onClick={() => props.onCopy?.()}
-                        />
+                        <CopyOutlined onClick={() => props.onCopy?.()} />
                     </Tooltip>
                 ) : null}
                 {props.onFormat ? (

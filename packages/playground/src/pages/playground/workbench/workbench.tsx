@@ -9,7 +9,7 @@ import FormSample from '@/components/formSample';
 import TitleWithToolbar from '@/components/titleWithToolbar';
 import { downloadFile, copy2Clipboard } from '@/utils';
 import { PlaygroundContext } from '..';
-import './workbench.less'
+import './workbench.less';
 import { localDB, LocalDBKey } from '@/utils/localDb';
 
 const WorkBench: React.FC<any> = () => {
@@ -21,25 +21,30 @@ const WorkBench: React.FC<any> = () => {
     }>({ sourceId: undefined, sourceType: undefined });
     const configEditorRef = useRef<editor.IStandaloneCodeEditor>(null);
     const valueEditorRef = useRef<editor.IStandaloneCodeEditor>(null);
-    const autoSaveTimer = useRef(null)
-    const context = useContext(PlaygroundContext)
+    const autoSaveTimer = useRef(null);
+    const context = useContext(PlaygroundContext);
 
     useEffect(() => {
         const workbench = localDB.get(LocalDBKey.WorkBench);
-        const content = workbench.find(w => w.name === context.workInProgress)?.content
-        configEditorRef.current.setValue(content ?? '')
-    }, [context.workInProgress])
+        const content = workbench.find(
+            (w) => w.name === context.workInProgress,
+        )?.content;
+        configEditorRef.current.setValue(content ?? '');
+    }, [context.workInProgress]);
 
     useEffect(() => {
-        if(context.autoSave) {
+        if (context.autoSave) {
             autoSaveTimer.current = setInterval(() => {
-                localDB.autoSaveConfig(context.workInProgress, configEditorRef.current.getValue())
-            }, 2000)
+                localDB.autoSaveConfig(
+                    context.workInProgress,
+                    configEditorRef.current.getValue(),
+                );
+            }, 2000);
         }
         return () => {
-            clearInterval(autoSaveTimer.current)
-        }
-    }, [context.autoSave, configEditorRef.current, context.workInProgress])
+            clearInterval(autoSaveTimer.current);
+        };
+    }, [context.autoSave, configEditorRef.current, context.workInProgress]);
 
     useEffect(() => {
         const { sourceType } = source;
@@ -72,11 +77,9 @@ const WorkBench: React.FC<any> = () => {
         }
     }, [source.sourceType]);
 
-
-
     const parseEditorValue = (value: string) => {
         return new Promise<any>((resolve, reject) => {
-            if(value.replace(/\s/g, '') === '') {
+            if (value.replace(/\s/g, '') === '') {
                 resolve(null);
             }
             let parsedValue = [];

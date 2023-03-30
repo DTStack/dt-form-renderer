@@ -19,12 +19,18 @@ export interface FormServicePoolType<FormData = any, ExtraData = any> {
 /**
  * @description 表单校验器的类型
  */
-export type FormItemValidatorType = (rule: any, value: any) => Promise<Error | void>;
+export type FormItemValidatorType = (
+    rule: any,
+    value: any,
+) => Promise<Error | void>;
 
 /**
  * @description 自定义表单校验器的类型 返回一个 FormItemValidator {@link FormItemValidatorType}
  */
-export type FormItemCustomRuleType = (formData, extraData)=> FormItemValidatorType;
+export type FormItemCustomRuleType = (
+    formData,
+    extraData,
+) => FormItemValidatorType;
 
 /**
  * @description formRenderer 的 ruleMap 类型
@@ -88,7 +94,6 @@ export interface TriggerActionType {
  * @description 自定义校验器配置的类型
  */
 export type ValidatorRuleConfigType = { validator: ValidatorExprType };
-
 
 /**
  * @description 自定义校验规则配置的类型
