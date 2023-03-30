@@ -22,6 +22,7 @@
     ]
   },
   "dependencies": {
+    "@ant-design/icons": "^5.0.1",
     "@ant-design/pro-layout": "^6.5.0",
     "@datasync-form-renderer/core": "workspace:../core",
     "gh-pages": "^5.0.0",

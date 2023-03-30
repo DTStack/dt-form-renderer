@@ -3,8 +3,14 @@ type IMonacoLanguageCompletionItem = languages.CompletionItem;
 
 export const fieldCompletionsCreator: (
     range: IRange,
-) => IMonacoLanguageCompletionItem[] = (range) =>
-    [
+    context: languages.CompletionContext,
+) => IMonacoLanguageCompletionItem[] = (_range, context) =>{
+    const range = {..._range};
+    if(context.triggerCharacter === '"') {
+        range.startColumn -= 1;
+        range.endColumn += 1
+    }
+    return [
         {
             label: 'fieldName',
             detail: '字段名称',
@@ -81,6 +87,7 @@ export const fieldCompletionsCreator: (
         insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
         insertText: i.insertText ?? `"${i.label}": $1,`,
     }));
+}
 
 export const expressionCompletionsCreator: (
     range: IRange,

@@ -6,7 +6,6 @@ import {
 
 languages.json.jsonDefaults.setDiagnosticsOptions;
 
-console.log('register ++++');
 languages.registerCompletionItemProvider('json', {
     triggerCharacters: ['.', ' ', '*'],
     provideCompletionItems: function (model, position, context, token) {
@@ -19,7 +18,7 @@ languages.registerCompletionItemProvider('json', {
         );
 
         let suggestions: languages.CompletionItem[] = [];
-        suggestions = suggestions.concat(fieldCompletionsCreator(wordRange));
+        suggestions = suggestions.concat(fieldCompletionsCreator(wordRange, context));
         suggestions = suggestions.concat(
             expressionCompletionsCreator(wordRange),
         );

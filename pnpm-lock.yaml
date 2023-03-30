@@ -44,6 +44,7 @@ importers:
 
   packages/playground:
     specifiers:
+      '@ant-design/icons': ^5.0.1
       '@ant-design/pro-layout': ^6.5.0
       '@datasync-form-renderer/core': workspace:../core
       '@umijs/preset-react': 1.x
@@ -55,13 +56,14 @@ importers:
       umi: ^3.5.37
       yorkie: ^2.0.0
     dependencies:
+      '@ant-design/icons': 5.0.1_react-dom@17.0.2+react@17.0.2
       '@ant-design/pro-layout': 6.38.22_react-dom@17.0.2+react@17.0.2
       '@datasync-form-renderer/core': link:../core
       gh-pages: 5.0.0
       monaco-editor: 0.30.1
       umi: 3.5.37
     devDependencies:
-      '@umijs/preset-react': 1.8.31_7720ff56ce29e3394cfa7fb8ca4a3203
+      '@umijs/preset-react': 1.8.31_ecf18bcbc376c0dff7d41b8b5c5ac6c7
       '@umijs/test': 3.5.37
       lint-staged: 10.5.4
       monaco-editor-webpack-plugin: 6.0.0_monaco-editor@0.30.1
@@ -92,6 +94,11 @@ packages:
     dependencies:
       '@ctrl/tinycolor': 3.6.0
 
+  /@ant-design/colors/7.0.0:
+    resolution: {integrity: sha512-iVm/9PfGCbC0dSMBrz7oiEXZaaGH7ceU40OJEfKmyuzR9R5CRimJYPlRiFtMQGQcbNMea/ePcoIebi4ASGYXtg==}
+    dependencies:
+      '@ctrl/tinycolor': 3.6.0
+
   /@ant-design/icons-svg/4.2.1:
     resolution: {integrity: sha512-EB0iwlKDGpG93hW8f85CTJTs4SvMX7tt5ceupvhALp1IF44SeUFOMhKUOYqpsoYWQKAOuTRDMqn75rEaKDp0Xw==}
 
@@ -103,6 +110,21 @@ packages:
       react-dom: '>=16.0.0'
     dependencies:
       '@ant-design/colors': 6.0.0
+      '@ant-design/icons-svg': 4.2.1
+      '@babel/runtime': 7.20.13
+      classnames: 2.3.2
+      rc-util: 5.27.2_react-dom@17.0.2+react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+
+  /@ant-design/icons/5.0.1_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-ZyF4ksXCcdtwA/1PLlnFLcF/q8/MhwxXhKHh4oCHDA4Ip+ZzAHoICtyp4wZWfiCVDP0yuz3HsjyvuldHFb3wjA==}
+    engines: {node: '>=8'}
+    peerDependencies:
+      react: '>=16.0.0'
+      react-dom: '>=16.0.0'
+    dependencies:
+      '@ant-design/colors': 7.0.0
       '@ant-design/icons-svg': 4.2.1
       '@babel/runtime': 7.20.13
       classnames: 2.3.2
@@ -1665,7 +1687,7 @@ packages:
       umi: 3.5.37
     dev: true
 
-  /@umijs/plugin-layout/0.18.1_3500c8bba605c4c0cf31f62b3c6b5b85:
+  /@umijs/plugin-layout/0.18.1_9bbec79b9b9d78d4e8f348b8094a9db8:
     resolution: {integrity: sha512-15YTcFpic0v15nFzlg6G8nvMCveBtcBL77Wr9wXYJdgR0iU7dnO7T4OqbLwgEc1uHxtGhTVibi6nSGelX56zCg==}
     peerDependencies:
       '@ant-design/icons': ^4.0.0
@@ -1675,6 +1697,7 @@ packages:
       '@umijs/plugin-model': 2.x
       umi: 3.x
     dependencies:
+      '@ant-design/icons': 5.0.1_react-dom@17.0.2+react@17.0.2
       '@ant-design/pro-layout': 6.38.22_react-dom@17.0.2+react@17.0.2
       '@umijs/plugin-initial-state': 2.4.0_umi@3.5.37
       '@umijs/plugin-locale': 0.15.1_12898c52e170a605bda6e7e78e0c2dba
@@ -1778,7 +1801,7 @@ packages:
     transitivePeerDependencies:
       - react-dom
 
-  /@umijs/preset-react/1.8.31_7720ff56ce29e3394cfa7fb8ca4a3203:
+  /@umijs/preset-react/1.8.31_ecf18bcbc376c0dff7d41b8b5c5ac6c7:
     resolution: {integrity: sha512-zQRYJw68mgG6pPcy6GwAXFRC/XxATIGmiaFAZHt7aYDy3VCccmjNKjs1pXqrcHYmGhoa7TyjCHUYEuJSv0n8uw==}
     peerDependencies:
       umi: 3.x
@@ -1790,7 +1813,7 @@ packages:
       '@umijs/plugin-dva': 0.13.0_12898c52e170a605bda6e7e78e0c2dba
       '@umijs/plugin-helmet': 1.1.3_react@17.0.2+umi@3.5.37
       '@umijs/plugin-initial-state': 2.4.0_umi@3.5.37
-      '@umijs/plugin-layout': 0.18.1_3500c8bba605c4c0cf31f62b3c6b5b85
+      '@umijs/plugin-layout': 0.18.1_9bbec79b9b9d78d4e8f348b8094a9db8
       '@umijs/plugin-locale': 0.15.1_12898c52e170a605bda6e7e78e0c2dba
       '@umijs/plugin-model': 2.6.2_umi@3.5.37
       '@umijs/plugin-request': 2.8.0_react@17.0.2+umi@3.5.37

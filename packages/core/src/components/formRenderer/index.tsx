@@ -112,7 +112,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
     }, [formItemsMeta]);
 
     /**
-     * 处理不切换数据源的情况下，某些字段从 销毁状态 到 挂载状态 时要触发的 action
+     * 处理不切换数据源的情况下，某些字段从销毁状态到挂载状态时要触发的 action
      */
     useEffect(() => {
         const currentFields = Object.keys(form.getFieldsValue());
@@ -135,7 +135,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
         mountedFieldsRef.current = currentFields;
     }, [form.getFieldsValue(), extraDataRef.current]);
 
-    const onValuesChange = (changedValues) => {
+    const onValuesChange = (changedValues, ...restArgs) => {
         const changedFields = Object.keys(changedValues);
         changedFields.forEach((fieldName) => {
             // 处理字段值之间的联动关系, 发布 字段值变更事件
@@ -147,6 +147,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 extraDataRef,
             );
         });
+        props.onValuesChange?.(changedValues, restArgs)
     };
 
     return (

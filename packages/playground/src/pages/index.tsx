@@ -1,10 +1,7 @@
-import styles from './index.less';
-import Page from '../components/page';
+import Playground from '../components/playground';
 
 export default function IndexPage() {
     return (
-        <div>
-            <Page />
-        </div>
+        <Playground />
     );
 }

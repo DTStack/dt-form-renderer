@@ -13,3 +13,14 @@
 .ant-form-item {
   margin-bottom: 16px;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0
+}
