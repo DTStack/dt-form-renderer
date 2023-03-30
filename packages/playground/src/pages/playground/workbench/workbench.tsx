@@ -26,7 +26,7 @@ const WorkBench: React.FC<any> = () => {
 
     useEffect(() => {
         const workbench = localDB.get(LocalDBKey.WorkBench);
-        const content = workbench.find(
+        const content = workbench?.find(
             (w) => w.name === context.workInProgress,
         )?.content;
         configEditorRef.current.setValue(content ?? '');

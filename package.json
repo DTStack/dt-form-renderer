@@ -25,6 +25,7 @@
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less}'",
     "playground": "pnpm --filter ./packages/playground",
     "editor": "pnpm --filter ./packages/playground",
+    "dev": "pnpm playground start",
     "deploy": "pnpm core build && pnpm i && pnpm playground deploy"
   },
   "repository": {
