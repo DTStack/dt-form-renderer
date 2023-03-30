@@ -79,7 +79,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
         /** 订阅 parsedJson 中声明的 dependencies 和 triggerAction */
         subscriber.subscribe(parsedJson);
         pubSubCenterRef.current = pubSubCenter;
-
+        form.setFieldsValue(props?.initialValues);
         return () => {
             pubSubCenter.dispose();
             subscriber.dispose();

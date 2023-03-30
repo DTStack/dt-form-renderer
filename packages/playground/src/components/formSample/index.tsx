@@ -12,6 +12,7 @@ const FormItem = Form.Item;
 interface IProps {
     parsedJson: any[];
     changeParseJson: (sourceId, sourceType) => void;
+    initialValues?: any;
 }
 
 const sourceList = [
@@ -30,7 +31,7 @@ const formLayout: any = {
     },
 };
 
-const FormDemo: React.FC<IProps> = (props) => {
+const FormSample: React.FC<IProps> = (props) => {
     const { parsedJson, changeParseJson } = props;
     const formRef = useRef<FormInstance>(null);
 
@@ -80,8 +81,9 @@ const FormDemo: React.FC<IProps> = (props) => {
             }}
             preserveFields={['sourceId', 'sourceType']}
             preserveFormItems={renderFixedItem}
+            initialValues={props.initialValues}
         />
     );
 };
 
-export default FormDemo;
+export default FormSample;

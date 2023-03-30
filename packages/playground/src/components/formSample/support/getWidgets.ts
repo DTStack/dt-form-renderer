@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import Editor from '../editor';
+import Editor from '../../editor';
 
 import type { GetWidgets } from '@datasync-form-renderer/core';
 
