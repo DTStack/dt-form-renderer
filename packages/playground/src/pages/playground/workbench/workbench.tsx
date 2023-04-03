@@ -1,86 +1,52 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { message } from 'antd';
+import { useSelector } from 'react-redux';
 import { editor } from 'monaco-editor';
-
-import hiveSource from '@/components/formSample/jsonSample/hiveSource';
-import oracleSource from '@/components/formSample/jsonSample/oracleSource';
 import Editor from '@/components/editor';
 import FormSample from '@/components/formSample';
 import TitleWithToolbar from '@/components/titleWithToolbar';
-import { downloadFile, copy2Clipboard } from '@/utils';
-import { PlaygroundContext } from '..';
+import { downloadFile, copy2Clipboard, debounceFunctionWrap } from '@/utils';
+import { updateFile } from '@/store/reducers/workbenchSlice';
+import { RootState, useAppDispatch } from '@/store';
 import './workbench.less';
-import { localDB, LocalDBKey } from '@/utils/localDb';
 
-const WorkBench: React.FC<any> = () => {
+interface workbenchProps {}
+
+const WorkBench: React.FC<workbenchProps> = () => {
     const [parsedJson, setParsedJson] = useState([]);
     const [initialValues, setInitialValues] = useState();
-    const [source, updateSource] = useState<{
-        sourceId: number;
-        sourceType: string;
-    }>({ sourceId: undefined, sourceType: undefined });
     const configEditorRef = useRef<editor.IStandaloneCodeEditor>(null);
     const valueEditorRef = useRef<editor.IStandaloneCodeEditor>(null);
-    const autoSaveTimer = useRef(null);
-    const context = useContext(PlaygroundContext);
+    const {
+        workbench: { workInProgress, files },
+    } = useSelector<RootState, RootState>((state) => state);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const workbench = localDB.get(LocalDBKey.WorkBench);
-        const content = workbench?.find(
-            (w) => w.name === context.workInProgress,
-        )?.content;
-        configEditorRef.current.setValue(content ?? '');
-    }, [context.workInProgress]);
+        const file = files?.find((w) => w.name === workInProgress);
+        configEditorRef.current.setValue(file?.configContent ?? '');
+        valueEditorRef.current.setValue(file?.valuesContent ?? '');
+    }, [workInProgress]);
 
-    useEffect(() => {
-        if (context.autoSave) {
-            autoSaveTimer.current = setInterval(() => {
-                localDB.autoSaveConfig(
-                    context.workInProgress,
-                    configEditorRef.current.getValue(),
-                );
-            }, 2000);
-        }
-        return () => {
-            clearInterval(autoSaveTimer.current);
-        };
-    }, [context.autoSave, configEditorRef.current, context.workInProgress]);
-
-    useEffect(() => {
-        const { sourceType } = source;
-        if (!configEditorRef.current) return;
-
-        if (sourceType === 'hive') {
-            let values = {};
-            setParsedJson([...hiveSource]);
-            configEditorRef.current.setValue(
-                JSON.stringify(hiveSource, null, 2),
-            );
-            hiveSource.forEach((item) => {
-                if (item.fieldName) {
-                    values[item.fieldName] = null;
-                }
-            });
-            valueEditorRef.current.setValue(JSON.stringify(values, null, 2));
-        } else if (sourceType === 'oracle') {
-            let values = {};
-            setParsedJson([...oracleSource]);
-            configEditorRef.current.setValue(
-                JSON.stringify(oracleSource, null, 2),
-            );
-            oracleSource.forEach((item) => {
-                if (item.fieldName) {
-                    values[item.fieldName] = null;
-                }
-            });
-            valueEditorRef.current.setValue(JSON.stringify(values, null, 2));
-        }
-    }, [source.sourceType]);
+    const saveCurrentPage = debounceFunctionWrap(() => {
+        const content = configEditorRef.current.getValue();
+        const initialValuesContent = valueEditorRef.current.getValue();
+        dispatch(
+            updateFile({
+                fileName: workInProgress,
+                fileMeta: {
+                    configContent: content,
+                    valuesContent: initialValuesContent,
+                },
+            }),
+        );
+    });
 
     const parseEditorValue = (value: string) => {
         return new Promise<any>((resolve, reject) => {
             if (value.replace(/\s/g, '') === '') {
-                resolve(null);
+                reject(null);
+                return;
             }
             let parsedValue = [];
             try {
@@ -97,7 +63,7 @@ const WorkBench: React.FC<any> = () => {
     const formatEditorContent = (
         ref: React.RefObject<editor.IStandaloneCodeEditor>,
     ) => {
-        parseEditorValue(ref.current.getValue()).then((obj) => {
+        return parseEditorValue(ref.current.getValue()).then((obj) => {
             ref.current.setValue(JSON.stringify(obj, null, 2));
             message.success('格式化成功！');
         });
@@ -108,31 +74,31 @@ const WorkBench: React.FC<any> = () => {
             parseEditorValue(valueEditorRef.current.getValue()),
             parseEditorValue(configEditorRef.current.getValue()),
         ];
-        Promise.all(promises).then(([initialValues, parsedJson]) => {
+        return Promise.all(promises).then(([initialValues, parsedJson]) => {
             setInitialValues(initialValues);
             setParsedJson(parsedJson ?? []);
         });
     };
 
-    const refreshValueEditor = () => {
+    const refreshValueEditor = (config?: string) => {
         const values = {};
-        parseEditorValue(configEditorRef.current.getValue()).then(
-            (parsedJson) => {
-                parsedJson.forEach((item) => {
-                    if (item.fieldName) {
-                        values[item.fieldName] = null;
-                    }
-                });
-                valueEditorRef.current.setValue(
-                    JSON.stringify(values, null, 2),
-                );
-                message.success('刷新成功， 表单已重新渲染！');
-            },
-        );
+        return parseEditorValue(
+            config ?? configEditorRef.current.getValue(),
+        ).then((parsedJson) => {
+            parsedJson.forEach((item) => {
+                if (item.fieldName) {
+                    values[item.fieldName] = null;
+                }
+            });
+            valueEditorRef.current.setValue(JSON.stringify(values, null, 2));
+        });
     };
 
-    const changeParsedJson = (sourceId, sourceType) => {
-        updateSource({ sourceId, sourceType });
+    const onImportTemplate = (config: string) => {
+        configEditorRef.current.setValue(config);
+        refreshValueEditor(config).then(() => {
+            refreshForm();
+        });
     };
 
     return (
@@ -156,16 +122,19 @@ const WorkBench: React.FC<any> = () => {
                             onDownload={() => {
                                 downloadFile(
                                     configEditorRef.current.getValue(),
+                                    workInProgress,
                                 );
                             }}
                             onFormat={() => {
                                 formatEditorContent(configEditorRef);
                             }}
+                            onImportTemplate={onImportTemplate}
                         >
                             表单项配置
                         </TitleWithToolbar>
                         <div style={{ flex: '1 1 0%' }}>
                             <Editor
+                                onChange={saveCurrentPage}
                                 className="editor-config"
                                 language="json"
                                 style={{
@@ -197,6 +166,7 @@ const WorkBench: React.FC<any> = () => {
                         ref={(r) =>
                             (valueEditorRef.current = r?.monacoInstance)
                         }
+                        onChange={saveCurrentPage}
                         editorHeight={{
                             kind: 'dynamic',
                             maxHeight: '30vh',
@@ -206,10 +176,9 @@ const WorkBench: React.FC<any> = () => {
             </div>
             <div className="form-wrapper">
                 <TitleWithToolbar size="large" onReload={refreshForm}>
-                    Form UI Preview
+                    表单 UI 预览
                 </TitleWithToolbar>
                 <FormSample
-                    changeParseJson={changeParsedJson}
                     parsedJson={parsedJson}
                     initialValues={initialValues}
                 />

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Form, Select, Input } from 'antd';
 import FormRenderer from '@datasync-form-renderer/core';
 import formServicePool from './support/formServicePool';
@@ -11,8 +11,7 @@ const FormItem = Form.Item;
 
 interface IProps {
     parsedJson: any[];
-    changeParseJson: (sourceId, sourceType) => void;
-    initialValues?: any;
+    initialValues: any;
 }
 
 const sourceList = [
@@ -32,8 +31,9 @@ const formLayout: any = {
 };
 
 const FormSample: React.FC<IProps> = (props) => {
-    const { parsedJson, changeParseJson } = props;
+    const { parsedJson } = props;
     const formRef = useRef<FormInstance>(null);
+
 
     const renderFixedItem = (form, extraDataRef) => {
         return (
@@ -54,7 +54,6 @@ const FormSample: React.FC<IProps> = (props) => {
                                 (s) => s.value === v,
                             )?.type;
                             form.setFieldValue('sourceType', sourceType);
-                            changeParseJson(v, sourceType);
                         }}
                         placeholder="请选择数据来源"
                         options={sourceList}
