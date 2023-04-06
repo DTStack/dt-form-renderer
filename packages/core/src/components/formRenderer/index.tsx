@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, useImperativeHandle, useLayoutEffect } from 'react';
 import { Form } from 'antd';
 import type { FormInstance, FormProps } from 'antd/es/form/Form';
 import type {
@@ -6,7 +6,7 @@ import type {
     FormItemRuleMapType,
     DocsMapType,
     FieldItemMetaType,
-    JsonConfigType,
+    JsonConfigType
 } from '../../type';
 import FormItemWrapper, { GetWidgets } from '../formItemWrapper';
 import ExtraContext, {
@@ -20,7 +20,7 @@ import InteractionSubscriber from '../../interaction/interactionSubscriber';
 const { useForm } = Form;
 
 export interface FormRendererProps extends FormProps {
-    parsedJson: JsonConfigType[];
+    jsonConfig: JsonConfigType;
     formServicePool: FormServicePoolType;
     ruleMap: FormItemRuleMapType;
     docsMap: DocsMapType;
@@ -38,7 +38,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
     FormRendererProps
 > = (props, ref) => {
     const {
-        parsedJson,
+        jsonConfig,
         formServicePool,
         defaultExtraData,
         ruleMap,
@@ -46,6 +46,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
         preserveFields,
         getWidgets,
         docsMap,
+        initialValues,
         ...restProps
     } = props;
     const [form] = useForm();
@@ -57,12 +58,13 @@ const FormRenderer: React.ForwardRefRenderFunction<
     useImperativeHandle(ref, () => form, [form]);
 
     /**
-     * 处理联动关系，订阅事件
+     * 切换数据源时处理联动关系，订阅事件
      */
-    useEffect(() => {
+    useLayoutEffect(() => {
         updateExtraData(defaultExtraData);
+        const fieldList = jsonConfig?.fieldList ?? []
         const jsonConfigTransformer = new JsonConfigTransformer(
-            parsedJson,
+            fieldList,
             ruleMap,
             docsMap,
         );
@@ -76,10 +78,10 @@ const FormRenderer: React.ForwardRefRenderFunction<
             { extraDataRef, update: updateExtraData },
             formServicePool,
         );
-        /** 订阅 parsedJson 中声明的 dependencies 和 triggerAction */
-        subscriber.subscribe(parsedJson);
+        /** 订阅 jsonConfig 中声明的 dependencies 和 triggerAction */
+        subscriber.subscribe(fieldList);
         pubSubCenterRef.current = pubSubCenter;
-        form.setFieldsValue(props?.initialValues);
+        form.setFieldsValue(initialValues);
         return () => {
             pubSubCenter.dispose();
             subscriber.dispose();
@@ -92,7 +94,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 form.setFieldsValue(fixedValues);
             });
         };
-    }, [parsedJson]);
+    }, [jsonConfig]);
 
     /**
      * 处理切换数据源时，要触发的 action
@@ -109,7 +111,17 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 ),
             );
         });
-    }, [formItemsMeta]);
+    }, [jsonConfig]);
+
+    /**
+     * defaultExtraData 变化时，更新到 extraDataContext 中
+     */
+    useEffect(() => {
+        /** 延迟调用，避免切换数据源时，之前的 extraData 没有清空 */
+        setTimeout(() => {
+            updateExtraData({...extraDataRef.current, ...defaultExtraData});
+        })
+    }, [defaultExtraData])
 
     /**
      * 处理不切换数据源的情况下，某些字段从销毁状态到挂载状态时要触发的 action
@@ -137,11 +149,12 @@ const FormRenderer: React.ForwardRefRenderFunction<
 
     const onValuesChange = (changedValues, ...restArgs) => {
         const changedFields = Object.keys(changedValues);
+        console.log(changedValues) 
         changedFields.forEach((fieldName) => {
             // 处理字段值之间的联动关系, 发布 字段值变更事件
             pubSubCenterRef.current.publishDepEvent(fieldName);
             // 处理字段触发的 action， 发布 字段值变更事件
-            pubSubCenterRef.current.publishTriggerEvent(
+            pubSubCenterRef.current.publishTriggerEvent (
                 fieldName,
                 form.getFieldsValue(),
                 extraDataRef,

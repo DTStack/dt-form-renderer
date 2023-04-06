@@ -101,15 +101,15 @@ export type ValidatorRuleConfigType = { validator: ValidatorExprType };
 export type RuleConfigType = ValidatorRuleConfigType | any;
 
 /**
- * @description json 配置的类型
+ * @description json 配置中字段配置的类型
  */
-export interface JsonConfigType {
+export interface JsonConfigFieldType {
     fieldName: string;
     widget: string;
     widgetProps?: WidgetPropsConfigType;
     dependencies?: string[];
     initialValue?: any;
-    label?: FunctionExprType | string;
+    label: FunctionExprType | string;
     destroy?: FunctionExprType | boolean;
     hidden?: FunctionExprType | boolean;
     rules?: RuleConfigType[];
@@ -120,6 +120,14 @@ export interface JsonConfigType {
     trigger?: FormItemProps['trigger'];
     valuePropName?: FormItemProps['valuePropName'];
     triggerActions?: TriggerActionType[];
+    valueDerived?: FunctionExprType;
+}
+
+/**
+ * @description json 配置的类型
+ */
+export interface JsonConfigType {
+    fieldList: JsonConfigFieldType[];
 }
 
 /**
@@ -131,7 +139,7 @@ export interface WidgetPropsType {
 }
 
 /**
- * @description formRender用于渲染的配置，衍生自 JsonConfigType {@link JsonConfigType}
+ * @description formRender用于渲染的配置，衍生自 JsonConfigFieldItemType {@link JsonConfigFieldType}
  */
 export interface FieldItemMetaType {
     fieldName: string;
@@ -148,4 +156,5 @@ export interface FieldItemMetaType {
     trigger?: FormItemProps['trigger'];
     valuePropName?: FormItemProps['valuePropName'];
     extra?: string;
+    valueDerived?: TransformedFnType;
 }

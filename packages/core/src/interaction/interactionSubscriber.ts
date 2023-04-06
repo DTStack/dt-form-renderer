@@ -1,11 +1,11 @@
 import { FormInstance } from 'antd';
 import PubSubCenter from './pubSubCenter';
 import { fieldValueInteractionFactory, triggerServiceFactory } from './factory';
-import { FormServicePoolType } from '../type';
+import { FormServicePoolType, JsonConfigFieldType } from '../type';
 import { ExtraContextType } from '../extraDataContext';
 
 export default class InteractionSubscriber {
-    private _parsedJson: any[] = null;
+    private _fieldConfList: JsonConfigFieldType[] = null;
     private _pubSubCenter: PubSubCenter = null;
     private _formInstance: FormInstance = null;
     private _extraContext: ExtraContextType = null;
@@ -28,7 +28,7 @@ export default class InteractionSubscriber {
     }
 
     dispose() {
-        this._parsedJson = null;
+        this._fieldConfList = null;
         this._formInstance = null;
         this._extraContext = null;
         this._pubSubCenter.dispose();
@@ -43,7 +43,7 @@ export default class InteractionSubscriber {
         /**
          * TODO 需要检测依赖是否成环
          */
-        const dependGraph = this._parsedJson
+        const dependGraph = this._fieldConfList
             .map((fieldConf) => {
                 return fieldConf.dependencies?.map((dependence) => ({
                     fieldName: fieldConf.fieldName,
@@ -108,6 +108,7 @@ export default class InteractionSubscriber {
                     null,
                     this._formInstance,
                     effectList,
+                    this._fieldConfList
                 ),
             );
         });
@@ -117,7 +118,7 @@ export default class InteractionSubscriber {
      * 订阅 triggerAction
      */
     subscribeTriggerActions = () => {
-        this._parsedJson.forEach((fieldConf) => {
+        this._fieldConfList.forEach((fieldConf) => {
             fieldConf.triggerActions?.forEach?.((action) => {
                 const service = this._triggerServiceFactory(action);
                 if (action.immediate === true) {
@@ -147,8 +148,8 @@ export default class InteractionSubscriber {
     /**
      * 订阅
      */
-    subscribe = (parsedJson: any[]) => {
-        this._parsedJson = parsedJson;
+    subscribe = (fieldList: JsonConfigFieldType[]) => {
+        this._fieldConfList = fieldList;
         this.subscribeFieldChangeEvent();
         this.subscribeTriggerActions();
     };

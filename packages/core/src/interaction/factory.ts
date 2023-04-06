@@ -1,5 +1,5 @@
 import type { FormInstance } from 'antd';
-import type { FormServicePoolType } from '../type';
+import type { FormServicePoolType, JsonConfigFieldType } from '../type';
 
 /**
  * @description 生成字段联动处理函数
@@ -10,9 +10,11 @@ import type { FormServicePoolType } from '../type';
 export function fieldValueInteractionFactory(
     form: FormInstance,
     effectFields: string[],
+    fieldConfList: JsonConfigFieldType[],
 ) {
-    const emptyValue = effectFields.reduce((ev, field) => {
-        ev[field] = undefined;
+    const effectFieldConfList = fieldConfList.filter(fc => effectFields.includes(fc.fieldName))
+    const emptyValue = effectFieldConfList.reduce((ev, fieldConf) => {
+        ev[fieldConf.fieldName] = fieldConf.initialValue;
         return ev;
     }, {} as any);
     return form.setFieldsValue(emptyValue);
