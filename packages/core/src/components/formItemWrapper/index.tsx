@@ -1,5 +1,5 @@
-import React, { useContext, useMemo } from 'react';
-import { Form } from 'antd';
+import React, { useContext, useMemo, useRef } from 'react';
+import { Form, FormInstance } from 'antd';
 import ExtraContext from '../../extraDataContext';
 import internalWidgets from '../internalWidgets';
 import type {
@@ -8,7 +8,7 @@ import type {
 } from '../../expressionParser/fnExpressionTransformer';
 import type { FieldItemMetaType } from '../../type';
 
-const { Item: FormItem, useFormInstance } = Form;
+const { Item: FormItem } = Form;
 
 export type GetWidgets = (widget: string) => React.ComponentType<any>;
 export interface FormItemWrapperProps {
@@ -20,51 +20,67 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
     const { formItemMeta, getWidgets } = props;
     const {
         fieldName,
+        valuePropName,
+        initialValue,
+        label,
+        labelAlign,
         widget,
         widgetProps,
-        label,
         destroy = false,
         hidden = false,
         rules,
         tooltip,
-        initialValue,
         colon,
         extra,
-        labelAlign,
         trigger,
-        valuePropName,
+        valueDerived,
     } = formItemMeta;
+    const derivedValueRef = useRef<undefined>()
     const extraContext = useContext(ExtraContext);
-    const form = useFormInstance();
 
-    /**
-     * TODO 这里因为 react 类型包版本问题，先写出any
-     */
     const Widget: any = useMemo(() => {
         return getWidgets(widget) ?? internalWidgets(widget);
     }, [widget]);
 
-    /**
-     * TODO 这里form.getFieldsValue() 的返回值每次都是一个新对象，导致scope一直在变化
-     */
-    const scope = useMemo<ScopeType>(() => {
-        return {
+    const genValueGetter = (form: FormInstance) => {
+        const scope: ScopeType = {
             formData: form.getFieldsValue(),
             extraDataRef: extraContext.extraDataRef,
+        } 
+        return (value: TransformedFnType | unknown) => {
+            if (typeof value !== 'function') {
+                return value;
+            } else {
+                return value.call(null, scope);
+            }
         };
-    }, [extraContext.extraDataRef, form.getFieldsValue()]);
+    }
 
-    const valueGetter = (value: TransformedFnType | unknown) => {
-        if (typeof value !== 'function') {
-            return value;
-        } else {
-            return value.call(null, scope);
+    /**
+     * 处理派生值的情况
+     */
+    const deriveValue = (form: FormInstance) => {
+        if(valueDerived === null) return
+        
+        const scope: ScopeType = {
+            formData: form.getFieldsValue(),
+            extraDataRef: extraContext.extraDataRef,
+        } 
+        const derivedValue = valueDerived(scope);
+        console.log(derivedValue) 
+        if(derivedValue !== derivedValueRef.current) {
+            setTimeout(() => {
+                form.setFieldValue(fieldName, derivedValue);
+            })
         }
-    };
+        derivedValueRef.current = derivedValue as any;
+    }
 
     return (
         <FormItem noStyle shouldUpdate>
-            {(_form) => {
+            {(form) => {
+                const valueGetter = genValueGetter(form as FormInstance)
+                deriveValue(form as FormInstance)
                 return !valueGetter(destroy) ? (
                     <FormItem
                         name={fieldName}

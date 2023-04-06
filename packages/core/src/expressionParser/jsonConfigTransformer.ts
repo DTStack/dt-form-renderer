@@ -4,7 +4,7 @@ import { ScopeType } from './fnExpressionTransformer';
 import type {
     RuleConfigType,
     ValidatorRuleConfigType,
-    JsonConfigType,
+    JsonConfigFieldType,
     DocsMapType,
     FormItemRuleMapType,
     FormItemCustomRuleType,
@@ -12,13 +12,13 @@ import type {
 import React from 'react';
 
 class JsonConfigTransformer {
-    private _jsonArr: JsonConfigType[] = null;
+    private _jsonArr: JsonConfigFieldType[] = null;
     private _genValidatorGetter: (expr: string) => FormItemCustomRuleType;
     private _getDoc: (expr: string) => React.ReactNode;
     private _genFunction: ExpressionParser['generateFunction'];
 
     constructor(
-        jsonArr: JsonConfigType[],
+        jsonArr: JsonConfigFieldType[],
         ruleMap: FormItemRuleMapType,
         docsMap: DocsMapType,
     ) {
@@ -58,7 +58,7 @@ class JsonConfigTransformer {
         };
     }
 
-    transformField(value: string) {
+    transformFnExprField(value: string) {
         const isFunctionExpression = ExpressionParser.isFunctionExpression;
         const res = isFunctionExpression(value)
             ? this._genFunction(value)
@@ -77,6 +77,14 @@ class JsonConfigTransformer {
         return null;
     }
 
+    transformValueDerived(valueDerived: string) {
+        const isFunctionExpression = ExpressionParser.isFunctionExpression;
+        const res = isFunctionExpression(valueDerived)
+            ? this._genFunction(valueDerived)
+            : valueDerived ? () => valueDerived : null;
+        return res;
+    }
+
     transform() {
         const jsonArr = this._jsonArr;
         return jsonArr.map((field) => {
@@ -87,18 +95,20 @@ class JsonConfigTransformer {
                 rules,
                 tooltip,
                 widgetProps = {},
+                valueDerived
             } = field;
             return {
                 ...field,
-                label: this.transformField(label),
-                destroy: this.transformField(destroy as string),
-                hidden: this.transformField(hidden as string),
+                label: this.transformFnExprField(label),
+                destroy: this.transformFnExprField(destroy as string),
+                hidden: this.transformFnExprField(hidden as string),
+                valueDerived: this.transformValueDerived(valueDerived),
                 rules: rules ? this.transformRules(rules) : () => [],
                 tooltip: this.transformTooltip(tooltip),
                 widgetProps: {
                     ...widgetProps,
-                    options: this.transformField(widgetProps.options as string),
-                    placeholder: this.transformField(widgetProps.placeholder),
+                    options: this.transformFnExprField(widgetProps.options as string),
+                    placeholder: this.transformFnExprField(widgetProps.placeholder),
                 },
             };
         });
