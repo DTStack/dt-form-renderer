@@ -6,18 +6,20 @@ import type {
     ScopeType,
     TransformedFnType,
 } from '../../expressionParser/fnExpressionTransformer';
-import type { FieldItemMetaType } from '../../type';
+import PubSubCenter from '@/interaction/pubSubCenter';
+import { FieldItemMetaType, ServiceTriggerEnum } from '../../type';
 
 const { Item: FormItem } = Form;
 
 export type GetWidgets = (widget: string) => React.ComponentType<any>;
 export interface FormItemWrapperProps {
     formItemMeta: FieldItemMetaType;
-    getWidgets?: GetWidgets;
+    getWidgets: GetWidgets;
+    publishServiceEvent: PubSubCenter['publishServiceEvent'];
 }
 
 const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
-    const { formItemMeta, getWidgets } = props;
+    const { formItemMeta, getWidgets, publishServiceEvent } = props;
     const {
         fieldName,
         valuePropName,
@@ -34,8 +36,9 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         extra,
         trigger,
         valueDerived,
+        servicesTriggers,
     } = formItemMeta;
-    const derivedValueRef = useRef<undefined>()
+    const derivedValueRef = useRef<undefined>();
     const extraContext = useContext(ExtraContext);
 
     const Widget: any = useMemo(() => {
@@ -46,7 +49,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         const scope: ScopeType = {
             formData: form.getFieldsValue(),
             extraDataRef: extraContext.extraDataRef,
-        } 
+        };
         return (value: TransformedFnType | unknown) => {
             if (typeof value !== 'function') {
                 return value;
@@ -54,33 +57,80 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                 return value.call(null, scope);
             }
         };
-    }
+    };
 
     /**
      * 处理派生值的情况
      */
     const deriveValue = (form: FormInstance) => {
-        if(valueDerived === null) return
-        
+        if (valueDerived === null) return;
+
         const scope: ScopeType = {
             formData: form.getFieldsValue(),
             extraDataRef: extraContext.extraDataRef,
-        } 
+        };
         const derivedValue = valueDerived(scope);
-        console.log(derivedValue) 
-        if(derivedValue !== derivedValueRef.current) {
+        if (derivedValue !== derivedValueRef.current) {
             setTimeout(() => {
                 form.setFieldValue(fieldName, derivedValue);
-            })
+            });
         }
         derivedValueRef.current = derivedValue as any;
-    }
+    };
+
+    const getServiceTriggerProps = (formData, extraData) => {
+        const serviceTriggerProps = {
+            onBlur: null,
+            onFocus: null,
+            onSearch: null,
+        };
+        servicesTriggers.forEach((trigger) => {
+            if (trigger === ServiceTriggerEnum.onFocus) {
+                serviceTriggerProps.onFocus = (...args: any[]) => {
+                    publishServiceEvent(
+                        fieldName,
+                        ServiceTriggerEnum.onFocus,
+                        formData,
+                        extraData,
+                        args,
+                    );
+                };
+            }
+            if (trigger === ServiceTriggerEnum.onBlur) {
+                serviceTriggerProps.onBlur = (...args: any[]) => {
+                    publishServiceEvent(
+                        fieldName,
+                        ServiceTriggerEnum.onBlur,
+                        formData,
+                        extraData,
+                        args,
+                    );
+                };
+            }
+            if (trigger === ServiceTriggerEnum.onSearch) {
+                serviceTriggerProps.onSearch = (...args: any[]) => {
+                    publishServiceEvent(
+                        fieldName,
+                        ServiceTriggerEnum.onSearch,
+                        formData,
+                        extraData,
+                        args,
+                    );
+                };
+            }
+        });
+        return serviceTriggerProps;
+    };
 
     return (
         <FormItem noStyle shouldUpdate>
             {(form) => {
-                const valueGetter = genValueGetter(form as FormInstance)
-                deriveValue(form as FormInstance)
+                const valueGetter = genValueGetter(form as FormInstance);
+                deriveValue(form as FormInstance);
+                const { onBlur, onFocus, onSearch } = getServiceTriggerProps(
+                    form.getFieldsValue(),
+                    extraContext.extraDataRef.current,
+                );
                 return !valueGetter(destroy) ? (
                     <FormItem
                         name={fieldName}
@@ -101,6 +151,10 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                                 valueGetter(widgetProps?.placeholder) ?? ''
                             }
                             options={valueGetter(widgetProps?.options)}
+                            disabled={valueGetter(widgetProps.disabled)}
+                            onBlur={onBlur}
+                            onFocus={onFocus}
+                            onSearch={onSearch}
                         />
                     </FormItem>
                 ) : null;

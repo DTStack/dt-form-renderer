@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useImperativeHandle, useLayoutEffect } from 'react';
+import React, {
+    useState,
+    useEffect,
+    useRef,
+    useImperativeHandle,
+    useLayoutEffect,
+} from 'react';
 import { Form } from 'antd';
 import type { FormInstance, FormProps } from 'antd/es/form/Form';
 import type {
@@ -6,8 +12,9 @@ import type {
     FormItemRuleMapType,
     DocsMapType,
     FieldItemMetaType,
-    JsonConfigType
+    JsonConfigType,
 } from '../../type';
+import { ServiceTriggerEnum } from '../../type';
 import FormItemWrapper, { GetWidgets } from '../formItemWrapper';
 import ExtraContext, {
     useExtraData,
@@ -62,7 +69,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
      */
     useLayoutEffect(() => {
         updateExtraData(defaultExtraData);
-        const fieldList = jsonConfig?.fieldList ?? []
+        const fieldList = jsonConfig?.fieldList ?? [];
         const jsonConfigTransformer = new JsonConfigTransformer(
             fieldList,
             ruleMap,
@@ -78,7 +85,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
             { extraDataRef, update: updateExtraData },
             formServicePool,
         );
-        /** 订阅 jsonConfig 中声明的 dependencies 和 triggerAction */
+        /** 订阅 jsonConfig 中声明的 dependencies 和 triggerService */
         subscriber.subscribe(fieldList);
         pubSubCenterRef.current = pubSubCenter;
         form.setFieldsValue(initialValues);
@@ -104,8 +111,9 @@ const FormRenderer: React.ForwardRefRenderFunction<
             // 延迟调用，保证所有的formItem组件此时已经挂载
             const currentFields = Object.keys(form.getFieldsValue());
             currentFields.forEach((mf) =>
-                pubSubCenterRef.current.publishImmediateTriggerEvent(
+                pubSubCenterRef.current.publishServiceEvent(
                     mf,
+                    ServiceTriggerEnum.onMount,
                     form.getFieldsValue(),
                     extraDataRef,
                 ),
@@ -119,9 +127,9 @@ const FormRenderer: React.ForwardRefRenderFunction<
     useEffect(() => {
         /** 延迟调用，避免切换数据源时，之前的 extraData 没有清空 */
         setTimeout(() => {
-            updateExtraData({...extraDataRef.current, ...defaultExtraData});
-        })
-    }, [defaultExtraData])
+            updateExtraData({ ...extraDataRef.current, ...defaultExtraData });
+        });
+    }, [defaultExtraData]);
 
     /**
      * 处理不切换数据源的情况下，某些字段从销毁状态到挂载状态时要触发的 action
@@ -132,12 +140,13 @@ const FormRenderer: React.ForwardRefRenderFunction<
         const willMountFields = currentFields.filter(
             (f) => !mountedFields.includes(f),
         );
-        /** 当某些字段挂载时触发 Immediate Action */
+        /** 当某些字段挂载时触发 onMount service */
         if (willMountFields.length && mountedFieldsRef.current.length) {
             setTimeout(() => {
                 willMountFields.forEach((mf) =>
-                    pubSubCenterRef.current.publishImmediateTriggerEvent(
+                    pubSubCenterRef.current.publishServiceEvent(
                         mf,
+                        ServiceTriggerEnum.onMount,
                         form.getFieldsValue(),
                         extraDataRef,
                     ),
@@ -149,13 +158,13 @@ const FormRenderer: React.ForwardRefRenderFunction<
 
     const onValuesChange = (changedValues, ...restArgs) => {
         const changedFields = Object.keys(changedValues);
-        console.log(changedValues) 
         changedFields.forEach((fieldName) => {
             // 处理字段值之间的联动关系, 发布 字段值变更事件
             pubSubCenterRef.current.publishDepEvent(fieldName);
             // 处理字段触发的 action， 发布 字段值变更事件
-            pubSubCenterRef.current.publishTriggerEvent (
+            pubSubCenterRef.current.publishServiceEvent(
                 fieldName,
+                ServiceTriggerEnum.onChange,
                 form.getFieldsValue(),
                 extraDataRef,
             );
@@ -187,6 +196,9 @@ const FormRenderer: React.ForwardRefRenderFunction<
                             getWidgets={getWidgets}
                             key={formItemMeta.fieldName}
                             formItemMeta={formItemMeta}
+                            publishServiceEvent={
+                                pubSubCenterRef.current.publishServiceEvent
+                            }
                         />
                     );
                 })}

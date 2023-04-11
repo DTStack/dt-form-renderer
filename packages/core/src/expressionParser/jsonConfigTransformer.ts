@@ -8,6 +8,8 @@ import type {
     DocsMapType,
     FormItemRuleMapType,
     FormItemCustomRuleType,
+    TriggerServiceType,
+    ServiceTriggerEnum,
 } from '../type';
 import React from 'react';
 
@@ -81,8 +83,20 @@ class JsonConfigTransformer {
         const isFunctionExpression = ExpressionParser.isFunctionExpression;
         const res = isFunctionExpression(valueDerived)
             ? this._genFunction(valueDerived)
-            : valueDerived ? () => valueDerived : null;
+            : valueDerived
+            ? () => valueDerived
+            : null;
         return res;
+    }
+
+    getServicesTriggers(triggerServices: TriggerServiceType[]) {
+        if (!triggerServices?.length) return [];
+        const set = new Set<ServiceTriggerEnum>();
+        triggerServices.forEach(({ triggers }) => {
+            if (!triggers?.length) return [];
+            triggers.forEach((trigger) => set.add(trigger));
+        });
+        return Array.from(set);
     }
 
     transform() {
@@ -95,7 +109,8 @@ class JsonConfigTransformer {
                 rules,
                 tooltip,
                 widgetProps = {},
-                valueDerived
+                valueDerived,
+                triggerServices,
             } = field;
             return {
                 ...field,
@@ -105,10 +120,16 @@ class JsonConfigTransformer {
                 valueDerived: this.transformValueDerived(valueDerived),
                 rules: rules ? this.transformRules(rules) : () => [],
                 tooltip: this.transformTooltip(tooltip),
+                servicesTriggers: this.getServicesTriggers(triggerServices),
                 widgetProps: {
                     ...widgetProps,
-                    options: this.transformFnExprField(widgetProps.options as string),
-                    placeholder: this.transformFnExprField(widgetProps.placeholder),
+                    options: this.transformFnExprField(
+                        widgetProps.options as string,
+                    ),
+                    placeholder: this.transformFnExprField(
+                        widgetProps.placeholder,
+                    ),
+                    disabled: this.transformFnExprField(widgetProps.disabled),
                 },
             };
         });

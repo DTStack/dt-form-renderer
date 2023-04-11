@@ -1,9 +1,18 @@
 import { ExtraDataRefType } from '../extraDataContext';
+import {
+    ServiceTriggerEnum,
+    FormServiceType,
+    TriggerServiceType,
+} from '../type';
+
+export interface IServiceEvent {
+    service: FormServiceType;
+    triggers: ServiceTriggerEnum[];
+}
 
 export default class PubSubCenter {
     private _fieldDependEventPool: Map<string, Function[]> = new Map();
-    private _triggerEventPool: Map<string, Function[]> = new Map();
-    private _immediateTriggerEventPool: Map<String, Function[]> = new Map();
+    private _serviceEventPool: Map<string, IServiceEvent[]> = new Map();
 
     subscribeFieldDepEvent = (
         field: string,
@@ -25,63 +34,49 @@ export default class PubSubCenter {
 
     publishDepEvent = (field: string) => {
         const effectHandler = this._fieldDependEventPool.get(field) ?? [];
-        effectHandler.forEach((handler) => handler.call(null));
+        effectHandler.forEach((handler) => handler());
     };
 
-    subscribeTriggerEvent(field: string, _service: Function | Function[]) {
-        const services = Array.isArray(_service) ? _service : [_service];
-
-        if (this._triggerEventPool.has(field)) {
-            this._triggerEventPool.set(field, [
-                ...this._triggerEventPool.get(field),
+    subscribeServiceEvent = (
+        field: string,
+        serviceAction: IServiceEvent | IServiceEvent[],
+    ) => {
+        const services = Array.isArray(serviceAction)
+            ? serviceAction
+            : [serviceAction];
+        if (this._serviceEventPool.has(field)) {
+            this._serviceEventPool.set(field, [
+                ...this._serviceEventPool.get(field),
                 ...services,
             ]);
         } else {
-            this._triggerEventPool.set(field, services);
+            this._serviceEventPool.set(field, services);
         }
-    }
+    };
 
-    publishTriggerEvent(
+    publishServiceEvent = (
         field: string,
+        trigger: ServiceTriggerEnum,
         formData: any,
         extraDataRef: ExtraDataRefType,
-    ) {
-        const services = this._triggerEventPool.get(field) ?? [];
-        services.forEach((service) =>
-            service.call(null, formData, extraDataRef.current),
-        );
-    }
-
-    subscribeImmediateTriggerEvent(
-        field: string,
-        _service: Function | Function[],
-    ) {
-        const services = Array.isArray(_service) ? _service : [_service];
-
-        if (this._immediateTriggerEventPool.has(field)) {
-            this._immediateTriggerEventPool.set(field, [
-                ...this._immediateTriggerEventPool.get(field),
-                ...services,
-            ]);
-        } else {
-            this._immediateTriggerEventPool.set(field, services);
-        }
-    }
-
-    publishImmediateTriggerEvent(
-        field,
-        formData,
-        extraDataRef: ExtraDataRefType,
-    ) {
-        const services = this._immediateTriggerEventPool.get(field) ?? [];
-        services.forEach((service) =>
-            service.call(null, formData, extraDataRef.current),
-        );
-    }
+        restArgs?: any[],
+    ) => {
+        const serviceActions = this._serviceEventPool.get(field) ?? [];
+        serviceActions.forEach((serviceAction) => {
+            const { triggers, service } = serviceAction;
+            if (triggers.includes(trigger)) {
+                service({
+                    args: restArgs,
+                    trigger,
+                    formData,
+                    extraData: extraDataRef.current,
+                });
+            }
+        });
+    };
 
     dispose() {
         this._fieldDependEventPool.clear();
-        this._immediateTriggerEventPool.clear();
-        this._triggerEventPool.clear();
+        this._serviceEventPool.clear();
     }
 }

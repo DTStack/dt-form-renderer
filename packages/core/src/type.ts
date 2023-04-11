@@ -3,17 +3,38 @@ import type { FormItemProps } from 'antd';
 import type { TransformedFnType } from './expressionParser/fnExpressionTransformer';
 
 /**
+ * @description service 的触发类型
+ */
+export enum ServiceTriggerEnum {
+    onMount = 'onMount',
+    onChange = 'onChange',
+    onBlur = 'onBlur',
+    onFocus = 'onFocus',
+    onSearch = 'onSearch',
+}
+
+/**
+ * @description service 参数类型
+ */
+export interface IServiceContext {
+    formData: any;
+    extraData: any;
+    args: any[];
+    trigger: ServiceTriggerEnum;
+}
+
+/**
  * @description formRenderer 的 service 类型
  */
-export interface FormServiceType<FormData = any, ExtraData = any> {
-    (formData: FormData, extraData: ExtraData): Promise<any>;
+export interface FormServiceType {
+    (context: IServiceContext): Promise<any>;
 }
 
 /**
  * @description formRenderer 的 formServicePool 类型
  */
-export interface FormServicePoolType<FormData = any, ExtraData = any> {
-    [key: string]: FormServiceType<FormData, ExtraData>;
+export interface FormServicePoolType {
+    [key: string]: FormServiceType;
 }
 
 /**
@@ -82,12 +103,12 @@ export interface WidgetPropsConfigType {
 }
 
 /**
- * @description 触发的 action 配置的类型
+ * @description 触发 service 配置的类型
  */
-export interface TriggerActionType {
+export interface TriggerServiceType {
     serviceName: string;
     fieldInExtraData: string;
-    immediate?: boolean;
+    triggers?: ServiceTriggerEnum[];
 }
 
 /**
@@ -119,7 +140,7 @@ export interface JsonConfigFieldType {
     labelAlign?: FormItemProps['labelAlign'];
     trigger?: FormItemProps['trigger'];
     valuePropName?: FormItemProps['valuePropName'];
-    triggerActions?: TriggerActionType[];
+    triggerServices?: TriggerServiceType[];
     valueDerived?: FunctionExprType;
 }
 
@@ -157,4 +178,5 @@ export interface FieldItemMetaType {
     valuePropName?: FormItemProps['valuePropName'];
     extra?: string;
     valueDerived?: TransformedFnType;
+    servicesTriggers?: ServiceTriggerEnum[];
 }

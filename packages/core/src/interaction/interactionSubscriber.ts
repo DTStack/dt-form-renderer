@@ -1,7 +1,13 @@
 import { FormInstance } from 'antd';
-import PubSubCenter from './pubSubCenter';
+import PubSubCenter, { IServiceEvent } from './pubSubCenter';
 import { fieldValueInteractionFactory, triggerServiceFactory } from './factory';
-import { FormServicePoolType, JsonConfigFieldType } from '../type';
+import {
+    FormServicePoolType,
+    JsonConfigFieldType,
+    ServiceTriggerEnum,
+    TriggerServiceType,
+    FormServiceType,
+} from '../type';
 import { ExtraContextType } from '../extraDataContext';
 
 export default class InteractionSubscriber {
@@ -9,7 +15,9 @@ export default class InteractionSubscriber {
     private _pubSubCenter: PubSubCenter = null;
     private _formInstance: FormInstance = null;
     private _extraContext: ExtraContextType = null;
-    private _triggerServiceFactory: (action: any) => any = null;
+    private _triggerServiceFactory: (
+        serviceConf: TriggerServiceType,
+    ) => FormServiceType = null;
 
     constructor(
         formInstance: FormInstance,
@@ -108,40 +116,34 @@ export default class InteractionSubscriber {
                     null,
                     this._formInstance,
                     effectList,
-                    this._fieldConfList
+                    this._fieldConfList,
                 ),
             );
         });
     };
 
     /**
-     * 订阅 triggerAction
+     * 订阅 triggerServices
      */
-    subscribeTriggerActions = () => {
+    subscribeTriggerServices = () => {
         this._fieldConfList.forEach((fieldConf) => {
-            fieldConf.triggerActions?.forEach?.((action) => {
-                const service = this._triggerServiceFactory(action);
-                if (action.immediate === true) {
-                    this._pubSubCenter.subscribeImmediateTriggerEvent(
-                        fieldConf.fieldName,
+            const { fieldName, triggerServices } = fieldConf;
+            if (!triggerServices?.length) return;
+            const serviceActions: IServiceEvent[] =
+                fieldConf.triggerServices?.map?.((triggerService) => {
+                    const service = this._triggerServiceFactory(triggerService);
+                    const triggers = triggerService?.triggers?.length
+                        ? triggerService?.triggers
+                        : [
+                              ServiceTriggerEnum.onMount,
+                              ServiceTriggerEnum.onChange,
+                          ];
+                    return {
                         service,
-                    );
-                } else if (action.immediate === false) {
-                    this._pubSubCenter.subscribeTriggerEvent(
-                        fieldConf.fieldName,
-                        service,
-                    );
-                } else {
-                    this._pubSubCenter.subscribeTriggerEvent(
-                        fieldConf.fieldName,
-                        service,
-                    );
-                    this._pubSubCenter.subscribeImmediateTriggerEvent(
-                        fieldConf.fieldName,
-                        service,
-                    );
-                }
-            });
+                        triggers,
+                    };
+                });
+            this._pubSubCenter.subscribeServiceEvent(fieldName, serviceActions);
         });
     };
 
@@ -151,6 +153,6 @@ export default class InteractionSubscriber {
     subscribe = (fieldList: JsonConfigFieldType[]) => {
         this._fieldConfList = fieldList;
         this.subscribeFieldChangeEvent();
-        this.subscribeTriggerActions();
+        this.subscribeTriggerServices();
     };
 }
