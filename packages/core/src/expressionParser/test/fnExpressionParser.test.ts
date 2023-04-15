@@ -7,6 +7,7 @@ describe('Function Transformer Tests', () => {
         },
         extraDataRef: {
             current: {
+                serviceLoading: {},
                 y: 2,
                 arr: [1, 2, 3],
             },

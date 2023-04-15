@@ -1,12 +1,19 @@
 import React, { useRef, useReducer } from 'react';
 
+export interface IExtraDataType {
+    serviceLoading: {
+        [key: string]: boolean;  
+    }
+    [key: string]: any;
+}
+
 /**
  * @description extraData context hook
  * @param init 缺省值
  * @returns
  */
-export function useExtraData(init) {
-    const stateRef = useRef(init);
+export function useExtraData(init: IExtraDataType) {
+    const stateRef = useRef<IExtraDataType>(init);
     const [_, updateState] = useReducer((preState, action) => {
         stateRef.current =
             typeof action === 'function'
@@ -20,7 +27,9 @@ export function useExtraData(init) {
 
 export type ExtraDataRefType = ReturnType<typeof useExtraData>[0];
 
-type UpdateExtraType = ReturnType<typeof useExtraData>[1];
+type ExtraActionType = IExtraDataType | ((prevExtraData: IExtraDataType) => IExtraDataType)
+
+export type UpdateExtraType = ((action: ExtraActionType) => void) 
 
 export interface ExtraContextType {
     extraDataRef: ExtraDataRefType;
@@ -28,7 +37,7 @@ export interface ExtraContextType {
 }
 
 const ExtraContext = React.createContext<ExtraContextType>({
-    extraDataRef: { current: {} },
+    extraDataRef: { current: { serviceLoading: {} } },
     update: () => void 0,
 });
 

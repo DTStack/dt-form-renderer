@@ -128,6 +128,7 @@ describe('Expression Parser Tests', () => {
         };
         const extraDataRef = {
             current: {
+                serviceLoading: {},
                 m: [1, 2, 3],
             },
         };

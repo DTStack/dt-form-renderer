@@ -6,18 +6,18 @@
         "allowJs": true,
         "target": "es6",
         "module": "ES2022",
-        "noUnusedLocals": false,
+        "noUnusedLocals": true,
         "noUnusedParameters": true,
         "declaration": true,
         "strict": false,
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "skipLibCheck": true,
-        "jsx": "react-jsx",
+        "jsx": "react",
         "typeRoots": [
             "node",
             "node_modules/@types",
-            "../../node_modules/@types"
+            "../../node_modules/@types",
         ],
         "paths": {
             "@/*": ["./src/*"]

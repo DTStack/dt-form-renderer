@@ -1,4 +1,5 @@
 import type { FormInstance } from 'antd';
+import { UpdateExtraType } from '@/extraDataContext';
 import type {
     FormServicePoolType,
     JsonConfigFieldType,
@@ -37,7 +38,7 @@ export function fieldValueInteractionFactory(
  */
 export function triggerServiceFactory(
     servicePool: FormServicePoolType,
-    updateExtra,
+    updateExtra: UpdateExtraType,
     triggerService: TriggerServiceType,
 ): FormServiceType {
     const { serviceName, fieldInExtraData } = triggerService;
@@ -45,10 +46,21 @@ export function triggerServiceFactory(
     const service = servicePool?.[serviceName];
 
     return (context: IServiceContext) => {
+        updateExtra(extraData => ({
+            ...extraData,
+            serviceLoading: {
+                ...extraData.serviceLoading,
+                [serviceName]: true
+            }
+        }))
         return service(context).then((res) => {
             updateExtra((extraData) => ({
                 ...extraData,
                 [fieldInExtraData]: res,
+                serviceLoading: {
+                    ...extraData.serviceLoading,
+                    [serviceName]: false
+                }
             }));
         });
     };

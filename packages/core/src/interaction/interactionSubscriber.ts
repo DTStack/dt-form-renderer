@@ -14,7 +14,6 @@ export default class InteractionSubscriber {
     private _fieldConfList: JsonConfigFieldType[] = null;
     private _pubSubCenter: PubSubCenter = null;
     private _formInstance: FormInstance = null;
-    private _extraContext: ExtraContextType = null;
     private _triggerServiceFactory: (
         serviceConf: TriggerServiceType,
     ) => FormServiceType = null;
@@ -26,7 +25,6 @@ export default class InteractionSubscriber {
         formServicePool: FormServicePoolType,
     ) {
         this._formInstance = formInstance;
-        this._extraContext = extraContext;
         this._pubSubCenter = pubSubCenter;
         this._triggerServiceFactory = triggerServiceFactory.bind(
             null,
@@ -38,7 +36,6 @@ export default class InteractionSubscriber {
     dispose() {
         this._fieldConfList = null;
         this._formInstance = null;
-        this._extraContext = null;
         this._pubSubCenter.dispose();
         this._triggerServiceFactory = null;
     }

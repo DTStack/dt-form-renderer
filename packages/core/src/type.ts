@@ -3,7 +3,7 @@ import type { FormItemProps } from 'antd';
 import type { TransformedFnType } from './expressionParser/fnExpressionTransformer';
 
 /**
- * @description service 的触发类型
+ * @description service 的触发方式枚举
  */
 export enum ServiceTriggerEnum {
     onMount = 'onMount',
@@ -14,20 +14,39 @@ export enum ServiceTriggerEnum {
 }
 
 /**
+ * @description 枚举类型转化为联合类型
+ */
+type EnumToUnion<Enum extends string|number> =
+  `${Enum}` extends `${infer Num extends number}`
+    ? Num
+    : `${Enum}`
+
+/**
+ * @description service 的触发方式的联合类型
+ */
+export type ServiceTriggerKind = EnumToUnion<ServiceTriggerEnum>
+
+/**
  * @description service 参数类型
  */
 export interface IServiceContext {
+    /** 触发service的字段 */
+    fieldName: string;
+    /** service 被触发时表单的数据 */
     formData: any;
+    /** service 被触发时extra的值 */
     extraData: any;
+    /** 触发service时的参数，比如 onSearch 回调函数的参数 */
     args: any[];
-    trigger: ServiceTriggerEnum;
+    /** service 触发方式 */
+    trigger: ServiceTriggerKind;
 }
 
 /**
  * @description formRenderer 的 service 类型
  */
-export interface FormServiceType {
-    (context: IServiceContext): Promise<any>;
+export interface FormServiceType<Result = any> {
+    (context: IServiceContext): Promise<Result>;
 }
 
 /**
@@ -108,7 +127,7 @@ export interface WidgetPropsConfigType {
 export interface TriggerServiceType {
     serviceName: string;
     fieldInExtraData: string;
-    triggers?: ServiceTriggerEnum[];
+    triggers?: ServiceTriggerKind[];
 }
 
 /**
@@ -155,8 +174,7 @@ export interface JsonConfigType {
  * @description 表单组件的 props 类型，衍生自 WidgetPropsConfigType {@link WidgetPropsConfigType}
  */
 export interface WidgetPropsType {
-    options: TransformedFnType | any[];
-    [key: string]: any;
+    [key: string]: TransformedFnType | unknown;
 }
 
 /**
@@ -178,5 +196,5 @@ export interface FieldItemMetaType {
     valuePropName?: FormItemProps['valuePropName'];
     extra?: string;
     valueDerived?: TransformedFnType;
-    servicesTriggers?: ServiceTriggerEnum[];
+    servicesTriggers?: ServiceTriggerKind[];
 }

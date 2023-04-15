@@ -7,7 +7,7 @@ import type {
     TransformedFnType,
 } from '../../expressionParser/fnExpressionTransformer';
 import PubSubCenter from '@/interaction/pubSubCenter';
-import { FieldItemMetaType, ServiceTriggerEnum } from '../../type';
+import { FieldItemMetaType, ServiceTriggerEnum, WidgetPropsType } from '../../type';
 
 const { Item: FormItem } = Form;
 
@@ -122,6 +122,14 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         return serviceTriggerProps;
     };
 
+    const widgetPropsGetter = (valueGetter: ReturnType<typeof genValueGetter>, _widgetProps: WidgetPropsType) => {
+        const widgetProps: {} = {};
+        Object.entries(_widgetProps).map(([key, value]) => {
+            widgetProps[key] = valueGetter(value);
+        })
+        return widgetProps
+    }
+
     return (
         <FormItem noStyle shouldUpdate>
             {(form) => {
@@ -131,6 +139,10 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                     form.getFieldsValue(),
                     extraContext.extraDataRef.current,
                 );
+                const serviceProps = {} as any;
+                onBlur && (serviceProps.onBlur = onBlur);
+                onFocus && (serviceProps.onFocus = onFocus);
+                onSearch && (serviceProps.onSearch = onSearch);
                 return !valueGetter(destroy) ? (
                     <FormItem
                         name={fieldName}
@@ -146,15 +158,8 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                         valuePropName={valuePropName}
                     >
                         <Widget
-                            {...widgetProps}
-                            placeholder={
-                                valueGetter(widgetProps?.placeholder) ?? ''
-                            }
-                            options={valueGetter(widgetProps?.options)}
-                            disabled={valueGetter(widgetProps.disabled)}
-                            onBlur={onBlur}
-                            onFocus={onFocus}
-                            onSearch={onSearch}
+                            {...widgetPropsGetter(valueGetter, widgetProps)}
+                            {...serviceProps}
                         />
                     </FormItem>
                 ) : null;

@@ -57,7 +57,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
         ...restProps
     } = props;
     const [form] = useForm();
-    const [extraDataRef, updateExtraData] = useExtraData({});
+    const [extraDataRef, updateExtraData] = useExtraData({ serviceLoading: {} });
     const [formItemsMeta, updateFormItems] = useState<FieldItemMetaType[]>([]);
     const pubSubCenterRef = useRef<PubSubCenter>(null);
     const mountedFieldsRef = useRef<string[]>([]);

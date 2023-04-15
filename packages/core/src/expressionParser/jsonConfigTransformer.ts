@@ -9,7 +9,7 @@ import type {
     FormItemRuleMapType,
     FormItemCustomRuleType,
     TriggerServiceType,
-    ServiceTriggerEnum,
+    ServiceTriggerKind,
 } from '../type';
 import React from 'react';
 
@@ -89,9 +89,18 @@ class JsonConfigTransformer {
         return res;
     }
 
+    transformWidgetsProps = (widgetProps: {}) => {
+        const transformedWidgetProps: {} = {};
+        if(!widgetProps) return transformedWidgetProps
+        Object.entries(widgetProps).map(([key, value]) => {
+            transformedWidgetProps[key] = this.transformFnExprField(value as string)
+        })
+        return transformedWidgetProps
+    }
+
     getServicesTriggers(triggerServices: TriggerServiceType[]) {
         if (!triggerServices?.length) return [];
-        const set = new Set<ServiceTriggerEnum>();
+        const set = new Set<ServiceTriggerKind>();
         triggerServices.forEach(({ triggers }) => {
             if (!triggers?.length) return [];
             triggers.forEach((trigger) => set.add(trigger));
@@ -121,16 +130,7 @@ class JsonConfigTransformer {
                 rules: rules ? this.transformRules(rules) : () => [],
                 tooltip: this.transformTooltip(tooltip),
                 servicesTriggers: this.getServicesTriggers(triggerServices),
-                widgetProps: {
-                    ...widgetProps,
-                    options: this.transformFnExprField(
-                        widgetProps.options as string,
-                    ),
-                    placeholder: this.transformFnExprField(
-                        widgetProps.placeholder,
-                    ),
-                    disabled: this.transformFnExprField(widgetProps.disabled),
-                },
+                widgetProps: this.transformWidgetsProps(widgetProps)
             };
         });
     }

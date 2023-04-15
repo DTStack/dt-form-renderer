@@ -1,13 +1,12 @@
 import { ExtraDataRefType } from '../extraDataContext';
 import {
-    ServiceTriggerEnum,
     FormServiceType,
-    TriggerServiceType,
+    ServiceTriggerKind
 } from '../type';
 
 export interface IServiceEvent {
     service: FormServiceType;
-    triggers: ServiceTriggerEnum[];
+    triggers: ServiceTriggerKind[];
 }
 
 export default class PubSubCenter {
@@ -56,7 +55,7 @@ export default class PubSubCenter {
 
     publishServiceEvent = (
         field: string,
-        trigger: ServiceTriggerEnum,
+        trigger: ServiceTriggerKind,
         formData: any,
         extraDataRef: ExtraDataRefType,
         restArgs?: any[],
@@ -68,6 +67,7 @@ export default class PubSubCenter {
                 service({
                     args: restArgs,
                     trigger,
+                    fieldName: field,
                     formData,
                     extraData: extraDataRef.current,
                 });
