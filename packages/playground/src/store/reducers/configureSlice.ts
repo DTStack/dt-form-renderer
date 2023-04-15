@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface ConfigureType {
-    autoSave: boolean
+    autoSave: boolean;
 }
 
 export const initialState: ConfigureType = {
@@ -13,12 +13,12 @@ export const configureSlice = createSlice({
     name: 'configure',
     initialState,
     reducers: {
-        initConfigure: (state, action: { payload: ConfigureType }) =>{
+        initConfigure: (state, action: { payload: ConfigureType }) => {
             return action.payload;
         },
         setAutoSave: (state, action: { payload: boolean }) => {
             return {
-                autoSave: action.payload
+                autoSave: action.payload,
             };
         },
     },

@@ -14,13 +14,13 @@ import type { DefaultOptionType } from 'antd/lib/select';
 const options: DefaultOptionType[] = [
     {
         label: 'hive source',
-        value: JSON.stringify(hiveSource, null, 2)
+        value: JSON.stringify(hiveSource, null, 4),
     },
     {
         label: 'oracle source',
-        value: JSON.stringify(oracleSource, null, 2)
+        value: JSON.stringify(oracleSource, null, 4),
     },
-]
+];
 
 interface TitleWithToolbarProps {
     onReload?: () => any;
@@ -37,16 +37,18 @@ const TitleWithToolbar: React.FC<TitleWithToolbarProps> = (props) => {
         <p className={'toolbar-title ' + className}>
             <p>
                 <span className="toolbar-title-title">{props.children}</span>
-                {props.onImportTemplate
-                    ? (<Select
-                            size="small"
-                            style={{ width: 150, marginLeft: 12 }}
-                            placeholder="选择模板以导入"
-                            value={null}
-                            options={options}
-                            onSelect={(value) => {props.onImportTemplate(value) }}
-                        />)
-                    : null}
+                {props.onImportTemplate ? (
+                    <Select
+                        size="small"
+                        style={{ width: 150, marginLeft: 12 }}
+                        placeholder="选择模板以导入"
+                        value={null}
+                        options={options}
+                        onSelect={(value) => {
+                            props.onImportTemplate(value);
+                        }}
+                    />
+                ) : null}
             </p>
             <span className="toolbar-title-toolbar">
                 {props.onDownload ? (

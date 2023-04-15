@@ -5,7 +5,11 @@ import { message } from 'antd';
  * @param content 文件文本内容
  * @param ext 文件扩展名
  */
-export function downloadFile(content: string, name: string,ext: string = 'json') {
+export function downloadFile(
+    content: string,
+    name: string,
+    ext: string = 'json',
+) {
     const eleLink = document.createElement('a');
     eleLink.download = `${name}_${Date.now()}.${ext}`;
     eleLink.style.display = 'none';
@@ -31,10 +35,10 @@ export function copy2Clipboard(text: string) {
 }
 
 /**
-* 该函数delayTime时间内顶多执行一次func（最后一次），如果freshTime时间内没有执行，则强制执行一次。
-* @param {function} func
-*/
-export function debounceFunctionWrap (func?: any) {
+ * 该函数delayTime时间内顶多执行一次func（最后一次），如果freshTime时间内没有执行，则强制执行一次。
+ * @param {function} func
+ */
+export function debounceFunctionWrap(func?: any) {
     /**
      * 最小执行间隔，每隔一段时间强制执行一次函数
      * 这里不能太小，因为太小会导致大的解析任务没执行完阻塞。
@@ -62,6 +66,6 @@ export function debounceFunctionWrap (func?: any) {
         _timeClock = setTimeout(() => {
             outTime = null;
             func(...arg);
-        }, delayTime)
-    }
+        }, delayTime);
+    };
 }

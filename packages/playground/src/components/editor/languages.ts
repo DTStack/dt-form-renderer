@@ -75,7 +75,7 @@ export const fieldCompletionsCreator: (
             insertText: `"${'widgetProps'}": { $1 },`,
         },
         {
-            label: 'triggerActions',
+            label: 'triggerServices',
             detail: '触发的action配置',
         },
     ].map((i) => ({

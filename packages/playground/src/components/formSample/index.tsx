@@ -1,24 +1,33 @@
-import React, { useEffect, useRef } from 'react';
-import { Form, Select, Input } from 'antd';
-import FormRenderer from '@datasync-form-renderer/core';
+import React, {
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
+import { Form, Select } from 'antd';
+import { FormInstance } from 'antd/es/form/Form';
+import { BaseOptionType } from 'antd/es/select';
+import FormRenderer, { JsonConfigType } from '@datasync-form-renderer/core';
 import formServicePool from './support/formServicePool';
 import ruleMap from './support/formRuleMap';
 import getWidgets from './support/getWidgets';
-import { FormInstance } from 'antd/es/form/Form';
 import docsMap from './support/doc';
+import { getSourceListViaType, getSourceTypeList } from './mockApi/index';
+import {
+    DataSourceType,
+    DataSourceItem,
+} from './mockApi/mockData/streamSource';
 
 const FormItem = Form.Item;
 
 interface IProps {
-    parsedJson: any[];
+    parsedJson: JsonConfigType;
     initialValues: any;
 }
 
-const sourceList = [
-    { label: 'hive_1', value: 1, type: 'hive' },
-    { label: 'hive_2', value: 2, type: 'hive' },
-    { label: 'oracle_1', value: 3, type: 'oracle' },
-];
+const sourceTypeList = [{ label: 'mysql', value: 'mysql' }];
+
 const formLayout: any = {
     labelCol: {
         xs: { span: 24 },
@@ -30,39 +39,69 @@ const formLayout: any = {
     },
 };
 
+const defaultExtraData = {
+    flinkVersion: '1.12',
+    dataSourceList: [],
+};
+
 const FormSample: React.FC<IProps> = (props) => {
     const { parsedJson } = props;
+    const [jsonConfig, setJsonConfig] = useState<JsonConfigType>(null);
+    const [extraData, setExtraData] = useState<any>(defaultExtraData);
+    const [sourceTypeList, updateSourceTypeList] = useState<DataSourceType[]>(
+        [],
+    );
     const formRef = useRef<FormInstance>(null);
 
+    useEffect(() => {
+        getSourceTypeList().then((res) => {
+            updateSourceTypeList(res);
+        });
+    }, []);
+
+    useLayoutEffect(() => {
+        setJsonConfig(parsedJson);
+    }, [parsedJson]);
+
+    const sourceTypeOptions = useMemo<BaseOptionType[]>(() => {
+        return sourceTypeList.map((item) => ({
+            label: item.name,
+            value: item.type,
+        }));
+    }, [sourceTypeList]);
+
+    const onChangeSource = (form, sourceType) => {
+        getSourceListViaType(sourceType).then((res) => {
+            setExtraData({
+                ...extraData,
+                dataSourceList: res.map((item) => ({
+                    label: item.name,
+                    value: item.id,
+                })),
+            });
+        });
+    };
 
     const renderFixedItem = (form, extraDataRef) => {
         return (
-            <>
-                <FormItem
-                    name="sourceId"
-                    label="数据来源"
-                    rules={[
-                        {
-                            required: true,
-                            message: '请选择数据来源！',
-                        },
-                    ]}
-                >
-                    <Select
-                        onChange={(v) => {
-                            const sourceType = sourceList.find(
-                                (s) => s.value === v,
-                            )?.type;
-                            form.setFieldValue('sourceType', sourceType);
-                        }}
-                        placeholder="请选择数据来源"
-                        options={sourceList}
-                    />
-                </FormItem>
-                <FormItem name="sourceType" label="数据源类型" hidden>
-                    <Input />
-                </FormItem>
-            </>
+            <FormItem
+                name="type"
+                label="数据源类型"
+                rules={[
+                    {
+                        required: true,
+                        message: '请选择数据源类型!',
+                    },
+                ]}
+            >
+                <Select
+                    onChange={(v) => {
+                        onChangeSource(form, v);
+                    }}
+                    placeholder="请选择数据源类型"
+                    options={sourceTypeOptions}
+                />
+            </FormItem>
         );
     };
 
@@ -74,13 +113,12 @@ const FormSample: React.FC<IProps> = (props) => {
             getWidgets={getWidgets}
             ruleMap={ruleMap}
             formServicePool={formServicePool}
-            parsedJson={parsedJson}
-            defaultExtraData={{
-                isNotHiveTable: false,
-            }}
-            preserveFields={['sourceId', 'sourceType']}
+            jsonConfig={jsonConfig}
+            defaultExtraData={extraData}
+            preserveFields={['sourceType']}
             preserveFormItems={renderFixedItem}
             initialValues={props.initialValues}
+            onValuesChange={(...args) => console.log(args)}
         />
     );
 };

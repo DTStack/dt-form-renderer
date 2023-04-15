@@ -21,12 +21,13 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "core": "pnpm --filter ./packages/core",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less}'",
+    "core": "pnpm --filter ./packages/core",
     "playground": "pnpm --filter ./packages/playground",
-    "editor": "pnpm --filter ./packages/playground",
-    "dev": "pnpm playground start",
-    "deploy": "pnpm core build && pnpm i && pnpm playground deploy"
+    "build": "pnpm core build",
+    "start": "pnpm core build && pnpm i && pnpm playground start",
+    "deploy": "pnpm core build && pnpm i && pnpm playground deploy",
+    "sync": "pnpm core build && rm -rf ../dt-works/dt-insight-studio/packages/dataSync-form-renderer/* && cp -r ./packages/core/*  ../dt-works/dt-insight-studio/packages/dataSync-form-renderer/"
   },
   "repository": {
     "type": "git",

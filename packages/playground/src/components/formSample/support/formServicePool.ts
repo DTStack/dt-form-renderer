@@ -2,9 +2,25 @@ import type {
     FormServicePoolType,
     FormServiceType,
 } from '@datasync-form-renderer/core';
+import { getSourceListViaType } from '../mockApi';
 
-const getSchemaList: FormServiceType = function (formData, extraData) {
-    console.log('invoke getSchemaList', formData, extraData);
+const getDerivedValue: FormServiceType = function ({
+    formData,
+    extraData,
+    trigger,
+    args,
+}) {
+    console.log('invoke getDerivedValue', formData, extraData);
+    return Promise.resolve();
+};
+
+const getSchemaList: FormServiceType = function ({
+    formData,
+    extraData,
+    trigger,
+    args,
+}) {
+    console.log('invoke getSchemaList', formData, extraData, args);
     if (!formData.sourceId || !formData.sourceType) return Promise.resolve([]);
     return Promise.resolve(
         [
@@ -14,8 +30,16 @@ const getSchemaList: FormServiceType = function (formData, extraData) {
     );
 };
 
-const getTableList: FormServiceType = function (formData, extraData) {
+const getTableList: FormServiceType = function ({
+    formData,
+    extraData,
+    trigger,
+    args,
+}) {
     console.log('invoke getTableList', formData, extraData);
+    console.log('FORM DATA ***', formData);
+    console.log('EXTRA DATA ***', extraData);
+    console.log('ARGS ***', args, typeof args);
     if (!formData.schema) return Promise.resolve([]);
     const result =
         formData.schema.endsWith === 'assets'
@@ -34,7 +58,12 @@ const getTableList: FormServiceType = function (formData, extraData) {
     });
 };
 
-const getTableLocationType: FormServiceType = function (formData, extraData) {
+const getTableLocationType: FormServiceType = function ({
+    formData,
+    extraData,
+    trigger,
+    args,
+}) {
     console.log('invoke getTableLocationType', formData, extraData);
     if (!formData.tableName) return Promise.resolve(true);
     const result = (formData.tableName as string)?.endsWith('meta');
@@ -45,7 +74,12 @@ const getTableLocationType: FormServiceType = function (formData, extraData) {
     });
 };
 
-const getHivePartitions: FormServiceType = function (formData, extraData) {
+const getHivePartitions: FormServiceType = function ({
+    formData,
+    extraData,
+    trigger,
+    args,
+}) {
     console.log('invoke getHivePartitions', formData, extraData);
     if (!formData.tableName) return Promise.resolve([]);
     const result = (formData.tableName as string)?.endsWith('meta')
@@ -64,7 +98,12 @@ const getHivePartitions: FormServiceType = function (formData, extraData) {
     });
 };
 
-const getPartitionDetail: FormServiceType = function (formData, extraData) {
+const getPartitionDetail: FormServiceType = function ({
+    formData,
+    extraData,
+    trigger,
+    args,
+}) {
     console.log('invoke getPartitionDetail', formData, extraData);
     if (!formData.tableName) return Promise.resolve([]);
     const result = (formData.tableName as string)?.endsWith('meta')
@@ -89,6 +128,7 @@ const formServicePool: FormServicePoolType = {
     getHivePartitions,
     getTableLocationType,
     getPartitionDetail,
+    getDerivedValue,
 };
 
 export default formServicePool;

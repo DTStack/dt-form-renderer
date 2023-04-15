@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { message } from 'antd';
 import { useSelector } from 'react-redux';
 import { editor } from 'monaco-editor';
+import { JsonConfigType } from '@datasync-form-renderer/core';
 import Editor from '@/components/editor';
 import FormSample from '@/components/formSample';
 import TitleWithToolbar from '@/components/titleWithToolbar';
@@ -13,7 +14,7 @@ import './workbench.less';
 interface workbenchProps {}
 
 const WorkBench: React.FC<workbenchProps> = () => {
-    const [parsedJson, setParsedJson] = useState([]);
+    const [parsedJson, setParsedJson] = useState({} as JsonConfigType);
     const [initialValues, setInitialValues] = useState();
     const configEditorRef = useRef<editor.IStandaloneCodeEditor>(null);
     const valueEditorRef = useRef<editor.IStandaloneCodeEditor>(null);
@@ -42,13 +43,19 @@ const WorkBench: React.FC<workbenchProps> = () => {
         );
     });
 
-    const parseEditorValue = (value: string) => {
+    const parseEditorValue = (value: string, required = true) => {
         return new Promise<any>((resolve, reject) => {
             if (value.replace(/\s/g, '') === '') {
-                reject(null);
-                return;
+                if (required) {
+                    reject(null);
+                    message.error('json 配置不能为空！');
+                    return;
+                } else {
+                    resolve({});
+                    return;
+                }
             }
-            let parsedValue = [];
+            let parsedValue = {};
             try {
                 parsedValue = JSON.parse(value);
             } catch (error) {
@@ -63,20 +70,20 @@ const WorkBench: React.FC<workbenchProps> = () => {
     const formatEditorContent = (
         ref: React.RefObject<editor.IStandaloneCodeEditor>,
     ) => {
-        return parseEditorValue(ref.current.getValue()).then((obj) => {
-            ref.current.setValue(JSON.stringify(obj, null, 2));
+        return parseEditorValue(ref.current.getValue(), false).then((obj) => {
+            ref.current.setValue(JSON.stringify(obj, null, 4));
             message.success('格式化成功！');
         });
     };
 
     const refreshForm = () => {
         const promises = [
-            parseEditorValue(valueEditorRef.current.getValue()),
-            parseEditorValue(configEditorRef.current.getValue()),
+            parseEditorValue(valueEditorRef.current.getValue(), false),
+            parseEditorValue(configEditorRef.current.getValue(), true),
         ];
         return Promise.all(promises).then(([initialValues, parsedJson]) => {
             setInitialValues(initialValues);
-            setParsedJson(parsedJson ?? []);
+            setParsedJson(parsedJson ?? {});
         });
     };
 
@@ -84,13 +91,13 @@ const WorkBench: React.FC<workbenchProps> = () => {
         const values = {};
         return parseEditorValue(
             config ?? configEditorRef.current.getValue(),
-        ).then((parsedJson) => {
-            parsedJson.forEach((item) => {
+        ).then((parsedJson: JsonConfigType) => {
+            parsedJson.fieldList.forEach((item) => {
                 if (item.fieldName) {
                     values[item.fieldName] = null;
                 }
             });
-            valueEditorRef.current.setValue(JSON.stringify(values, null, 2));
+            valueEditorRef.current.setValue(JSON.stringify(values, null, 4));
         });
     };
 
