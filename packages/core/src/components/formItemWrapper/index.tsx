@@ -39,6 +39,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         servicesTriggers,
     } = formItemMeta;
     const derivedValueRef = useRef<undefined>();
+    const prevDestroyRef = useRef<boolean>(true)
     const extraContext = useContext(ExtraContext);
 
     const Widget: any = useMemo(() => {
@@ -77,6 +78,25 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         }
         derivedValueRef.current = derivedValue as any;
     };
+
+    const handleMountService = (destroyValue: boolean, form: FormInstance) => {
+        if(destroyValue || 
+            destroyValue === prevDestroyRef.current || 
+            !servicesTriggers.includes(ServiceTriggerEnum.onMount)
+        ) {
+            prevDestroyRef.current = destroyValue;
+            return;
+        }
+        prevDestroyRef.current = destroyValue;
+        setTimeout(() => {
+            publishServiceEvent(
+                fieldName,
+                ServiceTriggerEnum.onMount,
+                form.getFieldsValue(),
+                extraContext.extraDataRef,
+            )
+        })
+    }
 
     const getServiceTriggerProps = (formData, extraData) => {
         const serviceTriggerProps = {
@@ -137,13 +157,15 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                 deriveValue(form as FormInstance);
                 const { onBlur, onFocus, onSearch } = getServiceTriggerProps(
                     form.getFieldsValue(),
-                    extraContext.extraDataRef.current,
+                    extraContext.extraDataRef,
                 );
                 const serviceProps = {} as any;
                 onBlur && (serviceProps.onBlur = onBlur);
                 onFocus && (serviceProps.onFocus = onFocus);
                 onSearch && (serviceProps.onSearch = onSearch);
-                return !valueGetter(destroy) ? (
+                const destroyValue = valueGetter(destroy);
+                handleMountService(destroyValue, form as FormInstance)
+                return !destroyValue ? (
                     <FormItem
                         name={fieldName}
                         initialValue={initialValue}

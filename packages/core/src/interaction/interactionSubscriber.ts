@@ -149,7 +149,7 @@ export default class InteractionSubscriber {
      */
     subscribe = (fieldList: JsonConfigFieldType[]) => {
         this._fieldConfList = fieldList;
-        this.subscribeFieldChangeEvent();
         this.subscribeTriggerServices();
+        this.subscribeFieldChangeEvent();
     };
 }

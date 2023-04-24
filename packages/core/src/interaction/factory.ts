@@ -26,7 +26,8 @@ export function fieldValueInteractionFactory(
         ev[fieldConf.fieldName] = fieldConf.initialValue;
         return ev;
     }, {} as any);
-    return form.setFieldsValue(emptyValue);
+    form.setFieldsValue(emptyValue);
+    return effectFields
 }
 
 /**

@@ -33,7 +33,8 @@ export default class PubSubCenter {
 
     publishDepEvent = (field: string) => {
         const effectHandler = this._fieldDependEventPool.get(field) ?? [];
-        effectHandler.forEach((handler) => handler());
+        const effectFields = effectHandler.map((handler) => handler());
+        return effectFields
     };
 
     subscribeServiceEvent = (

@@ -60,7 +60,6 @@ const FormRenderer: React.ForwardRefRenderFunction<
     const [extraDataRef, updateExtraData] = useExtraData({ serviceLoading: {} });
     const [formItemsMeta, updateFormItems] = useState<FieldItemMetaType[]>([]);
     const pubSubCenterRef = useRef<PubSubCenter>(null);
-    const mountedFieldsRef = useRef<string[]>([]);
 
     useImperativeHandle(ref, () => form, [form]);
 
@@ -94,31 +93,9 @@ const FormRenderer: React.ForwardRefRenderFunction<
             subscriber.dispose();
             const fixedValues = form.getFieldsValue(preserveFields);
             pubSubCenterRef.current = null;
-            mountedFieldsRef.current = [];
-
-            setTimeout(() => {
-                form.resetFields();
-                form.setFieldsValue(fixedValues);
-            });
+            form.resetFields();
+            form.setFieldsValue(fixedValues);
         };
-    }, [jsonConfig]);
-
-    /**
-     * 处理切换数据源时，要触发的 action
-     */
-    useEffect(() => {
-        setTimeout(() => {
-            // 延迟调用，保证所有的formItem组件此时已经挂载
-            const currentFields = Object.keys(form.getFieldsValue());
-            currentFields.forEach((mf) =>
-                pubSubCenterRef.current.publishServiceEvent(
-                    mf,
-                    ServiceTriggerEnum.onMount,
-                    form.getFieldsValue(),
-                    extraDataRef,
-                ),
-            );
-        });
     }, [jsonConfig]);
 
     /**
@@ -131,43 +108,20 @@ const FormRenderer: React.ForwardRefRenderFunction<
         });
     }, [defaultExtraData]);
 
-    /**
-     * 处理不切换数据源的情况下，某些字段从销毁状态到挂载状态时要触发的 action
-     */
-    useEffect(() => {
-        const currentFields = Object.keys(form.getFieldsValue());
-        const mountedFields = mountedFieldsRef.current;
-        const willMountFields = currentFields.filter(
-            (f) => !mountedFields.includes(f),
-        );
-        /** 当某些字段挂载时触发 onMount service */
-        if (willMountFields.length && mountedFieldsRef.current.length) {
-            setTimeout(() => {
-                willMountFields.forEach((mf) =>
-                    pubSubCenterRef.current.publishServiceEvent(
-                        mf,
-                        ServiceTriggerEnum.onMount,
-                        form.getFieldsValue(),
-                        extraDataRef,
-                    ),
-                );
-            });
-        }
-        mountedFieldsRef.current = currentFields;
-    }, [form.getFieldsValue(), extraDataRef.current]);
-
     const onValuesChange = (changedValues, ...restArgs) => {
         const changedFields = Object.keys(changedValues);
         changedFields.forEach((fieldName) => {
             // 处理字段值之间的联动关系, 发布 字段值变更事件
-            pubSubCenterRef.current.publishDepEvent(fieldName);
+            const resetFields =  pubSubCenterRef.current.publishDepEvent(fieldName).flat();
             // 处理字段触发的 action， 发布 字段值变更事件
-            pubSubCenterRef.current.publishServiceEvent(
-                fieldName,
-                ServiceTriggerEnum.onChange,
-                form.getFieldsValue(),
-                extraDataRef,
-            );
+            [fieldName, ...resetFields].forEach(field => {
+                pubSubCenterRef.current.publishServiceEvent(
+                    field,
+                    ServiceTriggerEnum.onChange,
+                    form.getFieldsValue(),
+                    extraDataRef,
+                );
+            })
         });
         props.onValuesChange?.(changedValues, restArgs);
     };

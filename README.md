@@ -6,10 +6,9 @@
 git clone git@github.com:HaydenOrz/dataSync-form-renderer.git
 # install dependencies
 pnpm install
-# start example
+# start playground
 pnpm start
 ```
 
-## Web Demo
-![image](https://user-images.githubusercontent.com/58289241/220845152-c0f53bb6-96b3-4b47-af49-31b2606e36d8.png)
-
+## Online Demo
+[dataSync-form-renderer Playground](https://haydenorz.github.io/dataSync-form-renderer/)
