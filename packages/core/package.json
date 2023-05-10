@@ -1,9 +1,18 @@
 {
-  "name": "datasync-form-renderer-core",
+  "name": "dt-form-renderer-core",
   "version": "0.0.1",
   "description": "",
   "author": "Hayden",
-  "main": "./lib/index.js",
+  "main": "./esm/index.js",
+  "module": "./esm/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DTStack/dt-form-renderer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DTStack/dt-form-renderer/issues"
+  },
+  "homepage": "https://github.com/DTStack/dt-form-renderer#readme",
   "dependencies": {
     "xss": "^1.0.14"
   },

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./lib/",
+        "outDir": "./esm/",
         "baseUrl": "./",
         "sourceMap": true,
         "allowJs": true,

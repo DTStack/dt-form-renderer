@@ -10,6 +10,7 @@
 
 # production
 /lib
+/esm
 
 # misc
 .DS_Store
