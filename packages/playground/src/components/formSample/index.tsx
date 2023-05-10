@@ -116,7 +116,7 @@ const FormSample: React.FC<IProps> = (props) => {
             jsonConfig={jsonConfig}
             defaultExtraData={extraData}
             preserveFields={['sourceType']}
-            preserveFormItems={renderFixedItem}
+            header={renderFixedItem}
             initialValues={props.initialValues}
             onValuesChange={(...args) => console.log(args)}
         />

@@ -39,14 +39,7 @@ export function copy2Clipboard(text: string) {
  * @param {function} func
  */
 export function debounceFunctionWrap(func?: any) {
-    /**
-     * 最小执行间隔，每隔一段时间强制执行一次函数
-     * 这里不能太小，因为太小会导致大的解析任务没执行完阻塞。
-     */
     let freshTime = 1000;
-    /**
-     * 函数延迟时间
-     */
     let delayTime = 200;
 
     let outTime: any;
@@ -54,7 +47,6 @@ export function debounceFunctionWrap(func?: any) {
     return function () {
         const arg: any = arguments;
         _timeClock && clearTimeout(_timeClock);
-        // 这边设置在一定时间内，必须执行一次函数
         if (outTime) {
             let now: any = new Date();
             if (now - outTime > freshTime) {
