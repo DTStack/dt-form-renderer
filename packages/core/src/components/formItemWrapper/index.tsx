@@ -178,6 +178,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                         labelAlign={labelAlign}
                         trigger={trigger}
                         valuePropName={valuePropName}
+                        validateFirst
                     >
                         <Widget
                             {...widgetPropsGetter(valueGetter, widgetProps)}
