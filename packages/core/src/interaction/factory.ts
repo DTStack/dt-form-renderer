@@ -1,5 +1,5 @@
 import type { FormInstance } from 'antd';
-import { UpdateExtraType } from '@/extraDataContext';
+import { UpdateExtraType } from '../extraDataContext';
 import type {
     FormServicePoolType,
     JsonConfigFieldType,

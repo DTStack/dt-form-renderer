@@ -6,7 +6,7 @@ import type {
     ScopeType,
     TransformedFnType,
 } from '../../expressionParser/fnExpressionTransformer';
-import PubSubCenter from '@/interaction/pubSubCenter';
+import PubSubCenter from '../../interaction/pubSubCenter';
 import { FieldItemMetaType, ServiceTriggerEnum, WidgetPropsType } from '../../type';
 
 const { Item: FormItem } = Form;
