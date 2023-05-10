@@ -1,7 +1,7 @@
 {
-  "name": "datasync-form-renderer",
+  "name": "dt-form-renderer",
   "version": "0.0.1",
-  "description": "## Quick Start ```shell # clone registry git clone git@github.com:HaydenOrz/dataSync-form-renderer.git # install dependencies pnpm install # start example pnpm start ```",
+  "description": "Render Interaction Form by JSON",
   "main": "jest.config.js",
   "dependencies": {
     "antd": "4.24.8",
@@ -26,17 +26,16 @@
     "playground": "pnpm --filter ./packages/playground",
     "build": "pnpm core build",
     "start": "pnpm core build && pnpm i && pnpm playground start",
-    "deploy": "pnpm core build && pnpm i && pnpm playground deploy",
-    "sync": "pnpm core build && rm -rf ../dt-works/dt-insight-studio/packages/dataSync-form-renderer/* && cp -r ./packages/core/*  ../dt-works/dt-insight-studio/packages/dataSync-form-renderer/"
+    "deploy": "pnpm core build && pnpm i && pnpm playground deploy"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HaydenOrz/dataSync-form-renderer.git"
+    "url": "git+https://github.com/DTStack/dt-form-renderer.git"
   },
   "author": "Hayden",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/HaydenOrz/dataSync-form-renderer/issues"
+    "url": "https://github.com/DTStack/dt-form-renderer/issues"
   },
-  "homepage": "https://github.com/HaydenOrz/dataSync-form-renderer#readme"
+  "homepage": "https://github.com/DTStack/dt-form-renderer#readme"
 }

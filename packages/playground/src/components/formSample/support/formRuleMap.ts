@@ -2,7 +2,7 @@ import type {
     FormItemRuleMapType,
     FormItemValidatorType,
     FormItemCustomRuleType,
-} from '@datasync-form-renderer/core';
+} from '@dt-form-renderer/core';
 
 const noWhiteSpace: FormItemCustomRuleType = function (formData, extraData) {
     return (rule: any, value: any) => {

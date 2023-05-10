@@ -110,7 +110,7 @@ class Editor extends React.Component<EditorProps, EditorState> {
             <div
                 ref={(r) => (this._container = r)}
                 style={editorStyle}
-                className={`dataSync-monaco-editor ${className ?? ''}`}
+                className={`dt-monaco-editor ${className ?? ''}`}
             />
         );
     }

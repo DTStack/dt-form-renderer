@@ -8,7 +8,7 @@ import React, {
 import { Form, Select } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
 import { BaseOptionType } from 'antd/es/select';
-import FormRenderer, { JsonConfigType } from '@datasync-form-renderer/core';
+import FormRenderer, { JsonConfigType } from '@dt-form-renderer/core';
 import formServicePool from './support/formServicePool';
 import ruleMap from './support/formRuleMap';
 import getWidgets from './support/getWidgets';

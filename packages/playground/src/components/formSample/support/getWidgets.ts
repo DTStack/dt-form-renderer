@@ -1,7 +1,7 @@
 import { Select } from 'antd';
 import Editor from '../../editor';
 
-import type { GetWidgets } from '@datasync-form-renderer/core';
+import type { GetWidgets } from '@dt-form-renderer/core';
 
 const getWidgets: GetWidgets = (widget: string) => {
     const name = widget.toLowerCase();

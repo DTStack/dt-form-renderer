@@ -1,5 +1,5 @@
 {
-  "name": "datasync-form-renderer-playground",
+  "name": "dt-form-renderer-playground",
   "homepage": "./",
   "scripts": {
     "start": "umi dev",
@@ -24,7 +24,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@ant-design/pro-layout": "^6.5.0",
-    "@datasync-form-renderer/core": "workspace:../core",
+    "@dt-form-renderer/core": "workspace:../core",
     "@reduxjs/toolkit": "^1.9.3",
     "gh-pages": "^5.0.0",
     "idb": "^7.1.1",

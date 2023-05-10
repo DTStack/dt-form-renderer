@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { message } from 'antd';
 import { useSelector } from 'react-redux';
 import { editor } from 'monaco-editor';
-import { JsonConfigType } from '@datasync-form-renderer/core';
+import { JsonConfigType } from '@dt-form-renderer/core';
 import Editor from '@/components/editor';
 import FormSample from '@/components/formSample';
 import TitleWithToolbar from '@/components/titleWithToolbar';

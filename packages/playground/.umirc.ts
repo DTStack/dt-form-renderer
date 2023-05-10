@@ -2,7 +2,7 @@ import { defineConfig } from 'umi';
 import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 export default defineConfig({
-    title: 'datasync-form-render-playground',
+    title: 'dt-form-render-playground',
     nodeModulesTransform: {
         type: 'none',
     },
@@ -19,5 +19,5 @@ export default defineConfig({
     publicPath: './',
     // 设置路由前缀，通常用于部署到非根目录, 设置后改变 window.routerBase
     // 此时部署到 github page 上才不会白屏
-    base: '/dataSync-form-renderer/',
+    base: '/dt-form-renderer/',
 });

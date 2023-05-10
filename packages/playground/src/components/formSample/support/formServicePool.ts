@@ -1,7 +1,7 @@
 import type {
     FormServicePoolType,
     FormServiceType,
-} from '@datasync-form-renderer/core';
+} from '@dt-form-renderer/core';
 import { getSourceListViaType } from '../mockApi';
 
 const getDerivedValue: FormServiceType = function ({

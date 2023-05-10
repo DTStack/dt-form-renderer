@@ -46,7 +46,7 @@ importers:
     specifiers:
       '@ant-design/icons': ^5.0.1
       '@ant-design/pro-layout': ^6.5.0
-      '@datasync-form-renderer/core': workspace:../core
+      '@dt-form-renderer/core': workspace:../core
       '@reduxjs/toolkit': ^1.9.3
       '@umijs/preset-react': 1.x
       '@umijs/test': ^3.5.37
@@ -62,7 +62,7 @@ importers:
     dependencies:
       '@ant-design/icons': 5.0.1_react-dom@17.0.2+react@17.0.2
       '@ant-design/pro-layout': 6.38.22_react-dom@17.0.2+react@17.0.2
-      '@datasync-form-renderer/core': link:../core
+      '@dt-form-renderer/core': link:../core
       '@reduxjs/toolkit': 1.9.3_react-redux@8.0.5+react@17.0.2
       gh-pages: 5.0.0
       idb: 7.1.1

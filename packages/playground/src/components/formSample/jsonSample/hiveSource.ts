@@ -1,4 +1,4 @@
-import type { JsonConfigType } from '@datasync-form-renderer/core';
+import type { JsonConfigType } from '@dt-form-renderer/core';
 
 const hiveSource: JsonConfigType = {
     fieldList: [

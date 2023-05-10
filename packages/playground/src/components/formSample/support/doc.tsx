@@ -1,4 +1,5 @@
-import type { DocsMapType } from '@datasync-form-renderer/core';
+import * as React from 'react'
+import type { DocsMapType } from '@dt-form-renderer/core';
 
 const extraConfigDoc = (
     <div>
