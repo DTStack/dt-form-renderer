@@ -168,6 +168,7 @@ export interface JsonConfigFieldType {
  */
 export interface JsonConfigType {
     fieldList: JsonConfigFieldType[];
+    description?: any;
 }
 
 /**
