@@ -17,7 +17,7 @@
         "typeRoots": [
             "node",
             "node_modules/@types",
-            "../../node_modules/@types",
+            "../../node_modules/@types"
         ],
         "paths": {
             "@/*": ["./src/*"]

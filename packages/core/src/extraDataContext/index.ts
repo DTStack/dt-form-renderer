@@ -2,8 +2,8 @@ import React, { useRef, useReducer } from 'react';
 
 export interface IExtraDataType {
     serviceLoading: {
-        [key: string]: boolean;  
-    }
+        [key: string]: boolean;
+    };
     [key: string]: any;
 }
 
@@ -27,9 +27,11 @@ export function useExtraData(init: IExtraDataType) {
 
 export type ExtraDataRefType = ReturnType<typeof useExtraData>[0];
 
-type ExtraActionType = IExtraDataType | ((prevExtraData: IExtraDataType) => IExtraDataType)
+type ExtraActionType =
+    | IExtraDataType
+    | ((prevExtraData: IExtraDataType) => IExtraDataType);
 
-export type UpdateExtraType = ((action: ExtraActionType) => void) 
+export type UpdateExtraType = (action: ExtraActionType) => void;
 
 export interface ExtraContextType {
     extraDataRef: ExtraDataRefType;

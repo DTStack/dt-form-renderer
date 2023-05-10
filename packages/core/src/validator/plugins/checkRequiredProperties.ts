@@ -1,63 +1,63 @@
-import { Plugin, Diagnostic, DiagnosticLevel } from "../validator"
+import { Plugin, Diagnostic, DiagnosticLevel } from '../validator';
 
-const checkRequiredConf: Plugin = function(fieldsConfig) {
-    const title = "Required Property Check";
-    const diagnostics: Diagnostic[] = []; 
+const checkRequiredConf: Plugin = function (fieldsConfig) {
+    const title = 'Required Property Check';
+    const diagnostics: Diagnostic[] = [];
     const fieldNamesCache = [];
     fieldsConfig.forEach((fieldConf, index) => {
         const { fieldName, widget, label } = fieldConf;
-        if(!fieldName) {
+        if (!fieldName) {
             diagnostics.push({
                 level: DiagnosticLevel.Error,
                 message: `fieldName property can not be empty! please check \`fieldList[${index}].fieldName\`.`,
                 title,
-                location: [index]
-            })
+                location: [index],
+            });
         }
-        if(typeof fieldName !== "string") {
+        if (typeof fieldName !== 'string') {
             diagnostics.push({
                 level: DiagnosticLevel.Error,
                 message: `fieldName property must be a string! please check \`fieldList[${index}].fieldName\`.`,
                 title,
-                location: [index]
-            })
+                location: [index],
+            });
         }
-        if(!widget) {
+        if (!widget) {
             diagnostics.push({
                 level: DiagnosticLevel.Error,
                 message: `widget property can not be empty! please check \`fieldList[${index}].widget\`.`,
                 title,
-                location: [index]
-            })
+                location: [index],
+            });
         }
-        if(typeof widget !== "string") {
+        if (typeof widget !== 'string') {
             diagnostics.push({
                 level: DiagnosticLevel.Error,
                 message: `widget property must be a string! please check \`fieldList[${index}].widget\`.`,
                 title,
-                location: [index]
-            })
+                location: [index],
+            });
         }
-        if(!label) {
+        if (!label) {
             diagnostics.push({
                 level: DiagnosticLevel.Warn,
                 message: `label property should is empty! please check \`fieldList[${index}].widget\`.`,
                 title,
-                location: [index]
-            })
+                location: [index],
+            });
         }
-        if(fieldNamesCache.includes(fieldName)) {
+        if (fieldNamesCache.includes(fieldName)) {
             diagnostics.push({
                 level: DiagnosticLevel.Warn,
                 message: `there are duplicate fieldName property named \`${fieldName}\` in the fieldList! please check \`fieldList[${index}].fieldName\`.`,
                 title,
-                location: [index]
-            })
+                location: [index],
+            });
         } else {
-            fieldNamesCache.push(fieldName)
+            fieldNamesCache.push(fieldName);
         }
-    })
-    return diagnostics
-}
+    });
+    return diagnostics;
+};
 
 export default checkRequiredConf;

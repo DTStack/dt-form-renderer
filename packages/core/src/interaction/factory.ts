@@ -27,7 +27,7 @@ export function fieldValueInteractionFactory(
         return ev;
     }, {} as any);
     form.setFieldsValue(emptyValue);
-    return effectFields
+    return effectFields;
 }
 
 /**
@@ -47,21 +47,21 @@ export function triggerServiceFactory(
     const service = servicePool?.[serviceName];
 
     return (context: IServiceContext) => {
-        updateExtra(extraData => ({
+        updateExtra((extraData) => ({
             ...extraData,
             serviceLoading: {
                 ...extraData.serviceLoading,
-                [serviceName]: true
-            }
-        }))
+                [serviceName]: true,
+            },
+        }));
         return service(context).then((res) => {
             updateExtra((extraData) => ({
                 ...extraData,
                 [fieldInExtraData]: res,
                 serviceLoading: {
                     ...extraData.serviceLoading,
-                    [serviceName]: false
-                }
+                    [serviceName]: false,
+                },
             }));
         });
     };

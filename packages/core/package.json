@@ -1,35 +1,35 @@
 {
-  "name": "dt-form-renderer-core",
-  "version": "0.0.1",
-  "description": "",
-  "author": "Hayden",
-  "main": "./esm/index.js",
-  "module": "./esm/index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DTStack/dt-form-renderer.git"
-  },
-  "bugs": {
-    "url": "https://github.com/DTStack/dt-form-renderer/issues"
-  },
-  "homepage": "https://github.com/DTStack/dt-form-renderer#readme",
-  "dependencies": {
-    "xss": "^1.0.14"
-  },
-  "peerDependencies": {
-    "antd": ">4.2",
-    "react": ">=16.13.1",
-    "react-dom": ">=16.13.1"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0"
-  },
-  "scripts": {
-    "test": "jest",
-    "build": "rm -rf lib && tsc",
-    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}' --config ../../.prettierrc",
-    "check-types": "tsc --skipLibCheck --noEmit"
-  },
-  "license": "ISC"
+    "name": "dt-form-renderer-core",
+    "version": "0.0.1",
+    "description": "",
+    "author": "Hayden",
+    "main": "./esm/index.js",
+    "module": "./esm/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/DTStack/dt-form-renderer.git"
+    },
+    "bugs": {
+        "url": "https://github.com/DTStack/dt-form-renderer/issues"
+    },
+    "homepage": "https://github.com/DTStack/dt-form-renderer#readme",
+    "dependencies": {
+        "xss": "^1.0.14"
+    },
+    "peerDependencies": {
+        "antd": ">4.2",
+        "react": ">=16.13.1",
+        "react-dom": ">=16.13.1"
+    },
+    "devDependencies": {
+        "@types/react": "^17.0.0",
+        "@types/react-dom": "^17.0.0"
+    },
+    "scripts": {
+        "test": "jest",
+        "build": "rm -rf lib && tsc",
+        "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}' --config ../../.prettierrc",
+        "check-types": "tsc --skipLibCheck --noEmit"
+    },
+    "license": "ISC"
 }

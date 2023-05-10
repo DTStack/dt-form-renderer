@@ -1,4 +1,4 @@
-import checkDependencies from "./checkDependencies";
-import checkRequiredConf from "./checkRequiredProperties";
+import checkDependencies from './checkDependencies';
+import checkRequiredConf from './checkRequiredProperties';
 
-export { checkDependencies, checkRequiredConf }
+export { checkDependencies, checkRequiredConf };

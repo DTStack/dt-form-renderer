@@ -16,15 +16,13 @@ export enum ServiceTriggerEnum {
 /**
  * @description 枚举类型转化为联合类型
  */
-type EnumToUnion<Enum extends string|number> =
-  `${Enum}` extends `${infer Num extends number}`
-    ? Num
-    : `${Enum}`
+type EnumToUnion<Enum extends string | number> =
+    `${Enum}` extends `${infer Num extends number}` ? Num : `${Enum}`;
 
 /**
  * @description service 的触发方式的联合类型
  */
-export type ServiceTriggerKind = EnumToUnion<ServiceTriggerEnum>
+export type ServiceTriggerKind = EnumToUnion<ServiceTriggerEnum>;
 
 /**
  * @description service 参数类型

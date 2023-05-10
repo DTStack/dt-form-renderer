@@ -142,8 +142,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
             >
                 {typeof header === 'function'
                     ? header?.(form, extraDataRef.current)
-                    : header
-                }
+                    : header}
                 {formItemsMeta.map((formItemMeta) => {
                     return (
                         <FormItemWrapper
@@ -158,8 +157,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 })}
                 {typeof footer === 'function'
                     ? footer?.(form, extraDataRef.current)
-                    : footer
-                }
+                    : footer}
             </Form>
         </ExtraContext.Provider>
     );

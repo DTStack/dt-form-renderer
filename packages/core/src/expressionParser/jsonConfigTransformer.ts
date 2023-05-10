@@ -91,12 +91,14 @@ class JsonConfigTransformer {
 
     transformWidgetsProps = (widgetProps: {}) => {
         const transformedWidgetProps: {} = {};
-        if(!widgetProps) return transformedWidgetProps
+        if (!widgetProps) return transformedWidgetProps;
         Object.entries(widgetProps).map(([key, value]) => {
-            transformedWidgetProps[key] = this.transformFnExprField(value as string)
-        })
-        return transformedWidgetProps
-    }
+            transformedWidgetProps[key] = this.transformFnExprField(
+                value as string,
+            );
+        });
+        return transformedWidgetProps;
+    };
 
     getServicesTriggers(triggerServices: TriggerServiceType[]) {
         if (!triggerServices?.length) return [];
@@ -130,7 +132,7 @@ class JsonConfigTransformer {
                 rules: rules ? this.transformRules(rules) : () => [],
                 tooltip: this.transformTooltip(tooltip),
                 servicesTriggers: this.getServicesTriggers(triggerServices),
-                widgetProps: this.transformWidgetsProps(widgetProps)
+                widgetProps: this.transformWidgetsProps(widgetProps),
             };
         });
     }

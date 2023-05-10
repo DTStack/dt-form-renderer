@@ -1,8 +1,5 @@
 import { ExtraDataRefType } from '../extraDataContext';
-import {
-    FormServiceType,
-    ServiceTriggerKind
-} from '../type';
+import { FormServiceType, ServiceTriggerKind } from '../type';
 
 export interface IServiceEvent {
     service: FormServiceType;
@@ -34,7 +31,7 @@ export default class PubSubCenter {
     publishDepEvent = (field: string) => {
         const effectHandler = this._fieldDependEventPool.get(field) ?? [];
         const effectFields = effectHandler.map((handler) => handler());
-        return effectFields
+        return effectFields;
     };
 
     subscribeServiceEvent = (

@@ -5,6 +5,6 @@ export type { FormRendererProps } from './components/formRenderer';
 export type { GetWidgets } from './components/formItemWrapper';
 export * from './type';
 
-export { validate } from './validator'
+export { validate } from './validator';
 
 export default FormRenderer;
