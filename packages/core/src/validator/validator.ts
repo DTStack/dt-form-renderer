@@ -13,17 +13,19 @@ export interface Diagnostic {
     title: string;
 }
 
-export type Plugin = (fieldsConfig: JsonConfigFieldType[]) => Diagnostic[];
+export type ValidatePlugin = (
+    fieldsConfig: JsonConfigFieldType[],
+) => Diagnostic[];
 
 class ConfigValidator {
-    constructor(plugins?: Plugin[]) {
+    constructor(plugins?: ValidatePlugin[]) {
         this._plugins = plugins;
     }
 
     private _diagnosticsSet = new Set<Diagnostic>();
-    private _plugins: Plugin[] = [];
+    private _plugins: ValidatePlugin[] = [];
 
-    applyPlugin(plugin: Plugin) {
+    applyPlugin(plugin: ValidatePlugin) {
         this._plugins.push(plugin);
     }
 

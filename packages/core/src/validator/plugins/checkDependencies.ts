@@ -1,6 +1,6 @@
-import { Plugin, Diagnostic, DiagnosticLevel } from '../validator';
+import { ValidatePlugin, Diagnostic, DiagnosticLevel } from '../validator';
 
-const checkDependencies: Plugin = function (fieldsConfig) {
+const checkDependencies: ValidatePlugin = function (fieldsConfig) {
     const title = 'Dependencies Property Check';
     const diagnostics: Diagnostic[] = [];
     const allFieldNames = fieldsConfig.map((item) => item.fieldName);
