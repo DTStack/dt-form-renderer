@@ -45,9 +45,6 @@ export default class InteractionSubscriber {
      * 生成对应的依赖图
      */
     private getFieldsDependGraph() {
-        /**
-         * TODO 需要检测依赖是否成环
-         */
         const dependGraph = this._fieldConfList
             .map((fieldConf) => {
                 return fieldConf.dependencies?.map((dependence) => ({
@@ -138,6 +135,8 @@ export default class InteractionSubscriber {
                     return {
                         service,
                         triggers,
+                        fieldInExtraData: triggerService.fieldInExtraData,
+                        serviceName: triggerService.serviceName,
                     };
                 });
             this._pubSubCenter.subscribeServiceEvent(fieldName, serviceActions);

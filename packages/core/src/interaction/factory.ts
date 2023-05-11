@@ -12,7 +12,6 @@ import type {
  * @description 生成字段联动处理函数
  * @param form form 实例
  * @param effectFields 被影响的字段
- * 目前字段联动只做清空处理
  */
 export function fieldValueInteractionFactory(
     form: FormInstance,
@@ -22,12 +21,17 @@ export function fieldValueInteractionFactory(
     const effectFieldConfList = fieldConfList.filter((fc) =>
         effectFields.includes(fc.fieldName),
     );
-    const emptyValue = effectFieldConfList.reduce((ev, fieldConf) => {
-        ev[fieldConf.fieldName] = fieldConf.initialValue;
+    const changedFields: string[] = [];
+    const resetValues = effectFieldConfList.reduce((ev, fieldConf) => {
+        const { fieldName, initialValue } = fieldConf;
+        if (form.getFieldValue(fieldName) !== initialValue) {
+            ev[fieldConf.fieldName] = fieldConf.initialValue;
+            changedFields.push(fieldName);
+        }
         return ev;
     }, {} as any);
-    form.setFieldsValue(emptyValue);
-    return effectFields;
+    form.setFieldsValue(resetValues);
+    return changedFields;
 }
 
 /**

@@ -1,11 +1,8 @@
-import React, { useContext, useMemo, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import { Form, FormInstance } from 'antd';
 import ExtraContext from '../../extraDataContext';
 import internalWidgets from '../internalWidgets';
-import type {
-    ScopeType,
-    TransformedFnType,
-} from '../../expressionParser/fnExpressionTransformer';
+import type { ScopeType } from '../../expressionParser/fnExpressionTransformer';
 import PubSubCenter from '../../interaction/pubSubCenter';
 import {
     FieldItemMetaType,
@@ -13,17 +10,19 @@ import {
     WidgetPropsType,
 } from '../../type';
 
-const { Item: FormItem } = Form;
+const { Item: FormItem, useFormInstance } = Form;
 
 export type GetWidgets = (widget: string) => React.ComponentType<any>;
 export interface FormItemWrapperProps {
     formItemMeta: FieldItemMetaType;
     getWidgets: GetWidgets;
     publishServiceEvent: PubSubCenter['publishServiceEvent'];
+    valueGetter: (value) => any;
 }
 
 const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
-    const { formItemMeta, getWidgets, publishServiceEvent } = props;
+    const { formItemMeta, getWidgets, publishServiceEvent, valueGetter } =
+        props;
     const {
         fieldName,
         valuePropName,
@@ -32,7 +31,6 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         labelAlign,
         widget,
         widgetProps,
-        destroy = false,
         hidden = false,
         rules,
         tooltip,
@@ -43,26 +41,25 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         servicesTriggers,
     } = formItemMeta;
     const derivedValueRef = useRef<undefined>();
-    const prevDestroyRef = useRef<boolean>(true);
     const extraContext = useContext(ExtraContext);
+    const form = useFormInstance();
 
     const Widget: any = useMemo(() => {
         return getWidgets(widget) ?? internalWidgets(widget);
     }, [widget]);
 
-    const genValueGetter = (form: FormInstance) => {
-        const scope: ScopeType = {
-            formData: form.getFieldsValue(),
-            extraDataRef: extraContext.extraDataRef,
-        };
-        return (value: TransformedFnType | unknown) => {
-            if (typeof value !== 'function') {
-                return value;
-            } else {
-                return value.call(null, scope);
-            }
-        };
-    };
+    useEffect(() => {
+        if (servicesTriggers.includes(ServiceTriggerEnum.onMount)) {
+            setTimeout(() => {
+                publishServiceEvent(
+                    fieldName,
+                    ServiceTriggerEnum.onMount,
+                    form.getFieldsValue(),
+                    extraContext.extraDataRef,
+                );
+            });
+        }
+    }, []);
 
     /**
      * 处理派生值的情况
@@ -81,26 +78,6 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
             });
         }
         derivedValueRef.current = derivedValue as any;
-    };
-
-    const handleMountService = (destroyValue: boolean, form: FormInstance) => {
-        if (
-            destroyValue ||
-            destroyValue === prevDestroyRef.current ||
-            !servicesTriggers.includes(ServiceTriggerEnum.onMount)
-        ) {
-            prevDestroyRef.current = destroyValue;
-            return;
-        }
-        prevDestroyRef.current = destroyValue;
-        setTimeout(() => {
-            publishServiceEvent(
-                fieldName,
-                ServiceTriggerEnum.onMount,
-                form.getFieldsValue(),
-                extraContext.extraDataRef,
-            );
-        });
     };
 
     const getServiceTriggerProps = (formData, extraData) => {
@@ -147,10 +124,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         return serviceTriggerProps;
     };
 
-    const widgetPropsGetter = (
-        valueGetter: ReturnType<typeof genValueGetter>,
-        _widgetProps: WidgetPropsType,
-    ) => {
+    const widgetPropsGetter = (_widgetProps: WidgetPropsType) => {
         const widgetProps: {} = {};
         Object.entries(_widgetProps).map(([key, value]) => {
             widgetProps[key] = valueGetter(value);
@@ -161,7 +135,6 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
     return (
         <FormItem noStyle shouldUpdate>
             {(form) => {
-                const valueGetter = genValueGetter(form as FormInstance);
                 deriveValue(form as FormInstance);
                 const { onBlur, onFocus, onSearch } = getServiceTriggerProps(
                     form.getFieldsValue(),
@@ -171,9 +144,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                 onBlur && (serviceProps.onBlur = onBlur);
                 onFocus && (serviceProps.onFocus = onFocus);
                 onSearch && (serviceProps.onSearch = onSearch);
-                const destroyValue = valueGetter(destroy);
-                handleMountService(destroyValue, form as FormInstance);
-                return !destroyValue ? (
+                return (
                     <FormItem
                         name={fieldName}
                         initialValue={initialValue}
@@ -189,11 +160,11 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                         validateFirst
                     >
                         <Widget
-                            {...widgetPropsGetter(valueGetter, widgetProps)}
+                            {...widgetPropsGetter(widgetProps)}
                             {...serviceProps}
                         />
                     </FormItem>
-                ) : null;
+                );
             }}
         </FormItem>
     );

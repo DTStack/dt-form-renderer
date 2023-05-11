@@ -4,6 +4,7 @@ import React, {
     useRef,
     useImperativeHandle,
     useLayoutEffect,
+    useMemo,
 } from 'react';
 import { Form } from 'antd';
 import type { FormInstance, FormProps } from 'antd/es/form/Form';
@@ -20,6 +21,7 @@ import ExtraContext, { useExtraData } from '../../extraDataContext';
 import JsonConfigTransformer from '../../expressionParser/jsonConfigTransformer';
 import PubSubCenter from '../../interaction/pubSubCenter';
 import InteractionSubscriber from '../../interaction/interactionSubscriber';
+import type { ScopeType } from '@/expressionParser/fnExpressionTransformer';
 
 const { useForm } = Form;
 
@@ -110,24 +112,51 @@ const FormRenderer: React.ForwardRefRenderFunction<
         });
     }, [defaultExtraData]);
 
-    const onValuesChange = (changedValues, ...restArgs) => {
+    const valueGetter = (value) => {
+        const scope: ScopeType = {
+            formData: form.getFieldsValue(),
+            extraDataRef: extraDataRef,
+        };
+        if (typeof value !== 'function') {
+            return value;
+        } else {
+            return value.call(null, scope);
+        }
+    };
+
+    const shouldRenderFieldsMeta = useMemo(() => {
+        return formItemsMeta
+            .map((item) => {
+                if (valueGetter(item.destroy)) {
+                    return null;
+                }
+                return item;
+            })
+            .filter(Boolean);
+    }, [formItemsMeta, valueGetter]);
+
+    const onValuesChange = (changedValues, formData) => {
         const changedFields = Object.keys(changedValues);
         changedFields.forEach((fieldName) => {
             // 处理字段值之间的联动关系, 发布 字段值变更事件
-            const resetFields = pubSubCenterRef.current
-                .publishDepEvent(fieldName)
-                .flat();
-            // 处理字段触发的 action， 发布 字段值变更事件
-            [fieldName, ...resetFields].forEach((field) => {
-                pubSubCenterRef.current.publishServiceEvent(
-                    field,
-                    ServiceTriggerEnum.onChange,
-                    form.getFieldsValue(),
-                    extraDataRef,
-                );
-            });
+            const changedFields =
+                pubSubCenterRef.current.publishDepEvent(fieldName);
+
+            const allPubServiceFields = [fieldName, ...changedFields].filter(
+                (name) =>
+                    shouldRenderFieldsMeta.some(
+                        (item) => item.fieldName === name,
+                    ),
+            );
+
+            pubSubCenterRef.current.batchPublishServiceEvent(
+                allPubServiceFields,
+                ServiceTriggerEnum.onChange,
+                form.getFieldsValue(),
+                extraDataRef,
+            );
         });
-        props.onValuesChange?.(changedValues, restArgs);
+        props.onValuesChange?.(changedValues, formData);
     };
 
     return (
@@ -143,9 +172,10 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 {typeof header === 'function'
                     ? header?.(form, extraDataRef.current)
                     : header}
-                {formItemsMeta.map((formItemMeta) => {
+                {shouldRenderFieldsMeta.map((formItemMeta) => {
                     return (
                         <FormItemWrapper
+                            valueGetter={valueGetter}
                             getWidgets={getWidgets}
                             key={formItemMeta.fieldName}
                             formItemMeta={formItemMeta}

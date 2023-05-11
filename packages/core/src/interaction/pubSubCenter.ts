@@ -4,6 +4,8 @@ import { FormServiceType, ServiceTriggerKind } from '../type';
 export interface IServiceEvent {
     service: FormServiceType;
     triggers: ServiceTriggerKind[];
+    fieldInExtraData: string;
+    serviceName: string;
 }
 
 export default class PubSubCenter {
@@ -30,8 +32,8 @@ export default class PubSubCenter {
 
     publishDepEvent = (field: string) => {
         const effectHandler = this._fieldDependEventPool.get(field) ?? [];
-        const effectFields = effectHandler.map((handler) => handler());
-        return effectFields;
+        const changedFields = effectHandler.map((handler) => handler());
+        return changedFields.flat();
     };
 
     subscribeServiceEvent = (
@@ -66,6 +68,47 @@ export default class PubSubCenter {
                     args: restArgs,
                     trigger,
                     fieldName: field,
+                    formData,
+                    extraData: extraDataRef.current,
+                });
+            }
+        });
+    };
+
+    batchPublishServiceEvent = (
+        fieldNames: string[],
+        trigger: ServiceTriggerKind,
+        formData: any,
+        extraDataRef: ExtraDataRefType,
+    ) => {
+        const willTrigServiceActions: ({
+            fieldName: string;
+        } & IServiceEvent)[] = [];
+        fieldNames.forEach((fieldName) => {
+            const serviceActions = this._serviceEventPool.get(fieldName) ?? [];
+            // 过滤掉不需要触发的 service 和 重复的 service
+            serviceActions.forEach((serviceAction) => {
+                const { fieldInExtraData, triggers, serviceName } =
+                    serviceAction;
+                if (!triggers.includes(trigger)) return;
+                const hasExist = willTrigServiceActions.some((action) => {
+                    return (
+                        action.serviceName === serviceName &&
+                        action.fieldInExtraData === fieldInExtraData
+                    );
+                });
+                if (hasExist) return;
+                willTrigServiceActions.push({ ...serviceAction, fieldName });
+            });
+        }, []);
+
+        willTrigServiceActions.forEach((serviceAction) => {
+            const { triggers, service, fieldName } = serviceAction;
+            if (triggers.includes(trigger)) {
+                service({
+                    args: [],
+                    trigger,
+                    fieldName,
                     formData,
                     extraData: extraDataRef.current,
                 });
