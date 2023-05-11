@@ -2,6 +2,7 @@
     "compilerOptions": {
         "outDir": "./esm/",
         "baseUrl": "./",
+        "lib": ["ES2022", "DOM"],
         "sourceMap": true,
         "allowJs": true,
         "target": "es6",
