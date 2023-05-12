@@ -21,7 +21,7 @@ import ExtraContext, { useExtraData } from '../../extraDataContext';
 import JsonConfigTransformer from '../../expressionParser/jsonConfigTransformer';
 import PubSubCenter from '../../interaction/pubSubCenter';
 import InteractionSubscriber from '../../interaction/interactionSubscriber';
-import type { ScopeType } from '@/expressionParser/fnExpressionTransformer';
+import type { ScopeType } from '../../expressionParser/fnExpressionTransformer';
 
 const { useForm } = Form;
 
