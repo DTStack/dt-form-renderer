@@ -16,10 +16,10 @@ import type {
 export function fieldValueInteractionFactory(
     form: FormInstance,
     effectFields: string[],
-    fieldConfList: JsonConfigFieldType[],
+    fieldConfList: JsonConfigFieldType[]
 ) {
     const effectFieldConfList = fieldConfList.filter((fc) =>
-        effectFields.includes(fc.fieldName),
+        effectFields.includes(fc.fieldName)
     );
     const changedFields: string[] = [];
     const resetValues = effectFieldConfList.reduce((ev, fieldConf) => {
@@ -44,7 +44,7 @@ export function fieldValueInteractionFactory(
 export function triggerServiceFactory(
     servicePool: FormServicePoolType,
     updateExtra: UpdateExtraType,
-    triggerService: TriggerServiceType,
+    triggerService: TriggerServiceType
 ): FormServiceType {
     const { serviceName, fieldInExtraData } = triggerService;
 

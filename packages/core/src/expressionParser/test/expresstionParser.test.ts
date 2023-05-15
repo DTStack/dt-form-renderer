@@ -48,14 +48,14 @@ describe('Expression Parser Tests', () => {
     test('Generate Validator Getter', async () => {
         const getter1 = expressionParser.genValidatorGetter(
             ruleMap,
-            validatorExpr1,
+            validatorExpr1
         );
         const v1 = getter1.call(null, {}, extraData);
         await expect(v1()).rejects.toMatch('reject formJsonValidator');
 
         const getter2 = expressionParser.genValidatorGetter(
             ruleMap,
-            validatorExpr2,
+            validatorExpr2
         );
         const v2 = getter2.call(null, {}, extraData);
         await expect(v2()).rejects.toMatch('ok');

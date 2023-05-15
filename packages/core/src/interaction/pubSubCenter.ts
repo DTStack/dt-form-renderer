@@ -14,7 +14,7 @@ export default class PubSubCenter {
 
     subscribeFieldDepEvent = (
         field: string,
-        effectHandler: Function | Function[],
+        effectHandler: Function | Function[]
     ) => {
         const effectHandlers = Array.isArray(effectHandler)
             ? effectHandler
@@ -38,7 +38,7 @@ export default class PubSubCenter {
 
     subscribeServiceEvent = (
         field: string,
-        serviceAction: IServiceEvent | IServiceEvent[],
+        serviceAction: IServiceEvent | IServiceEvent[]
     ) => {
         const services = Array.isArray(serviceAction)
             ? serviceAction
@@ -58,7 +58,7 @@ export default class PubSubCenter {
         trigger: ServiceTriggerKind,
         formData: any,
         extraDataRef: ExtraDataRefType,
-        restArgs?: any[],
+        restArgs?: any[]
     ) => {
         const serviceActions = this._serviceEventPool.get(field) ?? [];
         serviceActions.forEach((serviceAction) => {
@@ -79,7 +79,7 @@ export default class PubSubCenter {
         fieldNames: string[],
         trigger: ServiceTriggerKind,
         formData: any,
-        extraDataRef: ExtraDataRefType,
+        extraDataRef: ExtraDataRefType
     ) => {
         const willTrigServiceActions: ({
             fieldName: string;

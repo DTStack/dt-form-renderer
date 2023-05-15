@@ -59,7 +59,7 @@ export interface FormServicePoolType {
  */
 export type FormItemValidatorType = (
     rule: any,
-    value: any,
+    value: any
 ) => Promise<Error | void>;
 
 /**
@@ -67,7 +67,7 @@ export type FormItemValidatorType = (
  */
 export type FormItemCustomRuleType = (
     formData,
-    extraData,
+    extraData
 ) => FormItemValidatorType;
 
 /**

@@ -20,7 +20,7 @@ describe('Function Transformer Tests', () => {
         expect(res).toBe(3);
 
         const reduceFn = expressionParser.transform(
-            'extraData.arr.includes(1)',
+            'extraData.arr.includes(1)'
         );
         const flag = reduceFn(scope);
         expect(flag).toBe(true);

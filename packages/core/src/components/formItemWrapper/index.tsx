@@ -54,7 +54,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                     fieldName,
                     ServiceTriggerEnum.onMount,
                     form.getFieldsValue(),
-                    extraContext.extraDataRef,
+                    extraContext.extraDataRef
                 );
             });
         }
@@ -92,7 +92,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                         ServiceTriggerEnum.onFocus,
                         formData,
                         extraData,
-                        args,
+                        args
                     );
                 };
             }
@@ -103,7 +103,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                         ServiceTriggerEnum.onBlur,
                         formData,
                         extraData,
-                        args,
+                        args
                     );
                 };
             }
@@ -114,7 +114,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                         ServiceTriggerEnum.onSearch,
                         formData,
                         extraData,
-                        args,
+                        args
                     );
                 };
             }
@@ -136,7 +136,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                 deriveValue(form as FormInstance);
                 const { onBlur, onFocus, onSearch } = getServiceTriggerProps(
                     form.getFieldsValue(),
-                    extraContext.extraDataRef,
+                    extraContext.extraDataRef
                 );
                 const serviceProps = {} as any;
                 onBlur && (serviceProps.onBlur = onBlur);

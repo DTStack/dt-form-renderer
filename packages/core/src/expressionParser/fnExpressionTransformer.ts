@@ -19,8 +19,8 @@ class FnExpressionTransformer {
         const scope = {
             extraData: scopeObj.extraDataRef,
             formData: scopeObj.formData,
-            Math: Math,
-            Date: Date,
+            Math,
+            Date,
         };
         const proxy = new Proxy(scope, {
             has() {

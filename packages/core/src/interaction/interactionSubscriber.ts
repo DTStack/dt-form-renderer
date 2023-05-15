@@ -15,21 +15,21 @@ export default class InteractionSubscriber {
     private _pubSubCenter: PubSubCenter = null;
     private _formInstance: FormInstance = null;
     private _triggerServiceFactory: (
-        serviceConf: TriggerServiceType,
+        serviceConf: TriggerServiceType
     ) => FormServiceType = null;
 
     constructor(
         formInstance: FormInstance,
         pubSubCenter: PubSubCenter,
         extraContext: ExtraContextType,
-        formServicePool: FormServicePoolType,
+        formServicePool: FormServicePoolType
     ) {
         this._formInstance = formInstance;
         this._pubSubCenter = pubSubCenter;
         this._triggerServiceFactory = triggerServiceFactory.bind(
             null,
             formServicePool,
-            extraContext.update,
+            extraContext.update
         );
     }
 
@@ -56,7 +56,7 @@ export default class InteractionSubscriber {
             .flat();
 
         const allBeDependOnFields = Array.from(
-            new Set(dependGraph.map((edge) => edge.dependOn)),
+            new Set(dependGraph.map((edge) => edge.dependOn))
         );
         const effectMap = new Map<string, string[]>();
 
@@ -70,7 +70,7 @@ export default class InteractionSubscriber {
             if (effectMap.has(fieldName)) {
                 effectMap.set(
                     fieldName,
-                    effectMap.get(fieldName).concat(effectFields),
+                    effectMap.get(fieldName).concat(effectFields)
                 );
             } else {
                 effectMap.set(fieldName, effectFields);
@@ -78,7 +78,7 @@ export default class InteractionSubscriber {
             if (effectMap.has(sourceFieldName)) {
                 effectMap.set(
                     sourceFieldName,
-                    effectMap.get(sourceFieldName).concat(effectFields),
+                    effectMap.get(sourceFieldName).concat(effectFields)
                 );
             } else {
                 effectMap.set(sourceFieldName, effectFields);
@@ -110,8 +110,8 @@ export default class InteractionSubscriber {
                     null,
                     this._formInstance,
                     effectList,
-                    this._fieldConfList,
-                ),
+                    this._fieldConfList
+                )
             );
         });
     };

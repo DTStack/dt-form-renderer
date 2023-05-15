@@ -76,7 +76,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
         const jsonConfigTransformer = new JsonConfigTransformer(
             fieldList,
             ruleMap,
-            docsMap,
+            docsMap
         );
         updateFormItems(jsonConfigTransformer.transform() as any);
         /** 初始化发布订阅池 */
@@ -86,7 +86,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
             form,
             pubSubCenter,
             { extraDataRef, update: updateExtraData },
-            formServicePool,
+            formServicePool
         );
         /** 订阅 jsonConfig 中声明的 dependencies 和 triggerService */
         subscriber.subscribe(fieldList);
@@ -145,15 +145,15 @@ const FormRenderer: React.ForwardRefRenderFunction<
             const allPubServiceFields = [fieldName, ...changedFields].filter(
                 (name) =>
                     shouldRenderFieldsMeta.some(
-                        (item) => item.fieldName === name,
-                    ),
+                        (item) => item.fieldName === name
+                    )
             );
 
             pubSubCenterRef.current.batchPublishServiceEvent(
                 allPubServiceFields,
                 ServiceTriggerEnum.onChange,
                 form.getFieldsValue(),
-                extraDataRef,
+                extraDataRef
             );
         });
         props.onValuesChange?.(changedValues, formData);

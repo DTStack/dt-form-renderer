@@ -74,7 +74,7 @@ export default class ExpressionParser {
      */
     genValidatorGetter(
         validatorMap: FormItemRuleMapType,
-        expr: string,
+        expr: string
     ): FormItemCustomRuleType {
         const validatorDesc = this.genValidatorDescFromExpression(expr);
         if (validatorDesc === null) {
@@ -85,7 +85,7 @@ export default class ExpressionParser {
                 return (
                     validatorDesc.property.reduce(
                         (obj: any, k) => (obj || {})[k],
-                        validatorMap?.validators ?? {},
+                        validatorMap?.validators ?? {}
                     ) ?? null
                 );
             };
@@ -93,7 +93,7 @@ export default class ExpressionParser {
             return (
                 validatorDesc.property.reduce(
                     (obj: any, k) => (obj || {})[k],
-                    validatorMap?.customRules ?? {},
+                    validatorMap?.customRules ?? {}
                 ) ?? null
             );
         } else {

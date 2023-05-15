@@ -22,13 +22,13 @@ class JsonConfigTransformer {
     constructor(
         jsonArr: JsonConfigFieldType[],
         ruleMap: FormItemRuleMapType,
-        docsMap: DocsMapType,
+        docsMap: DocsMapType
     ) {
         this._jsonArr = jsonArr;
         const expressionParser = new ExpressionParser();
         this._genValidatorGetter = expressionParser.genValidatorGetter.bind(
             expressionParser,
-            ruleMap,
+            ruleMap
         );
         this._getDoc = expressionParser.getDoc.bind(expressionParser, docsMap);
         this._genFunction =
@@ -40,15 +40,14 @@ class JsonConfigTransformer {
             return rules.map((rule: ValidatorRuleConfigType) => {
                 if (
                     !ExpressionParser.isValidatorExpression(
-                        rule.validator ?? '',
+                        rule.validator ?? ''
                     )
                 ) {
                     return rule;
                 }
-                const validator = this._genValidatorGetter(rule.validator).call(
-                    null,
+                const validator = this._genValidatorGetter(rule.validator)(
                     scope.formData,
-                    scope.extraDataRef.current,
+                    scope.extraDataRef.current
                 );
                 return validator
                     ? {
@@ -94,7 +93,7 @@ class JsonConfigTransformer {
         if (!widgetProps) return transformedWidgetProps;
         Object.entries(widgetProps).map(([key, value]) => {
             transformedWidgetProps[key] = this.transformFnExprField(
-                value as string,
+                value as string
             );
         });
         return transformedWidgetProps;

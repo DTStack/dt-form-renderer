@@ -14,7 +14,7 @@ export interface Diagnostic {
 }
 
 export type ValidatePlugin = (
-    fieldsConfig: JsonConfigFieldType[],
+    fieldsConfig: JsonConfigFieldType[]
 ) => Diagnostic[];
 
 class ConfigValidator {
