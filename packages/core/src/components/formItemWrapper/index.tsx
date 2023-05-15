@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { Form, FormInstance } from 'antd';
 import ExtraContext from '../../extraDataContext';
 import internalWidgets from '../internalWidgets';
@@ -40,7 +40,6 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         valueDerived,
         servicesTriggers,
     } = formItemMeta;
-    const derivedValueRef = useRef<undefined>();
     const extraContext = useContext(ExtraContext);
     const form = useFormInstance();
 
@@ -72,12 +71,11 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
             extraDataRef: extraContext.extraDataRef,
         };
         const derivedValue = valueDerived(scope);
-        if (derivedValue !== derivedValueRef.current) {
+        if (derivedValue !== form.getFieldValue(fieldName)) {
             setTimeout(() => {
                 form.setFieldValue(fieldName, derivedValue);
             });
         }
-        derivedValueRef.current = derivedValue as any;
     };
 
     const getServiceTriggerProps = (formData, extraData) => {
