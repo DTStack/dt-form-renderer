@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { Form, FormInstance } from 'antd';
+import { debounce } from '../helpers';
 import ExtraContext from '../../extraDataContext';
 import internalWidgets from '../internalWidgets';
 import type { ScopeType } from '../../expressionParser/fnExpressionTransformer';
@@ -18,11 +19,17 @@ export interface FormItemWrapperProps {
     getWidgets: GetWidgets;
     publishServiceEvent: PubSubCenter['publishServiceEvent'];
     valueGetter: (value) => any;
+    debounceSearch?: boolean;
 }
 
 const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
-    const { formItemMeta, getWidgets, publishServiceEvent, valueGetter } =
-        props;
+    const {
+        formItemMeta,
+        getWidgets,
+        publishServiceEvent,
+        valueGetter,
+        debounceSearch,
+    } = props;
     const {
         fieldName,
         valuePropName,
@@ -108,7 +115,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                 };
             }
             if (trigger === ServiceTriggerEnum.onSearch) {
-                serviceTriggerProps.onSearch = (...args: any[]) => {
+                const onSearch = (...args: any[]) => {
                     publishServiceEvent(
                         fieldName,
                         ServiceTriggerEnum.onSearch,
@@ -117,6 +124,9 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                         args
                     );
                 };
+                serviceTriggerProps.onSearch = debounceSearch
+                    ? debounce(onSearch)
+                    : onSearch;
             }
         });
         return serviceTriggerProps;
@@ -124,7 +134,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
 
     const widgetPropsGetter = (_widgetProps: WidgetPropsType) => {
         const widgetProps: {} = {};
-        Object.entries(_widgetProps).map(([key, value]) => {
+        Object.entries(_widgetProps).forEach(([key, value]) => {
             widgetProps[key] = valueGetter(value);
         });
         return widgetProps;

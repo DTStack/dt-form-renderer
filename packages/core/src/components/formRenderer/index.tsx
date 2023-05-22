@@ -33,12 +33,13 @@ export interface FormRendererProps extends FormProps {
     getWidgets?: GetWidgets;
     defaultExtraData: Record<string, any>;
     preserveFields?: string[];
+    debounceSearch?: boolean;
     header?:
         | React.ReactNode
         | ((form: FormInstance, extraData: any) => React.ReactNode);
     footer?:
         | React.ReactNode
-        | ((form: FormInstance, extraDataRef: any) => React.ReactNode);
+        | ((form: FormInstance, extraData: any) => React.ReactNode);
 }
 
 const FormRenderer: React.ForwardRefRenderFunction<
@@ -56,6 +57,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
         initialValues,
         header,
         footer,
+        debounceSearch,
         ...restProps
     } = props;
     const [form] = useForm();
@@ -115,12 +117,12 @@ const FormRenderer: React.ForwardRefRenderFunction<
     const valueGetter = (value) => {
         const scope: ScopeType = {
             formData: form.getFieldsValue(),
-            extraDataRef: extraDataRef,
+            extraDataRef,
         };
         if (typeof value !== 'function') {
             return value;
         } else {
-            return value.call(null, scope);
+            return value(scope);
         }
     };
 
@@ -175,6 +177,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 {shouldRenderFieldsMeta.map((formItemMeta) => {
                     return (
                         <FormItemWrapper
+                            debounceSearch={debounceSearch}
                             valueGetter={valueGetter}
                             getWidgets={getWidgets}
                             key={formItemMeta.fieldName}
