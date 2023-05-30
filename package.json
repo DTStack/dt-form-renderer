@@ -44,18 +44,5 @@
     "deploy": "pnpm core build && pnpm i && pnpm playground deploy",
     "core": "pnpm --filter ./packages/core",
     "playground": "pnpm --filter ./packages/playground"
-  },
-  "lint-staged": {
-    "*.{js,jsx,less,ts,tsx}": [
-      "prettier --write"
-    ],
-    "*.{ts,tsx}": [
-      "prettier --parser=typescript --write"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/@commitlint/cz-commitlint"
-    }
   }
 }
