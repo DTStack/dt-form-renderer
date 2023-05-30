@@ -14,15 +14,15 @@ languages.registerCompletionItemProvider('json', {
             position.lineNumber,
             wordInfo.startColumn,
             position.lineNumber,
-            wordInfo.endColumn,
+            wordInfo.endColumn
         );
 
         let suggestions: languages.CompletionItem[] = [];
         suggestions = suggestions.concat(
-            fieldCompletionsCreator(wordRange, context),
+            fieldCompletionsCreator(wordRange, context)
         );
         suggestions = suggestions.concat(
-            expressionCompletionsCreator(wordRange),
+            expressionCompletionsCreator(wordRange)
         );
 
         return new Promise((resolve) => {

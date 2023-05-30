@@ -20,7 +20,7 @@ const noWhiteSpace: FormItemCustomRuleType = function (formData, extraData) {
 
 const formJsonValidator: FormItemValidatorType = function (
     rule: any,
-    value: any,
+    value: any
 ) {
     let msg: string;
     try {

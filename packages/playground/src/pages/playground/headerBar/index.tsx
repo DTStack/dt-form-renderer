@@ -52,7 +52,7 @@ const HeaderBar: React.FC<HeaderBarProps> = (props) => {
             dispatch(setWIP(DefaultWip));
         } else {
             message.error(
-                '当前有未命名保存的文件记录 untitled，请先保存 untitled！',
+                '当前有未命名保存的文件记录 untitled，请先保存 untitled！'
             );
         }
     };
@@ -166,7 +166,7 @@ function SaveModal(props: SaveModalProps) {
                     ...wipFile,
                     name,
                 },
-            }),
+            })
         );
         dispatch(setWIP(name));
         if (checked) {

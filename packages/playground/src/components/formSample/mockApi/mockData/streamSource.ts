@@ -6,7 +6,7 @@ export interface DataSourceType {
 }
 
 const allDataSourceTypeList: DataSourceType[] = Object.entries(
-    DATA_SOURCE_TEXT,
+    DATA_SOURCE_TEXT
 ).map(([type, name]) => {
     return {
         type: +type,

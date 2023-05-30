@@ -26,7 +26,7 @@ const getSchemaList: FormServiceType = function ({
         [
             `${formData.sourceType}_schema_batch`,
             `${formData.sourceType}_schema_assets`,
-        ].map((s) => ({ label: s, value: s })),
+        ].map((s) => ({ label: s, value: s }))
     );
 };
 

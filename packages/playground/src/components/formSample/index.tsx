@@ -49,7 +49,7 @@ const FormSample: React.FC<IProps> = (props) => {
     const [jsonConfig, setJsonConfig] = useState<JsonConfigType>(null);
     const [extraData, setExtraData] = useState<any>(defaultExtraData);
     const [sourceTypeList, updateSourceTypeList] = useState<DataSourceType[]>(
-        [],
+        []
     );
     const formRef = useRef<FormInstance>(null);
 
