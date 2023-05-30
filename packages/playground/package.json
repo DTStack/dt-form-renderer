@@ -8,23 +8,12 @@
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less}' --config ../../.prettierrc",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
-    "deploy": "npm run build && gh-pages -d dist"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,less}": [
-      "prettier --write"
-    ],
-    "*.ts?(x)": [
-      "prettier --parser=typescript --write"
-    ]
+    "deploy": "npm run build && gh-pages -d dist",
+    "check-types": "tsc"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@ant-design/pro-layout": "^6.5.0",
-    "@dt-form-renderer/core": "workspace:../core",
     "@reduxjs/toolkit": "^1.9.3",
     "gh-pages": "^5.0.0",
     "idb": "^7.1.1",

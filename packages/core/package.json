@@ -29,7 +29,7 @@
         "test": "jest",
         "build": "rm -rf lib && tsc",
         "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}' --config ../../.prettierrc",
-        "check-types": "tsc --skipLibCheck --noEmit"
+        "check-types": "tsc --noEmit"
     },
     "license": "ISC"
 }
