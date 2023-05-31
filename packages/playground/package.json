@@ -1,6 +1,16 @@
 {
   "name": "dt-form-renderer-playground",
+  "version": "0.0.1",
+  "description": "dt-form-renderer playground",
+  "author": "Hayden",
   "homepage": "./",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DTStack/dt-form-renderer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DTStack/dt-form-renderer/issues"
+  },
   "scripts": {
     "start": "umi dev",
     "build": "umi build",
@@ -28,5 +38,6 @@
     "lint-staged": "^10.0.7",
     "monaco-editor-webpack-plugin": "6.0.0",
     "yorkie": "^2.0.0"
-  }
+  },
+  "license": "ISC"
 }

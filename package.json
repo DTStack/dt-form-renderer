@@ -1,18 +1,23 @@
 {
   "name": "dt-form-renderer",
   "version": "0.0.1",
-  "description": "Render Interaction Form by JSON",
+  "description": "Render Interaction Form Via JSON",
   "author": "Hayden",
+  "homepage": "https://github.com/DTStack/dt-form-renderer#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DTStack/dt-form-renderer.git"
   },
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/DTStack/dt-form-renderer/issues"
   },
-  "homepage": "https://github.com/DTStack/dt-form-renderer#readme",
-  "main": "jest.config.js",
+  "scripts": {
+    "prepare": "husky install",
+    "start": "pnpm core build && pnpm i && pnpm playground start",
+    "deploy": "pnpm core build && pnpm i && pnpm playground deploy",
+    "core": "pnpm --filter ./packages/core",
+    "playground": "pnpm --filter ./packages/playground"
+  },
   "dependencies": {
     "@dt-form-renderer/core": "workspace:./packages/core",
     "antd": "4.24.8",
@@ -38,11 +43,5 @@
     "prettier": "^2.2.0",
     "typescript": "^4.7.4"
   },
-  "scripts": {
-    "prepare": "husky install",
-    "start": "pnpm core build && pnpm i && pnpm playground start",
-    "deploy": "pnpm core build && pnpm i && pnpm playground deploy",
-    "core": "pnpm --filter ./packages/core",
-    "playground": "pnpm --filter ./packages/playground"
-  }
+  "license": "ISC"
 }
