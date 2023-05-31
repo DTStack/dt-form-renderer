@@ -3,9 +3,7 @@
 
 module.exports = {
     coveragePathIgnorePatterns: ['/node_modules/'],
-    globals: {
-        window: {},
-    },
+    globals: {},
     testEnvironment: 'jsdom',
     testEnvironmentOptions: {},
     testPathIgnorePatterns: ['/node_modules/'],
