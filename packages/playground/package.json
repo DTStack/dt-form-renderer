@@ -1,30 +1,30 @@
 {
   "name": "dt-form-renderer-playground",
+  "version": "0.0.1",
+  "description": "dt-form-renderer playground",
+  "author": "Hayden",
   "homepage": "./",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DTStack/dt-form-renderer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DTStack/dt-form-renderer/issues"
+  },
   "scripts": {
     "start": "umi dev",
     "build": "umi build",
     "postinstall": "umi generate tmp",
-    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less}' --config ../../.prettierrc",
+    "prettier-write": "prettier --write '**/*.{js,jsx,tsx,ts,less}' --config ../../.prettierrc",
+    "prettier": "prettier --check '**/*.{js,jsx,tsx,ts,less}' --config ../../.prettierrc",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
-    "deploy": "npm run build && gh-pages -d dist"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,less}": [
-      "prettier --write"
-    ],
-    "*.ts?(x)": [
-      "prettier --parser=typescript --write"
-    ]
+    "deploy": "npm run build && gh-pages -d dist",
+    "check-types": "tsc"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@ant-design/pro-layout": "^6.5.0",
-    "@dt-form-renderer/core": "workspace:../core",
     "@reduxjs/toolkit": "^1.9.3",
     "gh-pages": "^5.0.0",
     "idb": "^7.1.1",
@@ -39,5 +39,6 @@
     "lint-staged": "^10.0.7",
     "monaco-editor-webpack-plugin": "6.0.0",
     "yorkie": "^2.0.0"
-  }
+  },
+  "license": "ISC"
 }

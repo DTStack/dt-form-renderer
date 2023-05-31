@@ -39,7 +39,7 @@ const WorkBench: React.FC<workbenchProps> = () => {
                     configContent: content,
                     valuesContent: initialValuesContent,
                 },
-            }),
+            })
         );
     });
 
@@ -68,7 +68,7 @@ const WorkBench: React.FC<workbenchProps> = () => {
     };
 
     const formatEditorContent = (
-        ref: React.RefObject<editor.IStandaloneCodeEditor>,
+        ref: React.RefObject<editor.IStandaloneCodeEditor>
     ) => {
         return parseEditorValue(ref.current.getValue(), false).then((obj) => {
             ref.current.setValue(JSON.stringify(obj, null, 4));
@@ -90,7 +90,7 @@ const WorkBench: React.FC<workbenchProps> = () => {
     const refreshValueEditor = (config?: string) => {
         const values = {};
         return parseEditorValue(
-            config ?? configEditorRef.current.getValue(),
+            config ?? configEditorRef.current.getValue()
         ).then((parsedJson: JsonConfigType) => {
             parsedJson.fieldList.forEach((item) => {
                 if (item.fieldName) {
@@ -123,13 +123,13 @@ const WorkBench: React.FC<workbenchProps> = () => {
                         <TitleWithToolbar
                             onCopy={() => {
                                 copy2Clipboard(
-                                    configEditorRef.current.getValue(),
+                                    configEditorRef.current.getValue()
                                 );
                             }}
                             onDownload={() => {
                                 downloadFile(
                                     configEditorRef.current.getValue(),
-                                    workInProgress,
+                                    workInProgress
                                 );
                             }}
                             onFormat={() => {

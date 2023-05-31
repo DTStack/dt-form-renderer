@@ -45,11 +45,11 @@ export const workbenchSlice = createSlice({
             state,
             action: {
                 payload: { fileName: string; fileMeta: Partial<FileMetaType> };
-            },
+            }
         ) => {
             const { fileName, fileMeta } = action.payload;
             const index = state.files.findIndex(
-                (file) => file.name === fileName,
+                (file) => file.name === fileName
             );
             const newFiles = [...state.files];
             newFiles[index] = {
@@ -77,7 +77,7 @@ export const workbenchSlice = createSlice({
         },
         removeFile: (state, action: { payload: string }) => {
             const newFiles = state.files.filter(
-                (file) => file.name !== action.payload,
+                (file) => file.name !== action.payload
             );
             return {
                 ...state,

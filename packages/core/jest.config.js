@@ -3,13 +3,12 @@
 
 module.exports = {
     coveragePathIgnorePatterns: ['/node_modules/'],
-    globals: {
-        window: {},
-    },
+    globals: {},
     testEnvironment: 'jsdom',
+    testEnvironmentOptions: {},
     testPathIgnorePatterns: ['/node_modules/'],
     transform: {
-        '^.+\\.(t|j)sx?$': 'ts-jest',
+        '^.+\\.(t|j)sx?$': '@swc/jest',
     },
     testMatch: [
         '**/__tests__/**/(*.)+(spec|test).[jt]s?(x)',

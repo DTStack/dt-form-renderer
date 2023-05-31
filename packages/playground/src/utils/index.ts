@@ -8,7 +8,7 @@ import { message } from 'antd';
 export function downloadFile(
     content: string,
     name: string,
-    ext: string = 'json',
+    ext: string = 'json'
 ) {
     const eleLink = document.createElement('a');
     eleLink.download = `${name}_${Date.now()}.${ext}`;

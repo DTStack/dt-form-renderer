@@ -1,0 +1,54 @@
+name: CI
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 6
+          run_install: false
+
+      - name: Get pnpm version
+        id: pnpm-version
+        shell: bash
+        run: |
+          echo "PNPM_VERSION=$(pnpm --version)" >> $GITHUB_OUTPUT
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Units Test Of Core
+        run: pnpm core test
+
+      - name: Run Prettier Of Core
+        run: pnpm core prettier
+
+      - name: Run Prettier Of Playground
+        run: pnpm playground prettier
+
+      - name: Run check-types Of Core
+        run: pnpm core check-types

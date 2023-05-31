@@ -37,7 +37,7 @@ export function initIDB() {
                 db.createObjectStore(idbStores.CONFIG);
                 db.createObjectStore(idbStores.WORKBENCH);
                 console.log(
-                    `Init IndexDB Success!\nCurrentVersion: ${newVersion}\nPrevVersion: ${oldVersion}`,
+                    `Init IndexDB Success!\nCurrentVersion: ${newVersion}\nPrevVersion: ${oldVersion}`
                 );
             }
         },
@@ -49,7 +49,7 @@ export function syncRedux2IDB(store: RootState) {
     return openDB(IDB_NAME, currentVersion).then((idb) => {
         const transaction = idb.transaction(
             [idbStores.WORKBENCH, idbStores.CONFIG],
-            'readwrite',
+            'readwrite'
         );
         transaction
             .objectStore(idbStores.WORKBENCH)
@@ -68,7 +68,7 @@ export function getAllIDBData() {
     return openDB(IDB_NAME, currentVersion).then((idb) => {
         const transaction = idb.transaction(
             [idbStores.CONFIG, idbStores.WORKBENCH],
-            'readonly',
+            'readonly'
         );
         const promises = [
             transaction
@@ -98,7 +98,7 @@ export function getAllIDBData() {
                                   workInProgress,
                               },
                 };
-            },
+            }
         );
     });
 }

@@ -3,7 +3,7 @@ type IMonacoLanguageCompletionItem = languages.CompletionItem;
 
 export const fieldCompletionsCreator: (
     range: IRange,
-    context: languages.CompletionContext,
+    context: languages.CompletionContext
 ) => IMonacoLanguageCompletionItem[] = (_range, context) => {
     const range = { ..._range };
     if (context.triggerCharacter === '"') {
@@ -90,7 +90,7 @@ export const fieldCompletionsCreator: (
 };
 
 export const expressionCompletionsCreator: (
-    range: IRange,
+    range: IRange
 ) => IMonacoLanguageCompletionItem[] = (range) =>
     [
         {

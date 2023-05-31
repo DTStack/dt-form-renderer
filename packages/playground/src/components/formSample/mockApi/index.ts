@@ -10,7 +10,7 @@ import {
  */
 const getSourceListViaType = (sourceType) => {
     const sourceList = allDataSourceList.filter(
-        ({ type }) => type === sourceType,
+        ({ type }) => type === sourceType
     );
     return new Promise<DataSourceItem[]>((resolve) => {
         setTimeout(() => {
