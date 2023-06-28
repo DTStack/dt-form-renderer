@@ -3,7 +3,7 @@ dt-form-renderer 支持三种表达式
 
 + 函数表达式
 + 自定义校验器表达式
-+ 自定义doc/tooltip表达式
++ 自定义tooltip表达式
 
 <br/>
 
@@ -67,8 +67,8 @@ function FormDemo () {
 }
 ```
 
-## 自定义doc/tooltip表达式
-自定义校验器表达式实际上也是函数表达式的一种，它用于指定表单项比较复杂的 tooltip 提示。与自定义表单校验器相同，首先需要在代码中声明自定义的 tooltip 内容，然后通过 `FormRenderer` 组件的 props 传入
+## 自定义tooltip表达式
+自定义tooltip表达式表达式实际上也是函数表达式的一种，它用于指定表单项比较复杂的 tooltip 提示。与自定义表单校验器相同，首先需要在代码中声明自定义的 tooltip 内容，然后通过 `FormRenderer` 组件的 props 传入
 ```jsx
 import FormRenderer from 'dt-form-renderer';
 
