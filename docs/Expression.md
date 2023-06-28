@@ -14,7 +14,7 @@ dt-form-renderer 支持三种表达式
   "hidden": "{{ formData.type === 1 }}",
 }
 ```
-在函数表达式内部，内置 `formData` 和 `extraData` 两个变量，其中 `formData` 是当前表单收集到的数据，`extraData` 是外部数据。`extraData`  的数据来源于 `Service`  或者 `FormRenderer` 组件的 props。函数表达式可以在绝大多数的字段配置项中使用。
+在函数表达式内部，内置 `formData` 和 `extraData` 两个变量，其中 `formData` 是当前表单收集到的数据，`extraData` 是外部数据。`extraData`  的数据来源于 `Service`  或者 `FormRenderer` 组件的 props。
 
 <br/>
 
