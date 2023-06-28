@@ -89,7 +89,7 @@ function FormDemo () {
 在表单项的 JSON 配置中使用
 ```json
 {
-   "tooltip": "{{ docs.extraConfigDoc }}",
+   "tooltip": "{{ docs.doc1 }}",
 }
 ```
 
