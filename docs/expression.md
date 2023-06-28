@@ -5,6 +5,8 @@ dt-form-renderer 支持三种表达式
 + 自定义校验器表达式
 + 自定义doc/tooltip表达式
 
+<br/>
+
 ## 函数表达式
 函数表达式用于表达/实现联动逻辑，它与 vue 的插值表达式的形式类似，使用双花括号包裹 `{{...}}`
 ```json
@@ -14,6 +16,7 @@ dt-form-renderer 支持三种表达式
 ```
 在函数表达式内部，内置 `formData` 和 `extraData` 两个变量，其中 `formData` 是当前表单收集到的数据，`extraData` 是外部数据。`extraData`  的数据来源于 `Service`  或者 `FormRenderer` 组件的 props。函数表达式可以在绝大多数的字段配置项中使用。
 
+<br/>
 
 ## 自定义校验器表达式
 自定义校验器表达式实际上是函数表达式的一种，它用于指定表单项的自定义校验器。自定义校验器分为两种类型：
@@ -50,6 +53,8 @@ function FormDemo () {
   )
 }
 ```
+
+<br/>
 
 在表单项的 JSON 配置中使用
 ```json
