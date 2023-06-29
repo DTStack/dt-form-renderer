@@ -9,6 +9,12 @@
   "files": [
     "esm/*"
   ],
+  "keywords": [
+    "form renderer",
+    "react",
+    "ant-design",
+    "lowcode"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DTStack/dt-form-renderer.git"

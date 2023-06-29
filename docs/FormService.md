@@ -52,13 +52,13 @@ function FormDemo() {
 
 ```json
 {
-  "triggerServices": [
-    {
-      "serviceName": "service1",
-      "fieldInExtraData": "selectOptionData",
-      "trigger": ["onMount", "onChange", "onBlur", "onFocus", "onSearch"]
-    }
-  ]
+    "triggerServices": [
+        {
+            "serviceName": "service1",
+            "fieldInExtraData": "selectOptionData",
+            "trigger": ["onMount", "onChange", "onBlur", "onFocus", "onSearch"]
+        }
+    ]
 }
 ```
 
@@ -73,44 +73,47 @@ FormRenderer 内部维护了一个存储外部数据的容器-`extraData` ，`ex
 
 ```json
 {
-  "fieldName": "tableName",
-  "label": "表名",
-  "widget": "Select",
-  "widgetProps": {
-    "options": "{{ extraData.tableList }}",
-    "placeholder": "请选择表名"
-  },
-  "triggerServices": [
-    {
-      "serviceName": "getTableList",
-      "fieldInExtraData": "tableList",
-      "trigger": "onMount"
-    }
-  ]
+    "fieldName": "tableName",
+    "label": "表名",
+    "widget": "Select",
+    "widgetProps": {
+        "options": "{{ extraData.tableList }}",
+        "placeholder": "请选择表名"
+    },
+    "triggerServices": [
+        {
+            "serviceName": "getTableList",
+            "fieldInExtraData": "tableList",
+            "trigger": "onMount"
+        }
+    ]
 }
 ```
 
-另外 extraData 内置了一个 `serviceLoading` 属性，用于存储 FormService 的 loading 状态，可以使用 `extraData.serviceLoading.serviceName` 的方式获取 FormService 对应的loading状态
+另外 extraData 内置了一个 `serviceLoading` 属性，用于存储 FormService 的 loading 状态，可以使用 `extraData.serviceLoading.serviceName` 的方式获取 FormService 对应的 loading 状态
+
 ```json
 {
-  "widget": "Select",
-  "widgetProps": {
-    "loading": "{{ extraData.serviceLoading.getTableList }}"
-  },
-  "triggerServices": [
-    {
-      "serviceName": "getTableList",
-    }
-  ]
+    "widget": "Select",
+    "widgetProps": {
+        "loading": "{{ extraData.serviceLoading.getTableList }}"
+    },
+    "triggerServices": [
+        {
+            "serviceName": "getTableList"
+        }
+    ]
 }
 ```
 
 ### Trigger
-`trigger` 即为 FormService 的触发时机，共有5种
-+ `onMount` 当前表单项组件挂载时
-+ `onChange` 当前表单项组件触发 change 事件时
-+ `onBlur`  当前表单项组件触发 blur 事件时
-+ `onFocus` 当前表单项组件触发 focus 事件时
-+ `onSearch`  当前表单项组件触发 search 事件时
+
+`trigger` 即为 FormService 的触发时机，共有 5 种
+
+-   `onMount` 当前表单项组件挂载时
+-   `onChange` 当前表单项组件触发 change 事件时
+-   `onBlur` 当前表单项组件触发 blur 事件时
+-   `onFocus` 当前表单项组件触发 focus 事件时
+-   `onSearch` 当前表单项组件触发 search 事件时
 
 除了 `onMount` 外，当 FormService 被触发时 trigger 对应事件的回调函数的参数，会被作为 FormService 的第四个参数（`args`）传给 FormService
