@@ -1,7 +1,5 @@
 <h1 align='center'> dt-form-renderer </h1>
 
-<hr>
-
 -   一个基于 React 和 Ant-Design 的表单渲染器
 -   使用 JSON 描述表单
 -   支持复杂的联动逻辑
