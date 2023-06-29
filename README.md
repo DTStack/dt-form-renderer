@@ -4,26 +4,6 @@
 -   使用 JSON 描述表单
 -   支持复杂的联动逻辑
 
-## 安装
-
-使用 npm
-
-```shell
-npm install dt-form-renderer
-```
-
-使用 yarn
-
-```shell
-yarn add dt-form-renderer
-```
-
-使用 pnpm
-
-```shell
-pnpm install dt-form-renderer
-```
-
 <br/>
 
 ## 文档
