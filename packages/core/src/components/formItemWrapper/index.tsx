@@ -10,6 +10,8 @@ import {
     ServiceTriggerEnum,
     WidgetPropsType,
 } from '../../type';
+import { warning } from '../../utils/report';
+import NotFoundWidget from '../notFoundWidget';
 
 const { Item: FormItem, useFormInstance } = Form;
 
@@ -51,7 +53,13 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
     const form = useFormInstance();
 
     const Widget: any = useMemo(() => {
-        return getWidgets(widget) ?? internalWidgets(widget);
+        const _widget = getWidgets(widget) ?? internalWidgets(widget);
+        if (_widget === null) {
+            warning(`widget named \`${widget}\` is not found!`, 'Widget');
+            return NotFoundWidget;
+        } else {
+            return _widget;
+        }
     }, [widget]);
 
     useEffect(() => {
