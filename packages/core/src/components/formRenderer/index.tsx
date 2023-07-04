@@ -100,6 +100,9 @@ const FormRenderer: React.ForwardRefRenderFunction<
 
     useEffect(() => {
         form.setFieldsValue(initialValues);
+        return () => {
+            form.resetFields();
+        };
     }, [jsonConfig]);
 
     /**
