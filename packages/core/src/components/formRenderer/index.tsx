@@ -4,7 +4,6 @@ import React, {
     useRef,
     useImperativeHandle,
     useLayoutEffect,
-    useMemo,
 } from 'react';
 import { Form } from 'antd';
 import type { FormInstance, FormProps } from 'antd/es/form/Form';
@@ -126,38 +125,36 @@ const FormRenderer: React.ForwardRefRenderFunction<
         }
     };
 
-    const shouldRenderFieldsMeta = useMemo(() => {
-        return formItemsMeta
-            .map((item) => {
-                if (valueGetter(item.destroy)) {
-                    return null;
-                }
-                return item;
-            })
-            .filter(Boolean);
-    }, [formItemsMeta, valueGetter]);
-
     const onValuesChange = (changedValues, formData) => {
         const changedFields = Object.keys(changedValues);
+        let interactFields = [];
+
+        // 处理字段值之间的联动关系,
         changedFields.forEach((fieldName) => {
-            // 处理字段值之间的联动关系, 发布 字段值变更事件
-            const changedFields =
+            const fieldsName =
                 pubSubCenterRef.current.publishDepEvent(fieldName);
-
-            const allPubServiceFields = [fieldName, ...changedFields].filter(
-                (name) =>
-                    shouldRenderFieldsMeta.some(
-                        (item) => item.fieldName === name
-                    )
-            );
-
-            pubSubCenterRef.current.batchPublishServiceEvent(
-                allPubServiceFields,
-                ServiceTriggerEnum.onChange,
-                form.getFieldsValue(),
-                extraDataRef
-            );
+            interactFields = [...interactFields, ...fieldsName];
         });
+
+        const shouldRenderFields = formItemsMeta
+            .filter((item) => {
+                return !valueGetter(item.destroy);
+            })
+            .map((item) => item.fieldName);
+
+        // 发布字段值变更事件
+        const allPubServiceFields = [
+            ...changedFields,
+            ...interactFields,
+        ].filter((fieldName) => shouldRenderFields.includes(fieldName));
+
+        pubSubCenterRef.current.batchPublishServiceEvent(
+            Array.from(new Set(allPubServiceFields)),
+            ServiceTriggerEnum.onChange,
+            form.getFieldsValue(),
+            extraDataRef
+        );
+
         props.onValuesChange?.(changedValues, formData);
     };
 
@@ -174,7 +171,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 {typeof header === 'function'
                     ? header?.(form, extraDataRef.current)
                     : header}
-                {shouldRenderFieldsMeta.map((formItemMeta) => {
+                {formItemsMeta.map((formItemMeta) => {
                     return (
                         <FormItemWrapper
                             debounceSearch={debounceSearch}

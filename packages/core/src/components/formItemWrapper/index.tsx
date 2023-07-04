@@ -48,6 +48,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         trigger,
         valueDerived,
         servicesTriggers,
+        destroy,
     } = formItemMeta;
     const extraContext = useContext(ExtraContext);
     const form = useFormInstance();
@@ -151,6 +152,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
     return (
         <FormItem noStyle shouldUpdate>
             {(form) => {
+                if (valueGetter(destroy)) return null;
                 deriveValue(form as FormInstance);
                 const { onBlur, onFocus, onSearch } = getServiceTriggerProps(
                     form.getFieldsValue(),
