@@ -31,7 +31,6 @@ export interface FormRendererProps extends FormProps {
     docsMap?: DocsMapType;
     getWidgets?: GetWidgets;
     defaultExtraData: Record<string, any>;
-    preserveFields?: string[];
     debounceSearch?: boolean;
     header?:
         | React.ReactNode
@@ -50,7 +49,6 @@ const FormRenderer: React.ForwardRefRenderFunction<
         formServicePool,
         defaultExtraData,
         ruleMap,
-        preserveFields,
         getWidgets,
         docsMap,
         initialValues,
@@ -92,15 +90,16 @@ const FormRenderer: React.ForwardRefRenderFunction<
         /** 订阅 jsonConfig 中声明的 dependencies 和 triggerService */
         subscriber.subscribe(fieldList);
         pubSubCenterRef.current = pubSubCenter;
-        form.setFieldsValue(initialValues);
+
         return () => {
             pubSubCenter.dispose();
             subscriber.dispose();
-            const preserveValues = form.getFieldsValue(preserveFields);
             pubSubCenterRef.current = null;
-            form.resetFields();
-            form.setFieldsValue(preserveValues);
         };
+    }, [jsonConfig]);
+
+    useEffect(() => {
+        form.setFieldsValue(initialValues);
     }, [jsonConfig]);
 
     /**
