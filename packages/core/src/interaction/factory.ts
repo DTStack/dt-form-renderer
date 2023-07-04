@@ -1,5 +1,6 @@
-import type { FormInstance } from 'antd';
 import { UpdateExtraType } from '../extraDataContext';
+import { warning } from '../utils/report';
+import type { FormInstance } from 'antd';
 import type {
     FormServicePoolType,
     JsonConfigFieldType,
@@ -45,10 +46,17 @@ export function triggerServiceFactory(
     servicePool: FormServicePoolType,
     updateExtra: UpdateExtraType,
     triggerService: TriggerServiceType
-): FormServiceType {
+): FormServiceType | null {
     const { serviceName, fieldInExtraData } = triggerService;
 
     const service = servicePool?.[serviceName];
+    if (typeof service !== 'function') {
+        return null;
+    }
+    warning(
+        `formService named \`${serviceName}\` is not found!`,
+        'FormService'
+    );
 
     return (context: IServiceContext) => {
         updateExtra((extraData) => ({

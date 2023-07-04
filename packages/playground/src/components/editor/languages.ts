@@ -12,12 +12,25 @@ export const fieldCompletionsCreator: (
     }
     return [
         {
+            label: 'description',
+            detail: '表单配置描述',
+        },
+        {
+            label: 'fieldList',
+            detail: '表单项配置列表',
+        },
+        {
             label: 'fieldName',
             detail: '字段名称',
         },
         {
             label: 'widget',
             detail: '组件名称',
+        },
+        {
+            label: 'widgetProps',
+            detail: '组件的属性',
+            insertText: `"${'widgetProps'}": { $1 },`,
         },
         {
             label: 'dependencies',
@@ -27,6 +40,27 @@ export const fieldCompletionsCreator: (
         {
             label: 'initialValue',
             detail: '字段初始值',
+        },
+        {
+            label: 'label',
+            detail: 'label 标签的文本',
+        },
+        {
+            label: 'destroy',
+            detail: '是否销毁',
+        },
+        {
+            label: 'hidden',
+            detail: '是否隐藏',
+        },
+        {
+            label: 'rules',
+            detail: '校验规则集',
+            insertText: `"${'rules'}": [ $1 ],`,
+        },
+        {
+            label: 'tooltip',
+            detail: '配置提示信息',
         },
         {
             label: 'colon',
@@ -49,34 +83,12 @@ export const fieldCompletionsCreator: (
             detail: '子节点的值的属性',
         },
         {
-            label: 'destroy',
-            detail: '是否销毁',
-        },
-        {
-            label: 'hidden',
-            detail: '是否隐藏',
-        },
-        {
-            label: 'label',
-            detail: 'label 标签的文本',
-        },
-        {
-            label: 'rules',
-            detail: '校验规则集',
-            insertText: `"${'rules'}": [ $1 ],`,
-        },
-        {
-            label: 'tooltip',
-            detail: '配置提示信息',
-        },
-        {
-            label: 'widgetProps',
-            detail: '组件的属性',
-            insertText: `"${'widgetProps'}": { $1 },`,
-        },
-        {
             label: 'triggerServices',
-            detail: '触发的action配置',
+            detail: 'formService 配置',
+        },
+        {
+            label: 'valueDerived',
+            detail: '值的派生',
         },
     ].map((i) => ({
         ...i,
@@ -108,6 +120,10 @@ export const expressionCompletionsCreator: (
         {
             label: '{{ ruleMap.validators.$1 }}',
             detail: '自定义校验器 -validators',
+        },
+        {
+            label: '{{ docs.$1 }}',
+            detail: '自定义 tooltip  -docsMap',
         },
     ].map((i) => ({
         ...i,

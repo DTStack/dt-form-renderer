@@ -16,7 +16,7 @@ export default class InteractionSubscriber {
     private _formInstance: FormInstance = null;
     private _triggerServiceFactory: (
         serviceConf: TriggerServiceType
-    ) => FormServiceType = null;
+    ) => FormServiceType | null = null;
 
     constructor(
         formInstance: FormInstance,
@@ -123,9 +123,10 @@ export default class InteractionSubscriber {
         this._fieldConfList.forEach((fieldConf) => {
             const { fieldName, triggerServices } = fieldConf;
             if (!triggerServices?.length) return;
-            const serviceActions: IServiceEvent[] =
-                fieldConf.triggerServices?.map?.((triggerService) => {
+            const serviceActions: IServiceEvent[] = fieldConf.triggerServices
+                ?.map?.((triggerService) => {
                     const service = this._triggerServiceFactory(triggerService);
+                    if (!service) return null;
                     const triggers = triggerService?.triggers?.length
                         ? triggerService?.triggers
                         : [
@@ -138,7 +139,8 @@ export default class InteractionSubscriber {
                         fieldInExtraData: triggerService.fieldInExtraData,
                         serviceName: triggerService.serviceName,
                     };
-                });
+                })
+                .filter(Boolean);
             this._pubSubCenter.subscribeServiceEvent(fieldName, serviceActions);
         });
     };

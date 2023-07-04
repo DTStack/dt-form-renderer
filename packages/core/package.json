@@ -38,9 +38,10 @@
   "scripts": {
     "test": "jest",
     "build": "rm -rf lib && tsc",
+    "watch": "rm -rf lib && tsc --watch",
+    "check-types": "tsc --noEmit",
     "prettier:write": "prettier --write '**/*.{js,jsx,tsx,ts,less}' --config ../../.prettierrc",
-    "prettier": "prettier --check '**/*.{js,jsx,tsx,ts,less}' --config ../../.prettierrc",
-    "check-types": "tsc --noEmit"
+    "prettier": "prettier --check '**/*.{js,jsx,tsx,ts,less}' --config ../../.prettierrc"
   },
   "license": "ISC",
   "publishConfig": {
