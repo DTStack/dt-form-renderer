@@ -13,8 +13,8 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "start": "pnpm core build && pnpm i && pnpm playground start",
-    "deploy": "pnpm core build && pnpm i && pnpm playground deploy",
+    "start": "pnpm i && pnpm core watch  && pnpm playground start",
+    "deploy": "pnpm i && pnpm core build && pnpm playground deploy",
     "core": "pnpm --filter ./packages/core",
     "playground": "pnpm --filter ./packages/playground"
   },
