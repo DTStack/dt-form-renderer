@@ -6,6 +6,7 @@ import { JsonConfigType } from '@dt-form-renderer/core';
 import Editor from '@/components/editor';
 import FormSample from '@/components/formSample';
 import TitleWithToolbar from '@/components/titleWithToolbar';
+import ErrorBoundary from '@/components/errorBoundary';
 import { downloadFile, copy2Clipboard, debounceFunctionWrap } from '@/utils';
 import { updateFile } from '@/store/reducers/workbenchSlice';
 import { RootState, useAppDispatch } from '@/store';
@@ -25,8 +26,8 @@ const WorkBench: React.FC<workbenchProps> = () => {
 
     useEffect(() => {
         const file = files?.find((w) => w.name === workInProgress);
-        configEditorRef.current.setValue(file?.configContent ?? '');
-        valueEditorRef.current.setValue(file?.valuesContent ?? '');
+        configEditorRef.current.getModel().setValue(file?.configContent ?? '');
+        valueEditorRef.current.getModel().setValue(file?.valuesContent ?? '');
     }, [workInProgress]);
 
     const saveCurrentPage = debounceFunctionWrap(() => {
@@ -47,8 +48,8 @@ const WorkBench: React.FC<workbenchProps> = () => {
         return new Promise<any>((resolve, reject) => {
             if (value.replace(/\s/g, '') === '') {
                 if (required) {
-                    reject(null);
                     message.error('json 配置不能为空！');
+                    reject();
                     return;
                 } else {
                     resolve({});
@@ -78,13 +79,23 @@ const WorkBench: React.FC<workbenchProps> = () => {
 
     const refreshForm = () => {
         const promises = [
-            parseEditorValue(valueEditorRef.current.getValue(), false),
-            parseEditorValue(configEditorRef.current.getValue(), true),
+            parseEditorValue(
+                valueEditorRef.current.getModel().getValue(),
+                false
+            ),
+            parseEditorValue(
+                configEditorRef.current.getModel().getValue(),
+                true
+            ),
         ];
-        return Promise.all(promises).then(([initialValues, parsedJson]) => {
-            setInitialValues(initialValues);
-            setParsedJson(parsedJson ?? {});
-        });
+        return Promise.all(promises)
+            .then(([initialValues, parsedJson]) => {
+                console.log(initialValues);
+                console.log(parsedJson);
+                setInitialValues(initialValues);
+                setParsedJson(parsedJson ?? {});
+            })
+            .catch((e) => {});
     };
 
     const refreshValueEditor = (config?: string) => {
@@ -185,10 +196,14 @@ const WorkBench: React.FC<workbenchProps> = () => {
                 <TitleWithToolbar size="large" onReload={refreshForm}>
                     表单 UI 预览
                 </TitleWithToolbar>
-                <FormSample
-                    parsedJson={parsedJson}
-                    initialValues={initialValues}
-                />
+                <div className="form-content">
+                    <ErrorBoundary onRefresh={refreshForm}>
+                        <FormSample
+                            parsedJson={parsedJson}
+                            initialValues={initialValues}
+                        />
+                    </ErrorBoundary>
+                </div>
             </div>
         </>
     );

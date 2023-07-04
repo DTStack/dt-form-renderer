@@ -19,13 +19,16 @@
     padding-left: 16px;
     display: flex;
     flex-direction: column;
-    .ant-form {
+    .form-content {
         border: 1px solid #ddd;
         border-radius: 4px;
         padding: 12px;
-        min-height: calc(100% - 32px);
-        .ant-form-item {
-            margin-bottom: 10px;
+        height: calc(100% - 32px);
+        overflow-y: auto;
+        .ant-form {
+            .ant-form-item {
+                margin-bottom: 10px;
+            }
         }
     }
 }

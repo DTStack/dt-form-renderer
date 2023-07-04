@@ -1,5 +1,5 @@
 import React from 'react';
-import { editor } from 'monaco-editor';
+import { editor, IDisposable } from 'monaco-editor';
 import './autoComplete';
 import './index.less';
 
@@ -12,7 +12,7 @@ export type MonacoEditorHeight =
 
 interface EditorProps {
     value?: string;
-    onChange?: (value: string) => void;
+    onChange?: (value: string, event: editor.IModelContentChangedEvent) => void;
     language?: string;
     style?: React.CSSProperties;
     className?: string;
@@ -27,9 +27,12 @@ type EditorState = typeof initialState;
 
 class Editor extends React.Component<EditorProps, EditorState> {
     state = initialState;
+
     private _container = null;
     monacoInstance: editor.IStandaloneCodeEditor = null;
-
+    private __prevent_onChange = false;
+    private _changeSubscription: IDisposable;
+    private _resizeSubscription: IDisposable;
     private readonly resizeObserver = new ResizeObserver(() => {
         if (this.monacoInstance) {
             this.monacoInstance.layout();
@@ -42,15 +45,30 @@ class Editor extends React.Component<EditorProps, EditorState> {
 
     componentDidUpdate(prevProps: Readonly<any>): void {
         if (prevProps.value !== this.props.value) {
-            const pos = this.monacoInstance.getPosition();
-            this.monacoInstance.setValue(this.props.value);
-            this.monacoInstance.setPosition(pos);
+            this.__prevent_onChange = true;
+            this.monacoInstance.pushUndoStop();
+            this.monacoInstance.getModel().pushEditOperations(
+                [],
+                [
+                    {
+                        range: this.monacoInstance
+                            .getModel()
+                            .getFullModelRange(),
+                        text: this.props.value,
+                    },
+                ],
+                () => null
+            );
+            this.monacoInstance.pushUndoStop();
+            this.__prevent_onChange = false;
         }
     }
 
     componentWillUnmount(): void {
         this.monacoInstance.dispose();
         this.resizeObserver.disconnect();
+        this._changeSubscription.dispose();
+        this._resizeSubscription.dispose();
     }
 
     initEditor = () => {
@@ -79,14 +97,21 @@ class Editor extends React.Component<EditorProps, EditorState> {
     };
 
     initEditorEvent = () => {
-        this.monacoInstance.onDidChangeModelContent((event: any) => {
-            const { onChange } = this.props;
-            const newValue = this.monacoInstance.getValue();
-            if (onChange) onChange(newValue);
-        });
-        this.monacoInstance.onDidContentSizeChange((e) => {
-            this.setState({ contentHeight: e.contentHeight });
-        });
+        this._changeSubscription = this.monacoInstance.onDidChangeModelContent(
+            (event: any) => {
+                const { onChange } = this.props;
+                const newValue = this.monacoInstance.getValue();
+                if (!this.__prevent_onChange && onChange) {
+                    onChange(newValue, event);
+                }
+            }
+        );
+
+        this._resizeSubscription = this.monacoInstance.onDidContentSizeChange(
+            (e) => {
+                this.setState({ contentHeight: e.contentHeight });
+            }
+        );
     };
 
     render() {
