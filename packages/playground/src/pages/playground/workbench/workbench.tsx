@@ -3,7 +3,7 @@ import { message } from 'antd';
 import { useSelector } from 'react-redux';
 import { editor } from 'monaco-editor';
 import { JsonConfigType } from '@dt-form-renderer/core';
-import Editor from '@/components/editor';
+import Editor, { setEditorValue } from '@/components/editor';
 import FormSample from '@/components/formSample';
 import TitleWithToolbar from '@/components/titleWithToolbar';
 import ErrorBoundary from '@/components/errorBoundary';
@@ -26,8 +26,8 @@ const WorkBench: React.FC<workbenchProps> = () => {
 
     useEffect(() => {
         const file = files?.find((w) => w.name === workInProgress);
-        configEditorRef.current.getModel().setValue(file?.configContent ?? '');
-        valueEditorRef.current.getModel().setValue(file?.valuesContent ?? '');
+        setEditorValue(configEditorRef.current, file?.configContent ?? '');
+        setEditorValue(valueEditorRef.current, file?.valuesContent ?? '');
     }, [workInProgress]);
 
     const saveCurrentPage = debounceFunctionWrap(() => {
@@ -72,7 +72,7 @@ const WorkBench: React.FC<workbenchProps> = () => {
         ref: React.RefObject<editor.IStandaloneCodeEditor>
     ) => {
         return parseEditorValue(ref.current.getValue(), false).then((obj) => {
-            ref.current.setValue(JSON.stringify(obj, null, 4));
+            setEditorValue(ref.current, JSON.stringify(obj, null, 4));
             message.success('格式化成功！');
         });
     };
@@ -90,8 +90,6 @@ const WorkBench: React.FC<workbenchProps> = () => {
         ];
         return Promise.all(promises)
             .then(([initialValues, parsedJson]) => {
-                console.log(initialValues);
-                console.log(parsedJson);
                 setInitialValues(initialValues);
                 setParsedJson(parsedJson ?? {});
             })
@@ -108,15 +106,17 @@ const WorkBench: React.FC<workbenchProps> = () => {
                     values[item.fieldName] = null;
                 }
             });
-            valueEditorRef.current.setValue(JSON.stringify(values, null, 4));
+            setEditorValue(
+                valueEditorRef.current,
+                JSON.stringify(values, null, 4)
+            );
         });
     };
 
     const onImportTemplate = (config: string) => {
-        configEditorRef.current.setValue(config);
-        refreshValueEditor(config).then(() => {
-            refreshForm();
-        });
+        setEditorValue(configEditorRef.current, config);
+        setEditorValue(valueEditorRef.current, JSON.stringify({}, null, 4));
+        refreshForm();
     };
 
     return (

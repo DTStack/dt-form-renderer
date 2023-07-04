@@ -14,7 +14,9 @@ const store = configureStore({
         workbench,
         configure,
     },
-    middleware: [createLogger()],
+    middleware: [
+        process.env.NODE_ENV !== 'production' ? createLogger() : null,
+    ].filter(Boolean),
 });
 
 initIDB();

@@ -142,3 +142,21 @@ class Editor extends React.Component<EditorProps, EditorState> {
 }
 
 export default Editor;
+
+export const setEditorValue = (
+    editor: editor.IStandaloneCodeEditor,
+    value: string
+) => {
+    editor.pushUndoStop();
+    editor.getModel().pushEditOperations(
+        [],
+        [
+            {
+                range: editor.getModel().getFullModelRange(),
+                text: value,
+            },
+        ],
+        () => null
+    );
+    editor.pushUndoStop();
+};

@@ -18,7 +18,6 @@ class ErrorBoundary extends React.Component<IProps> {
     }
 
     render() {
-        console.log('hasError', this.state.hasError);
         if (this.state.hasError) {
             return (
                 <div

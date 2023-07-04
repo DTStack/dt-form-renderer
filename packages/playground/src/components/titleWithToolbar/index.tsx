@@ -6,19 +6,19 @@ import {
     CopyOutlined,
     DownloadOutlined,
 } from '@ant-design/icons';
-import hiveSource from '../formSample/jsonSample/hiveSource';
-import oracleSource from '../formSample/jsonSample/oracleSource';
+import loginFormMeta from '../formSample/jsonSample/login';
+import dataSyncFormMeta from '../formSample/jsonSample/dataSync';
 import './index.less';
 import type { DefaultOptionType } from 'antd/lib/select';
 
 const options: DefaultOptionType[] = [
     {
-        label: 'hive source',
-        value: JSON.stringify(hiveSource, null, 4),
+        label: '登录表单',
+        value: JSON.stringify(loginFormMeta, null, 4),
     },
     {
-        label: 'oracle source',
-        value: JSON.stringify(oracleSource, null, 4),
+        label: '数据同步',
+        value: JSON.stringify(dataSyncFormMeta, null, 4),
     },
 ];
 

@@ -2,6 +2,51 @@ import type { JsonConfigType } from '@dt-form-renderer/core';
 const oracleSource: JsonConfigType = {
     fieldList: [
         {
+            fieldName: 'sourceType',
+            label: '数据源类型',
+            widget: 'Select',
+            widgetProps: {
+                placeholder: '请选择数据源类型',
+                options: [
+                    { label: 'MySQL', value: 'mysql' },
+                    { label: 'Hive', value: 'hive' },
+                ],
+                allowClear: true,
+            },
+            rules: [{ required: true, message: '请选择数据源类型！' }],
+            triggerServices: [
+                {
+                    serviceName: 'getSourceList',
+                    fieldInExtraData: 'sourceList',
+                    triggers: ['onChange'],
+                },
+            ],
+        },
+        {
+            fieldName: 'sourceId',
+            label: '数据源',
+            dependencies: ['sourceType'],
+            widget: 'Select',
+            widgetProps: {
+                placeholder: '请选择数据源',
+                options: '{{ extraData.sourceList }}',
+                allowClear: true,
+            },
+            rules: [{ required: true, message: '请选择数据源！' }],
+            triggerServices: [
+                {
+                    serviceName: 'getSourceList',
+                    fieldInExtraData: 'sourceList',
+                    triggers: ['onMount'],
+                },
+                {
+                    serviceName: 'getSchemaList',
+                    fieldInExtraData: 'schemaList',
+                    triggers: ['onChange'],
+                },
+            ],
+        },
+        {
             fieldName: 'configMode',
             label: '配置方式',
             widget: 'RadioGroup',
@@ -15,14 +60,6 @@ const oracleSource: JsonConfigType = {
             },
         },
         {
-            fieldName: 'customSql',
-            label: 'SQL',
-            widget: 'sqlEditor',
-            destroy: '{{ formData.configMode !== 1 }}',
-            rules: [{ required: true, message: '请输入自定义SQL' }],
-            initialValue: '-- 仅限查询语句，例如select a,b from ...\n',
-        },
-        {
             fieldName: 'schema',
             label: 'schema',
             widget: 'Select',
@@ -32,23 +69,24 @@ const oracleSource: JsonConfigType = {
                 allowClear: true,
             },
             destroy: '{{ formData.configMode === 1 }}',
-            dependencies: ['dependencies'],
-            trigger: 'onChange',
+            dependencies: ['sourceId', 'configMode'],
             triggerServices: [
                 {
                     serviceName: 'getSchemaList',
                     fieldInExtraData: 'schemaList',
+                    triggers: ['onMount'],
                 },
                 {
                     serviceName: 'getTableList',
                     fieldInExtraData: 'tableList',
+                    triggers: ['onChange'],
                 },
             ],
         },
         {
             fieldName: 'tableName',
             label: '表名',
-            dependencies: ['schema', 'dependencies'],
+            dependencies: ['schema'],
             destroy: '{{ formData.configMode === 1 }}',
             widget: 'Select',
             widgetProps: {
@@ -61,21 +99,34 @@ const oracleSource: JsonConfigType = {
                     message: '请选择表名！',
                 },
             ],
-            trigger: 'onChange',
             triggerServices: [
                 {
                     serviceName: 'getTableList',
                     fieldInExtraData: 'tableList',
+                    triggers: ['onMount'],
                 },
             ],
+        },
+        {
+            fieldName: 'customSql',
+            label: 'SQL',
+            dependencies: ['sourceId', 'configMode'],
+            widget: 'sqlEditor',
+            widgetProps: {
+                style: {
+                    height: 100,
+                },
+            },
+            destroy: '{{ formData.configMode !== 1 }}',
+            rules: [{ required: true, message: '请输入自定义SQL' }],
+            initialValue: '-- 仅限查询语句，例如select a,b from ...\n',
         },
         {
             fieldName: 'where',
             label: '数据过滤',
             widget: 'textArea',
-            tooltip: '{{ docs.dataFilterDoc }}',
             destroy: '{{ formData.configMode === 1 }}',
-            dependencies: ['schema', 'dependencies', 'table'],
+            dependencies: ['table', 'customSql'],
             widgetProps: {
                 placeholder:
                     '请参考相关SQL语法填写where过滤语句（不要填写where关键字）。该过滤语句通常用作增量同步',
@@ -86,7 +137,7 @@ const oracleSource: JsonConfigType = {
             label: '切分键',
             tooltip: '仅支持数值型字段',
             widget: 'Input',
-            dependencies: ['schema', 'dependencies', 'table'],
+            dependencies: ['table', 'customSql'],
             rules: [{ validator: '{{ ruleMap.customRules.noWhiteSpace }}' }],
             widgetProps: {
                 placeholder: '请填写切分键',
@@ -94,7 +145,6 @@ const oracleSource: JsonConfigType = {
         },
         {
             fieldName: 'extraConfig',
-            tooltip: '{{ docs.extraConfigDoc }}',
             label: '高级配置',
             rules: [
                 {
@@ -106,7 +156,6 @@ const oracleSource: JsonConfigType = {
                 placeholder: '高级配置需要是json格式',
             },
             widget: 'textArea',
-            trigger: 'onChange',
         },
     ],
 };
