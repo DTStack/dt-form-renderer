@@ -51,12 +51,12 @@ export function triggerServiceFactory(
 
     const service = servicePool?.[serviceName];
     if (typeof service !== 'function') {
+        warning(
+            `formService named \`${serviceName}\` is not found!`,
+            'FormService'
+        );
         return null;
     }
-    warning(
-        `formService named \`${serviceName}\` is not found!`,
-        'FormService'
-    );
 
     return (context: IServiceContext) => {
         updateExtra((extraData) => ({
