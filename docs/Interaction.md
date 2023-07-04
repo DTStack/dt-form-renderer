@@ -123,3 +123,4 @@ dt-form-renderer 内置支持复杂的表单联动，表单的联动关系大致
 ```
 
 这样就可以做到收集 `userId` 的同时也收集 `userName`。
+**需要注意的是，由于 `valueDerived` 对应的函数表达式可能依赖 formData，所以它对应的值的更新会有延迟，也就是说，在 FormRenderer 的 onValuesChange 回调中，无法获取到最新的 `valueDerived` 对应的的值**。

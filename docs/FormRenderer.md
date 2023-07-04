@@ -11,7 +11,6 @@
 -   `ruleMap` 自定义的表单校验器的集合
 -   `docsMap` 自定义的 tooltip 的集合
 -   `getWidgets` 接收表单自定义组件的名称，返回表单自定义组件，详情看[这里](./Widget.md)
--   `preserveFields` 当 `jsonConfig` 变更时，仍然需要保留的表单值，一般与 `header` 和 `footer` 配合使用
 -   `defaultExtraData` 默认的 extraData, 详情看[这里](./FormService.md)
 -   `header` 固定渲染在表单头部的组件
 -   `footer` 固定渲染在表单尾部的组件
