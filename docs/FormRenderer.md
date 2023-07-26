@@ -22,7 +22,7 @@
 
 ### 更新
 
--   如果 jsonConfig 的值更新，那么整个表单都会根据新的 jsonConfig 进行渲染，表单的值，内部的各种状态都会重置，也包括表单已经收集到的所有表单数据，如果你希望在表单重置后，仍然保留某些表单项的值，那么可以使用 `preserveFields` 来声明对应的需要保留值的字段。
+-   如果 jsonConfig 的值更新，那么整个表单都会根据新的 jsonConfig 进行渲染，表单的值，内部的各种状态都会重置，也包括表单已经收集到的所有表单数据。
 -   传入 FormRenderer 组件的 `defaultExtraData` 的值发生改变时，表单内部的 extraData 也会随之更新。
 
 ### preserve
