@@ -40,8 +40,10 @@ JsonConfig 用于描述表单的渲染，它的一级结构如下所示
 -   `tooltip` 表单项的 tooltip， **支持使用自定义 tooltip 表达式**
 -   `triggerServices` FormService 配置
 -   `valueDerived` **支持函数表达式**，指定当前表单项的值如何从`formData`和`extraData`中衍生出来，通常与 `hidden` 和 `widgetProps.disabled` 配合使用
+-   `required` 表单项是否为必填， **支持函数表达式**
 -   `valuePropName` 同 ant-design FormItem 的 trigger
 -   `trigger` 同 ant-design FormItem 的 trigger
 -   `labelAlign` 同 ant-design FormItem 的 labelAlign
 -   `colon` 同 ant-design FormItem 的 colon
 -   `extra` 同 ant-design FormItem 的 extra
+-   `noStyle`  同 ant-design FormItem 的 noStyle

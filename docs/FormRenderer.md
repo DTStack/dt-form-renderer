@@ -15,6 +15,7 @@
 -   `header` 固定渲染在表单头部的组件
 -   `footer` 固定渲染在表单尾部的组件
 -   `debounceSearch` 表单项组件的 `onSearch` 回调是否需要防抖
+-   `onDerivedValuesChange` 当表单项配置了 `valueDerived` 属性，且当此表单项的值变化时，触发此回调函数
 
 <br/>
 
