@@ -14,6 +14,7 @@
 -   [表单联动](./docs/Interaction.md)
 -   [自定义表单控件](./docs/Widget.md)
 -   [表单 Service](./docs/FormService.md)
+-   [CHANGELOG](./packages/core/CHANGELOG.zh-CN.md)
 
 <br/>
 
@@ -79,6 +80,7 @@ const jsonConfig = {
 
 export default jsonConfig;
 ```
+
 
 ## 在线编辑
 
