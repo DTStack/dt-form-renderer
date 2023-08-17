@@ -76,7 +76,10 @@ const FormRenderer: React.ForwardRefRenderFunction<
      * 切换数据源时处理联动关系，订阅事件
      */
     useLayoutEffect(() => {
-        updateExtraData(defaultExtraData);
+        updateExtraData({
+            ...defaultExtraData,
+            serviceLoading: defaultExtraData?.serviceLoading ?? {},
+        });
         const fieldList = jsonConfig?.fieldList ?? [];
         const jsonConfigTransformer = new JsonConfigTransformer(
             fieldList,
