@@ -38,6 +38,12 @@ export interface FormRendererProps extends FormProps {
     footer?:
         | React.ReactNode
         | ((form: FormInstance, extraData: any) => React.ReactNode);
+    onDerivedValuesChange?: (
+        changedValues: any,
+        values: any,
+        extraData?: any
+    ) => any;
+    onValuesChange: (changedValues: any, values: any, extraData?: any) => any;
 }
 
 const FormRenderer: React.ForwardRefRenderFunction<
@@ -127,7 +133,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
         }
     };
 
-    const onValuesChange = (changedValues, formData) => {
+    const onValuesChange = (changedValues, _values) => {
         const changedFields = Object.keys(changedValues);
         let interactFields = [];
 
@@ -157,7 +163,22 @@ const FormRenderer: React.ForwardRefRenderFunction<
             extraDataRef
         );
 
-        props.onValuesChange?.(changedValues, formData);
+        props.onValuesChange?.(
+            changedValues,
+            form.getFieldsValue(),
+            extraDataRef.current
+        );
+    };
+
+    const onDerivedValueChange = (fieldName: string, value: any) => {
+        const changedValues = {
+            [fieldName]: value,
+        };
+        props.onDerivedValuesChange?.(
+            changedValues,
+            form.getFieldsValue(),
+            extraDataRef.current
+        );
     };
 
     return (
@@ -181,6 +202,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                             getWidgets={getWidgets}
                             key={formItemMeta.fieldName}
                             formItemMeta={formItemMeta}
+                            onDerivedValueChange={onDerivedValueChange}
                             publishServiceEvent={
                                 pubSubCenterRef.current.publishServiceEvent
                             }

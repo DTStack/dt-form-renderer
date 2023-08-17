@@ -20,6 +20,7 @@ export interface FormItemWrapperProps {
     formItemMeta: FieldItemMetaType;
     getWidgets: GetWidgets;
     publishServiceEvent: PubSubCenter['publishServiceEvent'];
+    onDerivedValueChange: (fieldName: string, value: any) => any;
     valueGetter: (value) => any;
     debounceSearch?: boolean;
 }
@@ -31,6 +32,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         publishServiceEvent,
         valueGetter,
         debounceSearch,
+        onDerivedValueChange,
     } = props;
     const {
         fieldName,
@@ -90,9 +92,8 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         };
         const derivedValue = valueDerived(scope);
         if (derivedValue !== form.getFieldValue(fieldName)) {
-            setTimeout(() => {
-                form.setFieldValue(fieldName, derivedValue);
-            });
+            form.setFieldValue(fieldName, derivedValue);
+            onDerivedValueChange(fieldName, derivedValue);
         }
     };
 
