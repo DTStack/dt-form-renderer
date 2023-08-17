@@ -49,6 +49,8 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         valueDerived,
         servicesTriggers,
         destroy,
+        required,
+        noStyle,
     } = formItemMeta;
     const extraContext = useContext(ExtraContext);
     const form = useFormInstance();
@@ -175,6 +177,10 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                         labelAlign={labelAlign}
                         trigger={trigger}
                         valuePropName={valuePropName}
+                        {...(required === undefined
+                            ? {}
+                            : { required: valueGetter(required) })}
+                        noStyle={noStyle}
                         validateFirst
                     >
                         <Widget

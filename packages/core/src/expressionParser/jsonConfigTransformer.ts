@@ -59,12 +59,9 @@ class JsonConfigTransformer {
         };
     }
 
-    transformFnExprField(value: string) {
+    transformFnExprField(value: any) {
         const isFunctionExpression = ExpressionParser.isFunctionExpression;
-        const res = isFunctionExpression(value)
-            ? this._genFunction(value)
-            : value;
-        return res;
+        return isFunctionExpression(value) ? this._genFunction(value) : value;
     }
 
     transformTooltip(tooltip: string) {
@@ -91,7 +88,7 @@ class JsonConfigTransformer {
     transformWidgetsProps = (widgetProps: {}) => {
         const transformedWidgetProps: {} = {};
         if (!widgetProps) return transformedWidgetProps;
-        Object.entries(widgetProps).map(([key, value]) => {
+        Object.entries(widgetProps).forEach(([key, value]) => {
             transformedWidgetProps[key] = this.transformFnExprField(
                 value as string
             );
@@ -121,6 +118,7 @@ class JsonConfigTransformer {
                 widgetProps = {},
                 valueDerived,
                 triggerServices,
+                required,
             } = field;
             return {
                 ...field,
@@ -132,6 +130,7 @@ class JsonConfigTransformer {
                 tooltip: this.transformTooltip(tooltip),
                 servicesTriggers: this.getServicesTriggers(triggerServices),
                 widgetProps: this.transformWidgetsProps(widgetProps),
+                required: this.transformFnExprField(required),
             };
         });
     }

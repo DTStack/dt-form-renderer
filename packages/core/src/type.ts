@@ -74,10 +74,10 @@ export type FormItemCustomRuleType = (
  * @description formRenderer 的 ruleMap 类型
  */
 export interface FormItemRuleMapType {
-    customRules: {
+    customRules?: {
         [key: string]: FormItemCustomRuleType;
     };
-    validators: {
+    validators?: {
         [key: string]: FormItemValidatorType;
     };
 }
@@ -147,7 +147,7 @@ export interface JsonConfigFieldType {
     widgetProps?: WidgetPropsConfigType;
     dependencies?: string[];
     initialValue?: any;
-    label: FunctionExprType | string;
+    label?: FunctionExprType | string;
     destroy?: FunctionExprType | boolean;
     hidden?: FunctionExprType | boolean;
     rules?: RuleConfigType[];
@@ -159,6 +159,8 @@ export interface JsonConfigFieldType {
     valuePropName?: FormItemProps['valuePropName'];
     triggerServices?: TriggerServiceType[];
     valueDerived?: FunctionExprType;
+    required?: FunctionExprType | boolean;
+    noStyle?: boolean;
 }
 
 /**
@@ -187,6 +189,7 @@ export interface FieldItemMetaType {
     label?: TransformedFnType | string;
     destroy?: TransformedFnType | boolean;
     hidden?: TransformedFnType | boolean;
+    required?: TransformedFnType | boolean;
     rules?: TransformedFnType | FormItemProps['rules'];
     tooltip?: React.ReactNode;
     colon?: FormItemProps['colon'];
@@ -196,4 +199,5 @@ export interface FieldItemMetaType {
     extra?: string;
     valueDerived?: TransformedFnType;
     servicesTriggers?: ServiceTriggerKind[];
+    noStyle?: boolean;
 }
