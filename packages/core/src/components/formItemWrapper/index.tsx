@@ -65,18 +65,16 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         } else {
             return _widget;
         }
-    }, [widget]);
+    }, [widget, getWidgets]);
 
     useEffect(() => {
         if (servicesTriggers.includes(ServiceTriggerEnum.onMount)) {
-            setTimeout(() => {
-                publishServiceEvent(
-                    fieldName,
-                    ServiceTriggerEnum.onMount,
-                    form.getFieldsValue(),
-                    extraContext.extraDataRef
-                );
-            });
+            publishServiceEvent(
+                fieldName,
+                ServiceTriggerEnum.onMount,
+                form.getFieldsValue(),
+                extraContext.extraDataRef
+            );
         }
     }, []);
 
