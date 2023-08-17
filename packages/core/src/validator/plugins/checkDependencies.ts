@@ -26,7 +26,7 @@ const checkDependencies: ValidatePlugin = function (fieldsConfig) {
             diagnostics.push({
                 title,
                 level: DiagnosticLevel.Warn,
-                message: `there are duplicate dependence in \`fieldList[${index}].dependencies\`.`,
+                message: `There are duplicate dependence in \`fieldList[${index}].dependencies\`.`,
                 location: [index, 'dependencies'],
             });
         }

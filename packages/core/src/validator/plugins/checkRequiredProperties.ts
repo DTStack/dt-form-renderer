@@ -41,7 +41,7 @@ const checkRequiredConf: ValidatePlugin = function (fieldsConfig) {
         if (!label) {
             diagnostics.push({
                 level: DiagnosticLevel.Warn,
-                message: `label property should is empty! please check \`fieldList[${index}].widget\`.`,
+                message: `label property should not empty! please check \`fieldList[${index}].widget\`.`,
                 title,
                 location: [index],
             });
