@@ -90,6 +90,10 @@ export const fieldCompletionsCreator: (
             label: 'valueDerived',
             detail: '值的派生',
         },
+        {
+            label: 'span',
+            detail: '表单项占用栅格数',
+        },
     ].map((i) => ({
         ...i,
         range: range,
