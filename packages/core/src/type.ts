@@ -199,5 +199,6 @@ export interface FieldItemMetaType {
     extra?: string;
     valueDerived?: TransformedFnType;
     servicesTriggers?: ServiceTriggerKind[];
+    span?: number;
     noStyle?: boolean;
 }

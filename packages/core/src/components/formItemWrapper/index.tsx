@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo } from 'react';
-import { Form, FormInstance } from 'antd';
+import { Form, FormInstance, Col } from 'antd';
 import { debounce } from '../helpers';
 import ExtraContext from '../../extraDataContext';
 import internalWidgets from '../internalWidgets';
@@ -18,6 +18,7 @@ const { Item: FormItem, useFormInstance } = Form;
 export type GetWidgets = (widget: string) => React.ComponentType<any>;
 export interface FormItemWrapperProps {
     formItemMeta: FieldItemMetaType;
+    defaultSpan?: number;
     getWidgets: GetWidgets;
     publishServiceEvent: PubSubCenter['publishServiceEvent'];
     onDerivedValueChange: (fieldName: string, value: any) => any;
@@ -28,6 +29,7 @@ export interface FormItemWrapperProps {
 const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
     const {
         formItemMeta,
+        defaultSpan = 24,
         getWidgets,
         publishServiceEvent,
         valueGetter,
@@ -50,6 +52,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         trigger,
         valueDerived,
         servicesTriggers,
+        span,
         destroy,
         required,
         noStyle,
@@ -164,29 +167,31 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                 onFocus && (serviceProps.onFocus = onFocus);
                 onSearch && (serviceProps.onSearch = onSearch);
                 return (
-                    <FormItem
-                        name={fieldName}
-                        initialValue={initialValue}
-                        tooltip={tooltip}
-                        label={valueGetter(label)}
-                        rules={valueGetter(rules)}
-                        hidden={valueGetter(hidden)}
-                        colon={colon}
-                        extra={extra}
-                        labelAlign={labelAlign}
-                        trigger={trigger}
-                        valuePropName={valuePropName}
-                        {...(required === undefined
-                            ? {}
-                            : { required: valueGetter(required) })}
-                        noStyle={noStyle}
-                        validateFirst
-                    >
-                        <Widget
-                            {...widgetPropsGetter(widgetProps)}
-                            {...serviceProps}
-                        />
-                    </FormItem>
+                    <Col span={valueGetter(hidden) ? 0 : span ?? defaultSpan}>
+                        <FormItem
+                            name={fieldName}
+                            initialValue={initialValue}
+                            tooltip={tooltip}
+                            label={valueGetter(label)}
+                            rules={valueGetter(rules)}
+                            hidden={valueGetter(hidden)}
+                            colon={colon}
+                            extra={extra}
+                            labelAlign={labelAlign}
+                            trigger={trigger}
+                            valuePropName={valuePropName}
+                            {...(required === undefined
+                                ? {}
+                                : { required: valueGetter(required) })}
+                            noStyle={noStyle}
+                            validateFirst
+                        >
+                            <Widget
+                                {...widgetPropsGetter(widgetProps)}
+                                {...serviceProps}
+                            />
+                        </FormItem>
+                    </Col>
                 );
             }}
         </FormItem>
