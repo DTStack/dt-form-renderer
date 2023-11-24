@@ -46,4 +46,5 @@ JsonConfig 用于描述表单的渲染，它的一级结构如下所示
 -   `labelAlign` 同 ant-design FormItem 的 labelAlign
 -   `colon` 同 ant-design FormItem 的 colon
 -   `extra` 同 ant-design FormItem 的 extra
--   `noStyle`  同 ant-design FormItem 的 noStyle
+-   `noStyle`  同 ant-design FormItem 的 noStyle,
+-   `span` 用于排版布局，同 ant-design Col 的 span
