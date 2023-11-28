@@ -61,9 +61,10 @@ const FormRenderer: React.ForwardRefRenderFunction<
         header,
         footer,
         debounceSearch,
+        form: formInstance,
         ...restProps
     } = props;
-    const [form] = useForm();
+    const [form] = useForm(formInstance);
     const [extraDataRef, updateExtraData] = useExtraData({
         serviceLoading: {},
     });
