@@ -37,3 +37,7 @@
 ### ref
 
 通过 ref 可以拿到 FormRenderer 内部的 ant-design form 实例。
+
+### form
+
+如果传入了 form 实例，则 FormRenderer 内部不会再创建新的 form 实例，数据都将收集在传入的 form 中，也就无需再通过 ref 去访问表单数据了。注意：传入的 form 实例必须是在 `Form.useForm()` 中创建的，不要使用类组件中通过 ref 创建的实例。
