@@ -91,8 +91,9 @@ export const fieldCompletionsCreator: (
             detail: '值的派生',
         },
         {
-            label: 'span',
-            detail: '表单项占用栅格数',
+            label: 'colProps',
+            detail: '表单项栅格布局属性',
+            insertText: `"${'colProps'}": { "span": 24$1 },`,
         },
     ].map((i) => ({
         ...i,
