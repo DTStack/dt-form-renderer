@@ -8,7 +8,8 @@
 
 -   `jsonConfig` 解析后的表单 json 配置，详情看[这里](./JsonConfig.md)
 -   `formServicePool` FormService 的集合，详情看[这里](./FormService.md)
--   `formItemLayout` 用于表单项的默认排版布局, 默认为`{ rowGutter: [16, 0], colSpan: 24 }`
+-   `rowProps` 用于表单的排版布局，与 [ant-design#Row](https://ant.design/components/grid-cn#row) 一致
+-   `defaultColSpan` 用于表单项的默认占用栅格大小, 默认为`24`
 -   `ruleMap` 自定义的表单校验器的集合
 -   `docsMap` 自定义的 tooltip 的集合
 -   `getWidgets` 接收表单自定义组件的名称，返回表单自定义组件，详情看[这里](./Widget.md)

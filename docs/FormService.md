@@ -9,7 +9,7 @@
 FormService 的基本格式如下所示
 
 ```js
-function service1(formData, extraData, trigger, args) {
+function service1({ formData, extraData, trigger, args }) {
     return new Promise((resolve) => {
         resolve(data);
     });
@@ -116,4 +116,4 @@ FormRenderer 内部维护了一个存储外部数据的容器-`extraData` ，`ex
 -   `onFocus` 当前表单项组件触发 focus 事件时
 -   `onSearch` 当前表单项组件触发 search 事件时
 
-除了 `onMount` 外，当 FormService 被触发时 trigger 对应事件的回调函数的参数，会被作为 FormService 的第四个参数（`args`）传给 FormService
+除了 `onMount` 外，当 FormService 被触发时 trigger 对应事件的回调函数的参数，会被作为 FormService 参数（`args`）传给 FormService
