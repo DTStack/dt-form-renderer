@@ -5,7 +5,8 @@ import React, {
     useImperativeHandle,
     useLayoutEffect,
 } from 'react';
-import { Form, Row, RowProps } from 'antd';
+import { Form, Row } from 'antd';
+import type { RowProps } from 'antd';
 import type { FormInstance, FormProps } from 'antd/es/form/Form';
 import type {
     FormServicePoolType,
@@ -27,10 +28,8 @@ const { useForm } = Form;
 export interface FormRendererProps extends FormProps {
     jsonConfig: JsonConfigType;
     formServicePool?: FormServicePoolType;
-    formItemLayout?: {
-        rowGutter?: RowProps['gutter'];
-        colSpan?: number;
-    };
+    rowProps?: RowProps;
+    defaultColSpan?: number;
     ruleMap?: FormItemRuleMapType;
     docsMap?: DocsMapType;
     getWidgets?: GetWidgets;
@@ -57,7 +56,8 @@ const FormRenderer: React.ForwardRefRenderFunction<
     const {
         jsonConfig,
         formServicePool,
-        formItemLayout,
+        rowProps,
+        defaultColSpan = 24,
         defaultExtraData,
         ruleMap,
         getWidgets,
@@ -203,17 +203,14 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 {typeof header === 'function'
                     ? header?.(form, extraDataRef.current)
                     : header}
-                <Row
-                    style={{ width: '100%' }}
-                    gutter={formItemLayout?.rowGutter || [16, 0]}
-                >
+                <Row style={{ width: '100%' }} {...rowProps}>
                     {formItemsMeta.map((formItemMeta) => {
                         return (
                             <FormItemWrapper
                                 debounceSearch={debounceSearch}
                                 valueGetter={valueGetter}
                                 getWidgets={getWidgets}
-                                defaultSpan={formItemLayout?.colSpan}
+                                defaultSpan={defaultColSpan}
                                 key={formItemMeta.fieldName}
                                 formItemMeta={formItemMeta}
                                 onDerivedValueChange={onDerivedValueChange}

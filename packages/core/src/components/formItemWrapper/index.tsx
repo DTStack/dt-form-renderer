@@ -29,7 +29,7 @@ export interface FormItemWrapperProps {
 const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
     const {
         formItemMeta,
-        defaultSpan = 24,
+        defaultSpan,
         getWidgets,
         publishServiceEvent,
         valueGetter,
@@ -52,7 +52,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         trigger,
         valueDerived,
         servicesTriggers,
-        span,
+        colProps,
         destroy,
         required,
         noStyle,
@@ -167,7 +167,14 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
                 onFocus && (serviceProps.onFocus = onFocus);
                 onSearch && (serviceProps.onSearch = onSearch);
                 return (
-                    <Col span={valueGetter(hidden) ? 0 : span ?? defaultSpan}>
+                    <Col
+                        {...colProps}
+                        span={
+                            valueGetter(hidden)
+                                ? 0
+                                : colProps?.span ?? defaultSpan
+                        }
+                    >
                         <FormItem
                             name={fieldName}
                             initialValue={initialValue}
