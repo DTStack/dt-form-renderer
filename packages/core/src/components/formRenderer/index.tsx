@@ -5,7 +5,8 @@ import React, {
     useImperativeHandle,
     useLayoutEffect,
 } from 'react';
-import { Form } from 'antd';
+import { Form, Row } from 'antd';
+import type { RowProps } from 'antd';
 import type { FormInstance, FormProps } from 'antd/es/form/Form';
 import type {
     FormServicePoolType,
@@ -27,6 +28,8 @@ const { useForm } = Form;
 export interface FormRendererProps extends FormProps {
     jsonConfig: JsonConfigType;
     formServicePool?: FormServicePoolType;
+    rowProps?: RowProps;
+    defaultColSpan?: number;
     ruleMap?: FormItemRuleMapType;
     docsMap?: DocsMapType;
     getWidgets?: GetWidgets;
@@ -53,6 +56,8 @@ const FormRenderer: React.ForwardRefRenderFunction<
     const {
         jsonConfig,
         formServicePool,
+        rowProps,
+        defaultColSpan = 24,
         defaultExtraData,
         ruleMap,
         getWidgets,
@@ -198,21 +203,24 @@ const FormRenderer: React.ForwardRefRenderFunction<
                 {typeof header === 'function'
                     ? header?.(form, extraDataRef.current)
                     : header}
-                {formItemsMeta.map((formItemMeta) => {
-                    return (
-                        <FormItemWrapper
-                            debounceSearch={debounceSearch}
-                            valueGetter={valueGetter}
-                            getWidgets={getWidgets}
-                            key={formItemMeta.fieldName}
-                            formItemMeta={formItemMeta}
-                            onDerivedValueChange={onDerivedValueChange}
-                            publishServiceEvent={
-                                pubSubCenterRef.current.publishServiceEvent
-                            }
-                        />
-                    );
-                })}
+                <Row style={{ width: '100%' }} {...rowProps}>
+                    {formItemsMeta.map((formItemMeta) => {
+                        return (
+                            <FormItemWrapper
+                                debounceSearch={debounceSearch}
+                                valueGetter={valueGetter}
+                                getWidgets={getWidgets}
+                                defaultSpan={defaultColSpan}
+                                key={formItemMeta.fieldName}
+                                formItemMeta={formItemMeta}
+                                onDerivedValueChange={onDerivedValueChange}
+                                publishServiceEvent={
+                                    pubSubCenterRef.current.publishServiceEvent
+                                }
+                            />
+                        );
+                    })}
+                </Row>
                 {typeof footer === 'function'
                     ? footer?.(form, extraDataRef.current)
                     : footer}

@@ -46,4 +46,5 @@ JsonConfig 用于描述表单的渲染，它的一级结构如下所示
 -   `labelAlign` 同 ant-design FormItem 的 labelAlign
 -   `colon` 同 ant-design FormItem 的 colon
 -   `extra` 同 ant-design FormItem 的 extra
--   `noStyle`  同 ant-design FormItem 的 noStyle
+-   `noStyle`  同 ant-design FormItem 的 noStyle,
+-   `colProps` 用于表单项排版布局，同 ant-design Col [ant-design#Col](https://ant.design/components/grid-cn#col)

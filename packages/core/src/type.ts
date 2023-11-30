@@ -1,5 +1,5 @@
 import React from 'react';
-import type { FormItemProps } from 'antd';
+import type { ColProps, FormItemProps } from 'antd';
 import type { TransformedFnType } from './expressionParser/fnExpressionTransformer';
 
 /**
@@ -161,6 +161,7 @@ export interface JsonConfigFieldType {
     valueDerived?: FunctionExprType;
     required?: FunctionExprType | boolean;
     noStyle?: boolean;
+    colProps?: ColProps;
 }
 
 /**
@@ -200,4 +201,5 @@ export interface FieldItemMetaType {
     valueDerived?: TransformedFnType;
     servicesTriggers?: ServiceTriggerKind[];
     noStyle?: boolean;
+    colProps?: ColProps;
 }

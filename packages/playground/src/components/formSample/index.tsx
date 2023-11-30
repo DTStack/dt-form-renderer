@@ -43,6 +43,7 @@ const FormSample: React.FC<IProps> = (props) => {
             ref={formRef}
             {...formLayout}
             docsMap={docsMap}
+            rowProps={{ gutter: [16, 0] }}
             getWidgets={getWidgets}
             ruleMap={ruleMap}
             formServicePool={formServicePool}

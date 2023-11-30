@@ -90,6 +90,11 @@ export const fieldCompletionsCreator: (
             label: 'valueDerived',
             detail: '值的派生',
         },
+        {
+            label: 'colProps',
+            detail: '表单项栅格布局属性',
+            insertText: `"${'colProps'}": { "span": 24$1 },`,
+        },
     ].map((i) => ({
         ...i,
         range: range,
