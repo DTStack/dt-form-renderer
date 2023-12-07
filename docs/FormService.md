@@ -56,7 +56,8 @@ function FormDemo() {
         {
             "serviceName": "service1",
             "fieldInExtraData": "selectOptionData",
-            "trigger": ["onMount", "onChange", "onBlur", "onFocus", "onSearch"]
+            "trigger": ["onMount", "onChange", "onBlur", "onFocus", "onSearch"],
+            "clearImmediately": true
         }
     ]
 }
@@ -117,3 +118,12 @@ FormRenderer 内部维护了一个存储外部数据的容器-`extraData` ，`ex
 -   `onSearch` 当前表单项组件触发 search 事件时
 
 除了 `onMount` 外，当 FormService 被触发时 trigger 对应事件的回调函数的参数，会被作为 FormService 参数（`args`）传给 FormService
+
+### clearImmediately
+
+触发 service 时，是否需要先清空对应的 `fieldInExtraData` 数据，如下拉框列表为远程接口获取，触发 service 时需要立马清除原来的数据，避免接口返回过慢，导致用户在接口数据返回前选择了旧数据，值默认为 `false`。
+
+
+### 默认行为
+
+FormRenderer 内部处理了 service 的异步请求数据竞态问题，对于同一个 service, 短时间内多次触发，只有请求队列中最后一次请求返回的数据会被更新到 `fieldInExtraData`。
