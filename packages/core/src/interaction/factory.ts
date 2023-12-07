@@ -47,7 +47,8 @@ export function triggerServiceFactory(
     updateExtra: UpdateExtraType,
     triggerService: TriggerServiceType
 ): FormServiceType | null {
-    const { serviceName, fieldInExtraData } = triggerService;
+    let lastServiceId = null;
+    const { serviceName, fieldInExtraData, clearImmediately } = triggerService;
 
     const service = servicePool?.[serviceName];
     if (typeof service !== 'function') {
@@ -59,14 +60,20 @@ export function triggerServiceFactory(
     }
 
     return (context: IServiceContext) => {
+        const serviceId = Symbol('serviceId');
+        lastServiceId = serviceId;
         updateExtra((extraData) => ({
             ...extraData,
+            [fieldInExtraData]: clearImmediately
+                ? undefined
+                : extraData[fieldInExtraData],
             serviceLoading: {
                 ...extraData.serviceLoading,
                 [serviceName]: true,
             },
         }));
         return service(context).then((res) => {
+            if (lastServiceId !== serviceId) return;
             updateExtra((extraData) => ({
                 ...extraData,
                 [fieldInExtraData]: res,
