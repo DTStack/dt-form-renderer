@@ -126,6 +126,7 @@ export interface TriggerServiceType {
     serviceName: string;
     fieldInExtraData: string;
     triggers?: ServiceTriggerKind[];
+    clearImmediately?: boolean;
 }
 
 /**
