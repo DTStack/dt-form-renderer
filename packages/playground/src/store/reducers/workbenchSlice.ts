@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 export const DefaultWip = 'untitled';
 
+import { templateOptions } from '@/components/titleWithToolbar';
+
 export interface FileMetaType {
     name: string;
     configContent: string;
@@ -17,8 +19,8 @@ export const initialState: WorkbenchType = {
     files: [
         {
             name: DefaultWip,
-            configContent: '',
-            valuesContent: '',
+            configContent: templateOptions[1].value as string,
+            valuesContent: '{}',
             gmtModified: Date.now(),
         },
     ],

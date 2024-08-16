@@ -10,10 +10,16 @@
         font-weight: 500;
     }
     .toolbar-title-toolbar {
-        .anticon svg {
+        height: 100%;
+        & > span {
+            display: inline-flex;
             cursor: pointer;
-            font-size: 14px;
-            margin-left: 12px;
+            padding: 0 6px;
+            height: 100%;
+            align-items: center;
+            .anticon svg {
+                font-size: 14px;
+            }
         }
     }
 }

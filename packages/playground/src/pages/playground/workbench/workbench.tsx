@@ -28,6 +28,9 @@ const WorkBench: React.FC<workbenchProps> = () => {
         const file = files?.find((w) => w.name === workInProgress);
         setEditorValue(configEditorRef.current, file?.configContent ?? '');
         setEditorValue(valueEditorRef.current, file?.valuesContent ?? '');
+        if (file?.valuesContent) {
+            refreshForm();
+        }
     }, [workInProgress]);
 
     const saveCurrentPage = debounceFunctionWrap(() => {

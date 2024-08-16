@@ -11,7 +11,7 @@ import dataSyncFormMeta from '../formSample/jsonSample/dataSync';
 import './index.less';
 import type { DefaultOptionType } from 'antd/lib/select';
 
-const options: DefaultOptionType[] = [
+export const templateOptions: DefaultOptionType[] = [
     {
         label: '登录表单',
         value: JSON.stringify(loginFormMeta, null, 4),
@@ -43,7 +43,7 @@ const TitleWithToolbar: React.FC<TitleWithToolbarProps> = (props) => {
                         style={{ width: 150, marginLeft: 12 }}
                         placeholder="选择模板以导入"
                         value={null}
-                        options={options}
+                        options={templateOptions}
                         onSelect={(value) => {
                             props.onImportTemplate(value);
                         }}
@@ -52,28 +52,32 @@ const TitleWithToolbar: React.FC<TitleWithToolbarProps> = (props) => {
             </p>
             <span className="toolbar-title-toolbar">
                 {props.onDownload ? (
-                    <Tooltip title="下载">
-                        <DownloadOutlined
-                            onClick={() => props.onDownload?.()}
-                        />
-                    </Tooltip>
+                    <span onClick={() => props.onDownload?.()}>
+                        <Tooltip title="下载">
+                            <DownloadOutlined />
+                        </Tooltip>
+                    </span>
                 ) : null}
                 {props.onCopy ? (
-                    <Tooltip title="复制">
-                        <CopyOutlined onClick={() => props.onCopy?.()} />
-                    </Tooltip>
+                    <span onClick={() => props.onCopy?.()}>
+                        <Tooltip title="复制">
+                            <CopyOutlined />
+                        </Tooltip>
+                    </span>
                 ) : null}
                 {props.onFormat ? (
-                    <Tooltip title="格式化">
-                        <FormatPainterOutlined
-                            onClick={() => props.onFormat?.()}
-                        />
-                    </Tooltip>
+                    <span onClick={() => props.onFormat?.()}>
+                        <Tooltip title="格式化">
+                            <FormatPainterOutlined />
+                        </Tooltip>
+                    </span>
                 ) : null}
                 {props.onReload ? (
-                    <Tooltip title="刷新">
-                        <ReloadOutlined onClick={() => props.onReload?.()} />
-                    </Tooltip>
+                    <span onClick={() => props.onReload?.()}>
+                        <Tooltip title="刷新">
+                            <ReloadOutlined />
+                        </Tooltip>
+                    </span>
                 ) : null}
             </span>
         </p>
