@@ -19,7 +19,7 @@ export const initialState: WorkbenchType = {
     files: [
         {
             name: DefaultWip,
-            configContent: templateOptions[1].value as string,
+            configContent: templateOptions[0].value as string,
             valuesContent: '{}',
             gmtModified: Date.now(),
         },
