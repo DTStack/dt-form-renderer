@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useMemo } from 'react';
-import { Form, FormInstance, Col } from 'antd';
+import { Form, Col } from 'antd';
 import { debounce } from '../helpers';
 import ExtraContext from '../../extraDataContext';
 import internalWidgets from '../internalWidgets';
-import type { ScopeType } from '../../expressionParser/fnExpressionTransformer';
+import type { TransformedFnType } from '../../expressionParser/fnExpressionTransformer';
 import PubSubCenter from '../../interaction/pubSubCenter';
 import {
     FieldItemMetaType,
@@ -20,6 +20,10 @@ export interface FormItemWrapperProps {
     formItemMeta: FieldItemMetaType;
     defaultSpan?: number;
     getWidgets: GetWidgets;
+    calcDerivedValue: (
+        fieldName: string,
+        valueDerived: TransformedFnType
+    ) => void;
     publishServiceEvent: PubSubCenter['publishServiceEvent'];
     onDerivedValueChange: (fieldName: string, value: any) => any;
     valueGetter: (value) => any;
@@ -34,7 +38,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         publishServiceEvent,
         valueGetter,
         debounceSearch,
-        onDerivedValueChange,
+        calcDerivedValue,
     } = props;
     const {
         fieldName,
@@ -80,23 +84,6 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
             );
         }
     }, []);
-
-    /**
-     * 处理派生值的情况
-     */
-    const deriveValue = (form: FormInstance) => {
-        if (valueDerived === null) return;
-
-        const scope: ScopeType = {
-            formData: form.getFieldsValue(),
-            extraDataRef: extraContext.extraDataRef,
-        };
-        const derivedValue = valueDerived(scope);
-        if (derivedValue !== form.getFieldValue(fieldName)) {
-            form.setFieldValue(fieldName, derivedValue);
-            onDerivedValueChange(fieldName, derivedValue);
-        }
-    };
 
     const getServiceTriggerProps = (formData, extraData) => {
         const serviceTriggerProps = {
@@ -157,7 +144,7 @@ const FormItemWrapper: React.FC<FormItemWrapperProps> = (props) => {
         <FormItem noStyle shouldUpdate>
             {(form) => {
                 if (valueGetter(destroy)) return null;
-                deriveValue(form as FormInstance);
+                calcDerivedValue(fieldName, valueDerived);
                 const { onBlur, onFocus, onSearch } = getServiceTriggerProps(
                     form.getFieldsValue(),
                     extraContext.extraDataRef

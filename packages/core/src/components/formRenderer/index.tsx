@@ -21,7 +21,10 @@ import ExtraContext, { useExtraData } from '../../extraDataContext';
 import JsonConfigTransformer from '../../expressionParser/jsonConfigTransformer';
 import PubSubCenter from '../../interaction/pubSubCenter';
 import InteractionSubscriber from '../../interaction/interactionSubscriber';
-import type { ScopeType } from '../../expressionParser/fnExpressionTransformer';
+import type {
+    ScopeType,
+    TransformedFnType,
+} from '../../expressionParser/fnExpressionTransformer';
 
 const { useForm } = Form;
 
@@ -142,6 +145,26 @@ const FormRenderer: React.ForwardRefRenderFunction<
         }
     };
 
+    /**
+     * 处理派生值的情况
+     */
+    const calcDerivedValue = (
+        fieldName: string,
+        valueDerived: TransformedFnType
+    ) => {
+        if (valueDerived === null) return;
+
+        const scope: ScopeType = {
+            formData: form.getFieldsValue(),
+            extraDataRef: extraDataRef,
+        };
+        const derivedValue = valueDerived(scope);
+        if (derivedValue !== form.getFieldValue(fieldName)) {
+            form.setFieldValue(fieldName, derivedValue);
+            onDerivedValueChange(fieldName, derivedValue);
+        }
+    };
+
     const onValuesChange = (changedValues, _values) => {
         const changedFields = Object.keys(changedValues);
         let interactFields = [];
@@ -151,6 +174,14 @@ const FormRenderer: React.ForwardRefRenderFunction<
             const fieldsName =
                 pubSubCenterRef.current.publishDepEvent(fieldName);
             interactFields = [...interactFields, ...fieldsName];
+        });
+
+        const derivedValueFields = formItemsMeta.filter(
+            (item) => item.valueDerived !== null
+        );
+
+        derivedValueFields.forEach((item) => {
+            calcDerivedValue(item.fieldName, item.valueDerived);
         });
 
         const shouldRenderFields = formItemsMeta
@@ -213,6 +244,7 @@ const FormRenderer: React.ForwardRefRenderFunction<
                                 defaultSpan={defaultColSpan}
                                 key={formItemMeta.fieldName}
                                 formItemMeta={formItemMeta}
+                                calcDerivedValue={calcDerivedValue}
                                 onDerivedValueChange={onDerivedValueChange}
                                 publishServiceEvent={
                                     pubSubCenterRef.current.publishServiceEvent

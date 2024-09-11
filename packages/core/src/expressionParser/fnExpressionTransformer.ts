@@ -1,3 +1,4 @@
+import { warning } from '../utils/report';
 import { ExtraDataRefType } from '../extraDataContext';
 
 export interface ScopeType {
@@ -42,8 +43,15 @@ class FnExpressionTransformer {
         return (scope: ScopeType) => {
             const proxy = this.createProxy(scope);
             const fnBody = `with(scope) {  return ${code} }`;
-            const fn = new Function('scope', fnBody);
-            return fn(proxy);
+            try {
+                const fn = new Function('scope', fnBody);
+                return fn(proxy);
+            } catch (error) {
+                warning(
+                    `The function expression transform failed: "${code}". ErrorMessage: ${error}`,
+                    'Expression'
+                );
+            }
         };
     };
 }
